@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Welcome to your Lovable Angular project
 
 ## Project info
 
@@ -32,7 +32,7 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Start the Angular development server with auto-reloading.
 npm run dev
 ```
 
@@ -54,10 +54,8 @@ npm run dev
 
 This project is built with:
 
-- Vite
+- Angular 18
 - TypeScript
-- React
-- shadcn-ui
 - Tailwind CSS
 
 ## How can I deploy this project?

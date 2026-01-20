@@ -1,0 +1,56 @@
+<div class="min-h-screen bg-background text-foreground">
+  <header class="border-b border-border bg-card">
+    <div
+      class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+        >
+          <span class="text-lg font-semibold">L</span>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-muted-foreground">
+            Lovable
+          </p>
+          <h1 class="text-lg font-semibold">Product Operations</h1>
+        </div>
+      </div>
+      <nav class="flex flex-wrap items-center gap-2 text-sm">
+        <a
+          routerLink="/"
+          routerLinkActive="text-primary"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="rounded-md px-3 py-2 hover:bg-muted"
+        >
+          Products
+        </a>
+        <a
+          routerLink="/batches"
+          routerLinkActive="text-primary"
+          class="rounded-md px-3 py-2 hover:bg-muted"
+        >
+          Batches
+        </a>
+        <a
+          routerLink="/offer-analytics"
+          routerLinkActive="text-primary"
+          class="rounded-md px-3 py-2 hover:bg-muted"
+        >
+          Offer analytics
+        </a>
+        <a
+          routerLink="/product/new"
+          routerLinkActive="text-primary"
+          class="rounded-md px-3 py-2 hover:bg-muted"
+        >
+          New product
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
