@@ -114,6 +114,16 @@ export class TagService {
     saveProductTags(next);
   }
 
+  removeProducts(productIds: string[]): void {
+    if (productIds.length === 0) return;
+    const next = { ...this.productTagsSubject.value };
+    productIds.forEach((productId) => {
+      delete next[productId];
+    });
+    this.productTagsSubject.next(next);
+    saveProductTags(next);
+  }
+
   clearTagFromAllProducts(tagId: string): void {
     const next: Record<string, string[]> = {};
     Object.entries(this.productTagsSubject.value).forEach(([productId, ids]) => {
