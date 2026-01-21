@@ -632,14 +632,7 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       }}
                     </div>
                     <div class="text-xs text-muted-foreground">
-                      {{
-                        product.marketplaces.length > 0
-                          ? product.marketplaces
-                              .slice(0, 2)
-                              .map((market) => market.platform)
-                              .join(', ')
-                          : 'No marketplace data'
-                      }}
+                      {{ marketplaceSummary(product) }}
                     </div>
                   </td>
                   <td class="px-4 py-4 text-right">
@@ -1044,6 +1037,16 @@ export class ProductGridComponent implements OnInit {
   soldPeriodLabel(period: SoldPeriod): string {
     const match = this.soldPeriods.find((option) => option.value === period);
     return match ? match.label : 'All time';
+  }
+
+  marketplaceSummary(product: Product): string {
+    if (product.marketplaces.length === 0) {
+      return 'No marketplace data';
+    }
+    return product.marketplaces
+      .slice(0, 2)
+      .map((market) => market.platform)
+      .join(', ');
   }
 
   statusLabel(status: StatusFilter): string {
