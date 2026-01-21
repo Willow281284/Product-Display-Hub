@@ -40,6 +40,30 @@ interface CsvFieldConfig {
   required?: boolean;
 }
 
+interface ProductInput {
+  [key: string]: string | undefined;
+  name?: string;
+  vendorSku?: string;
+  brand?: string;
+  productId?: string;
+  vendorName?: string;
+  manufacturerPart?: string;
+  asin?: string;
+  fnsku?: string;
+  gtin?: string;
+  ean?: string;
+  isbn?: string;
+  landedCost?: string;
+  shippingCost?: string;
+  salePrice?: string;
+  purchaseQty?: string;
+  soldQty?: string;
+  stockQty?: string;
+  returnQty?: string;
+  image?: string;
+  productType?: string;
+}
+
 interface ManualFieldConfig {
   id: string;
   label: string;
@@ -2561,10 +2585,17 @@ export class ProductGridComponent implements OnInit {
     const workbook = XLSX.read(buffer, { type: 'array' });
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json<string[]>(sheet, { header: 1, raw: false });
+    const data = XLSX.utils.sheet_to_json<(string | number | boolean | null)[]>(
+      sheet,
+      { header: 1, raw: false }
+    );
     const [headerRow, ...rows] = data;
-    const headers = (headerRow || []).map((header) => `${header}`.trim());
-    const parsedRows = rows.map((row) => row.map((cell) => `${cell ?? ''}`.trim()));
+    const headers = (headerRow ?? []).map(
+      (header: string | number | boolean | null) => `${header ?? ''}`.trim()
+    );
+    const parsedRows = rows.map((row) =>
+      row.map((cell: string | number | boolean | null) => `${cell ?? ''}`.trim())
+    );
     return { headers, rows: parsedRows };
   }
 
@@ -2596,17 +2627,21 @@ export class ProductGridComponent implements OnInit {
         });
         return record;
       })
-      .filter((record) => record.name || record.vendorSku);
+      .filter((record) => record['name'] || record['vendorSku']);
   }
 
-  private applyCsvUpdates(products: Product[], updates: Record<string, string>[]): Product[] {
+  private applyCsvUpdates(
+    products: Product[],
+    updates: Record<string, string>[]
+  ): Product[] {
     if (this.csvMatchFields.length === 0) return products;
     return products.map((product) => {
       const match = updates.find((record) =>
         this.csvMatchFields.some((fieldId) => {
           const value = record[fieldId];
           if (!value) return false;
-          return (product as Record<string, string | number | null>)[fieldId] === value;
+          const productValue = this.getProductFieldValue(product, fieldId);
+          return productValue != null && `${productValue}` === value;
         })
       );
       if (!match) return product;
@@ -2614,35 +2649,40 @@ export class ProductGridComponent implements OnInit {
     });
   }
 
-  private createProductFromInput(input: Record<string, string>): Product {
+  private createProductFromInput(input: ProductInput): Product {
     const id = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    const salePrice = this.toNumber(input.salePrice, 0);
-    const landedCost = this.toNumber(input.landedCost, 0);
-    const shippingCost = this.toNumber(input.shippingCost, 0);
-    const purchaseQty = Math.round(this.toNumber(input.purchaseQty, 0));
-    const soldQty = Math.round(this.toNumber(input.soldQty, 0));
-    const returnQty = Math.round(this.toNumber(input.returnQty, 0));
-    const stockQty = Math.round(this.toNumber(input.stockQty, Math.max(purchaseQty - soldQty + returnQty, 0)));
+    const salePrice = this.toNumber(input['salePrice'], 0);
+    const landedCost = this.toNumber(input['landedCost'], 0);
+    const shippingCost = this.toNumber(input['shippingCost'], 0);
+    const purchaseQty = Math.round(this.toNumber(input['purchaseQty'], 0));
+    const soldQty = Math.round(this.toNumber(input['soldQty'], 0));
+    const returnQty = Math.round(this.toNumber(input['returnQty'], 0));
+    const stockQty = Math.round(
+      this.toNumber(
+        input['stockQty'],
+        Math.max(purchaseQty - soldQty + returnQty, 0)
+      )
+    );
 
     const base: Product = {
       id,
-      image: input.image || `https://picsum.photos/seed/${id}/100/100`,
-      name: input.name || 'New Product',
-      vendorSku: input.vendorSku || `SKU-${id}`,
-      manufacturerPart: input.manufacturerPart || '',
-      asin: input.asin || '',
-      fnsku: input.fnsku || '',
-      gtin: input.gtin || '',
-      ean: input.ean || '',
-      isbn: input.isbn || '',
+      image: input['image'] || `https://picsum.photos/seed/${id}/100/100`,
+      name: input['name'] || 'New Product',
+      vendorSku: input['vendorSku'] || `SKU-${id}`,
+      manufacturerPart: input['manufacturerPart'] || '',
+      asin: input['asin'] || '',
+      fnsku: input['fnsku'] || '',
+      gtin: input['gtin'] || '',
+      ean: input['ean'] || '',
+      isbn: input['isbn'] || '',
       inventoryDifference: 0,
-      productId: input.productId || id,
+      productId: input['productId'] || id,
       variationId: null,
       variation: null,
-      vendorName: input.vendorName || '',
-      brand: input.brand || '',
+      vendorName: input['vendorName'] || '',
+      brand: input['brand'] || '',
       kitProduct: false,
-      productType: (input.productType as ProductType) || 'single',
+      productType: (input['productType'] as ProductType) || 'single',
       kitComponents: [],
       landedCost,
       shippingCost,
@@ -2666,25 +2706,80 @@ export class ProductGridComponent implements OnInit {
     return this.recalculateProduct(base);
   }
 
-  private updateProductFromRecord(product: Product, record: Record<string, string>): Product {
+  private updateProductFromRecord(
+    product: Product,
+    record: Record<string, string>
+  ): Product {
     const updated: Product = { ...product };
-    const numericFields = new Set(['salePrice', 'landedCost', 'shippingCost']);
-    const intFields = new Set(['purchaseQty', 'soldQty', 'stockQty', 'returnQty']);
+    const numberFields: Array<keyof Product> = [
+      'salePrice',
+      'landedCost',
+      'shippingCost',
+      'grossProfitPercent',
+      'grossProfitAmount',
+      'velocity',
+      'stockDays',
+      'suggestedRestockQty',
+      'inventoryDifference',
+    ];
+    const intFields: Array<keyof Product> = [
+      'purchaseQty',
+      'soldQty',
+      'stockQty',
+      'returnQty',
+      'soldQtyLastMonth',
+      'soldQtyLastQuarter',
+      'soldQtyLastYear',
+    ];
+    const stringFields: Array<keyof Product> = [
+      'name',
+      'vendorSku',
+      'brand',
+      'productId',
+      'vendorName',
+      'manufacturerPart',
+      'asin',
+      'fnsku',
+      'gtin',
+      'ean',
+      'isbn',
+    ];
 
     Object.entries(record).forEach(([field, value]) => {
       if (!value) return;
-      if (numericFields.has(field)) {
-        (updated as Record<string, number>)[field] = this.toNumber(value, updated[field as keyof Product] as number);
-      } else if (intFields.has(field)) {
-        (updated as Record<string, number>)[field] = Math.round(
-          this.toNumber(value, updated[field as keyof Product] as number)
-        );
-      } else if (field in updated) {
-        (updated as Record<string, string>)[field] = value;
+      if (numberFields.includes(field as keyof Product)) {
+        const key = field as keyof Product;
+        updated[key] = this.toNumber(value, updated[key] as number) as never;
+        return;
+      }
+      if (intFields.includes(field as keyof Product)) {
+        const key = field as keyof Product;
+        updated[key] = Math.round(
+          this.toNumber(value, updated[key] as number)
+        ) as never;
+        return;
+      }
+      if (stringFields.includes(field as keyof Product)) {
+        const key = field as keyof Product;
+        updated[key] = value as never;
       }
     });
 
     return this.recalculateProduct(updated);
+  }
+
+  private getProductFieldValue(
+    product: Product,
+    fieldId: string
+  ): string | number | null {
+    const field = fieldId as keyof Product;
+    if (field in product) {
+      const value = product[field];
+      if (typeof value === 'string' || typeof value === 'number') {
+        return value;
+      }
+    }
+    return null;
   }
 
   private recalculateProduct(product: Product): Product {
