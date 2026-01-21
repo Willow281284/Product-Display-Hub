@@ -2,19 +2,26 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { mockProducts, brands } from '@/data/mockProducts';
-import { Product } from '@/types/product';
+import { brands, marketplacePlatforms, mockProducts } from '@/data/mockProducts';
+import { FilterState, Product, SoldPeriod } from '@/types/product';
 
 type SortKey =
   | 'name'
   | 'vendorSku'
   | 'brand'
+  | 'productId'
+  | 'variationId'
+  | 'vendorName'
   | 'salePrice'
   | 'stockQty'
+  | 'soldQty'
   | 'restockStatus'
-  | 'marketplaces';
+  | 'marketplaces'
+  | 'productType';
 
 type SortDirection = 'asc' | 'desc';
+
+type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
 
 @Component({
   selector: 'app-product-grid',
@@ -39,8 +46,8 @@ type SortDirection = 'asc' | 'desc';
           </button>
         </div>
 
-        <div class="grid gap-4 lg:grid-cols-4">
-          <label class="flex flex-col gap-2 lg:col-span-2">
+        <div class="grid gap-4 lg:grid-cols-12">
+          <label class="flex flex-col gap-2 lg:col-span-5">
             <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
               >Search</span
             >
@@ -48,26 +55,39 @@ type SortDirection = 'asc' | 'desc';
               type="search"
               class="rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
               placeholder="Search by name, SKU, brand, vendor, or product ID"
-              [(ngModel)]="search"
+              [(ngModel)]="filters.search"
               (ngModelChange)="onFilterChange()"
             />
           </label>
-          <label class="flex flex-col gap-2">
+          <label class="flex flex-col gap-2 lg:col-span-3">
             <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
-              >Brand</span
+              >Product type</span
             >
             <select
               class="rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-              [(ngModel)]="selectedBrand"
-              (ngModelChange)="onFilterChange()"
+              [ngModel]="filters.kitProduct"
+              (ngModelChange)="setKitFilter($event)"
             >
-              <option value="">All brands</option>
-              <option *ngFor="let brand of brands" [value]="brand">
-                {{ brand }}
-              </option>
+              <option [ngValue]="null">All products</option>
+              <option [ngValue]="true">Kit products</option>
+              <option [ngValue]="false">Single products</option>
             </select>
           </label>
-          <label class="flex flex-col gap-2">
+          <label class="flex flex-col gap-2 lg:col-span-2">
+            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+              >Variation</span
+            >
+            <select
+              class="rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+              [ngModel]="filters.hasVariation"
+              (ngModelChange)="setVariationFilter($event)"
+            >
+              <option [ngValue]="null">All</option>
+              <option [ngValue]="true">Has variation</option>
+              <option [ngValue]="false">No variation</option>
+            </select>
+          </label>
+          <label class="flex flex-col gap-2 lg:col-span-2">
             <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
               >Rows</span
             >
@@ -83,6 +103,169 @@ type SortDirection = 'asc' | 'desc';
           </label>
         </div>
 
+        <div class="grid gap-4 lg:grid-cols-12">
+          <details class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
+            <summary class="cursor-pointer text-sm font-medium">
+              Brands
+              <span class="text-xs text-muted-foreground">
+                ({{ filters.brand.length || 'all' }})
+              </span>
+            </summary>
+            <div class="mt-3 max-h-52 space-y-2 overflow-y-auto pr-2">
+              <label
+                *ngFor="let brand of brands"
+                class="flex items-center gap-2 text-sm"
+              >
+                <input
+                  type="checkbox"
+                  class="h-4 w-4"
+                  [checked]="filters.brand.includes(brand)"
+                  (change)="toggleBrand(brand)"
+                />
+                <span>{{ brand }}</span>
+              </label>
+            </div>
+          </details>
+
+          <details class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
+            <summary class="cursor-pointer text-sm font-medium">
+              Marketplaces
+              <span class="text-xs text-muted-foreground">
+                ({{ filters.marketplace.length || 'all' }})
+              </span>
+            </summary>
+            <div class="mt-3 max-h-52 space-y-2 overflow-y-auto pr-2">
+              <label
+                *ngFor="let platform of marketplaces"
+                class="flex items-center gap-2 text-sm capitalize"
+              >
+                <input
+                  type="checkbox"
+                  class="h-4 w-4"
+                  [checked]="filters.marketplace.includes(platform)"
+                  (change)="toggleMarketplace(platform)"
+                />
+                <span>{{ platform }}</span>
+              </label>
+            </div>
+          </details>
+
+          <details class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
+            <summary class="cursor-pointer text-sm font-medium">
+              Status
+              <span class="text-xs text-muted-foreground">
+                ({{ filters.status.length || 'all' }})
+              </span>
+            </summary>
+            <div class="mt-3 space-y-2">
+              <label *ngFor="let status of statusOptions" class="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  class="h-4 w-4"
+                  [checked]="filters.status.includes(status)"
+                  (change)="toggleStatus(status)"
+                />
+                <span class="flex-1 capitalize">{{ statusLabel(status) }}</span>
+                <span class="text-xs text-muted-foreground">
+                  {{ statusCount(status) }}
+                </span>
+              </label>
+            </div>
+          </details>
+        </div>
+
+        <div class="grid gap-4 lg:grid-cols-12">
+          <div class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Price range
+            </p>
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              <label class="text-xs text-muted-foreground">
+                Min
+                <input
+                  type="number"
+                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [ngModel]="filters.priceRange[0]"
+                  (ngModelChange)="updateRange('priceRange', $event, filters.priceRange[1])"
+                />
+              </label>
+              <label class="text-xs text-muted-foreground">
+                Max
+                <input
+                  type="number"
+                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [ngModel]="filters.priceRange[1]"
+                  (ngModelChange)="updateRange('priceRange', filters.priceRange[0], $event)"
+                />
+              </label>
+            </div>
+          </div>
+
+          <div class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Stock range
+            </p>
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              <label class="text-xs text-muted-foreground">
+                Min
+                <input
+                  type="number"
+                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [ngModel]="filters.stockRange[0]"
+                  (ngModelChange)="updateRange('stockRange', $event, filters.stockRange[1])"
+                />
+              </label>
+              <label class="text-xs text-muted-foreground">
+                Max
+                <input
+                  type="number"
+                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [ngModel]="filters.stockRange[1]"
+                  (ngModelChange)="updateRange('stockRange', filters.stockRange[0], $event)"
+                />
+              </label>
+            </div>
+          </div>
+
+          <div class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Sold range
+            </p>
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              <label class="text-xs text-muted-foreground">
+                Min
+                <input
+                  type="number"
+                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [ngModel]="filters.soldRange[0]"
+                  (ngModelChange)="updateRange('soldRange', $event, filters.soldRange[1])"
+                />
+              </label>
+              <label class="text-xs text-muted-foreground">
+                Max
+                <input
+                  type="number"
+                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [ngModel]="filters.soldRange[1]"
+                  (ngModelChange)="updateRange('soldRange', filters.soldRange[0], $event)"
+                />
+              </label>
+            </div>
+            <label class="mt-3 block text-xs text-muted-foreground">
+              Period
+              <select
+                class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                [ngModel]="filters.soldPeriod"
+                (ngModelChange)="setSoldPeriod($event)"
+              >
+                <option *ngFor="let option of soldPeriods" [value]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+            </label>
+          </div>
+        </div>
+
         <ng-container *ngIf="filteredProducts() as filtered">
           <div class="flex flex-wrap items-center justify-between gap-2 text-sm">
             <p class="text-muted-foreground">
@@ -95,7 +278,7 @@ type SortDirection = 'asc' | 'desc';
           </div>
 
           <div class="overflow-x-auto rounded-lg border border-border">
-            <table class="w-full min-w-[860px] text-sm">
+            <table class="w-full min-w-[1100px] text-sm">
               <thead class="bg-muted/40 text-left text-xs uppercase tracking-wide">
                 <tr>
                   <th class="px-4 py-3">
@@ -106,6 +289,26 @@ type SortDirection = 'asc' | 'desc';
                     >
                       Product
                       <span class="text-[10px]">{{ sortIcon('name') }}</span>
+                    </button>
+                  </th>
+                  <th class="px-4 py-3">
+                    <button
+                      type="button"
+                      class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                      (click)="setSort('productType')"
+                    >
+                      Type
+                      <span class="text-[10px]">{{ sortIcon('productType') }}</span>
+                    </button>
+                  </th>
+                  <th class="px-4 py-3">
+                    <button
+                      type="button"
+                      class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                      (click)="setSort('vendorName')"
+                    >
+                      Vendor
+                      <span class="text-[10px]">{{ sortIcon('vendorName') }}</span>
                     </button>
                   </th>
                   <th class="px-4 py-3">
@@ -136,6 +339,16 @@ type SortDirection = 'asc' | 'desc';
                     >
                       Price
                       <span class="text-[10px]">{{ sortIcon('salePrice') }}</span>
+                    </button>
+                  </th>
+                  <th class="px-4 py-3 text-right">
+                    <button
+                      type="button"
+                      class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                      (click)="setSort('soldQty')"
+                    >
+                      Sold
+                      <span class="text-[10px]">{{ sortIcon('soldQty') }}</span>
                     </button>
                   </th>
                   <th class="px-4 py-3 text-right">
@@ -189,9 +402,23 @@ type SortDirection = 'asc' | 'desc';
                     </div>
                   </td>
                   <td class="px-4 py-4">
+                    <div class="text-sm font-medium capitalize">
+                      {{ product.productType }}
+                    </div>
+                    <div class="text-xs text-muted-foreground" *ngIf="product.variation">
+                      {{ product.variation.type }} · {{ product.variation.value }}
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
+                    <div class="text-sm font-medium">{{ product.vendorName }}</div>
+                    <div class="text-xs text-muted-foreground">
+                      {{ product.manufacturerPart }}
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
                     <div class="text-sm font-medium">{{ product.brand }}</div>
                     <div class="text-xs text-muted-foreground">
-                      {{ product.vendorName }}
+                      ASIN {{ product.asin }}
                     </div>
                   </td>
                   <td class="px-4 py-4">
@@ -205,7 +432,10 @@ type SortDirection = 'asc' | 'desc';
                     <div class="text-xs text-muted-foreground">
                       {{
                         product.marketplaces.length > 0
-                          ? product.marketplaces[0].platform
+                          ? product.marketplaces
+                              .slice(0, 2)
+                              .map((market) => market.platform)
+                              .join(', ')
                           : 'No marketplace data'
                       }}
                     </div>
@@ -216,6 +446,12 @@ type SortDirection = 'asc' | 'desc';
                     </p>
                     <p class="text-xs text-muted-foreground">
                       Margin {{ product.grossProfitPercent }}%
+                    </p>
+                  </td>
+                  <td class="px-4 py-4 text-right">
+                    <p class="font-medium">{{ soldQty(product) }}</p>
+                    <p class="text-xs text-muted-foreground">
+                      {{ soldPeriodLabel(filters.soldPeriod) }}
                     </p>
                   </td>
                   <td class="px-4 py-4 text-right">
@@ -271,9 +507,37 @@ type SortDirection = 'asc' | 'desc';
 export class ProductGridComponent {
   readonly products = mockProducts;
   readonly brands = brands;
+  readonly marketplaces = marketplacePlatforms;
 
-  search = '';
-  selectedBrand = '';
+  readonly soldPeriods: Array<{ value: SoldPeriod; label: string }> = [
+    { value: 'all', label: 'All time' },
+    { value: 'lastMonth', label: 'Last month' },
+    { value: 'lastQuarter', label: 'Last quarter' },
+    { value: 'lastYear', label: 'Last year' },
+  ];
+
+  readonly statusOptions: StatusFilter[] = [
+    'live',
+    'inactive',
+    'error',
+    'not_listed',
+  ];
+
+  filters: FilterState = {
+    search: '',
+    brand: [],
+    marketplace: [],
+    status: [],
+    priceRange: [0, 10000],
+    stockRange: [0, 10000],
+    soldRange: [0, 10000],
+    soldPeriod: 'all',
+    soldDateRange: [null, null],
+    kitProduct: null,
+    hasVariation: null,
+    tags: [],
+  };
+
   pageSize = 25;
   currentPage = 1;
   sortKey: SortKey | null = null;
@@ -301,7 +565,7 @@ export class ProductGridComponent {
   };
 
   filteredProducts(): Product[] {
-    const searchTerm = this.search.trim().toLowerCase();
+    const searchTerm = this.filters.search.trim().toLowerCase();
     let result = this.products;
 
     if (searchTerm) {
@@ -312,14 +576,77 @@ export class ProductGridComponent {
           product.brand,
           product.vendorName,
           product.productId,
+          product.manufacturerPart,
+          product.asin,
+          product.fnsku,
+          product.gtin,
+          product.ean,
+          product.isbn,
         ]
           .filter(Boolean)
           .some((value) => value.toLowerCase().includes(searchTerm))
       );
     }
 
-    if (this.selectedBrand) {
-      result = result.filter((product) => product.brand === this.selectedBrand);
+    if (this.filters.brand.length > 0) {
+      result = result.filter((product) =>
+        this.filters.brand.includes(product.brand)
+      );
+    }
+
+    if (this.filters.marketplace.length > 0) {
+      result = result.filter((product) =>
+        product.marketplaces.some((market) =>
+          this.filters.marketplace.includes(market.platform)
+        )
+      );
+    }
+
+    if (this.filters.status.length > 0) {
+      result = result.filter((product) => {
+        const includesNotListed = this.filters.status.includes('not_listed');
+        const statusFilters = this.filters.status.filter(
+          (status) => status !== 'not_listed'
+        );
+
+        if (includesNotListed && product.marketplaces.length === 0) {
+          return true;
+        }
+
+        if (statusFilters.length === 0) {
+          return false;
+        }
+
+        return product.marketplaces.some((market) =>
+          statusFilters.includes(market.status as StatusFilter)
+        );
+      });
+    }
+
+    result = result.filter((product) =>
+      this.withinRange(product.salePrice, this.filters.priceRange)
+    );
+
+    result = result.filter((product) =>
+      this.withinRange(product.stockQty, this.filters.stockRange)
+    );
+
+    result = result.filter((product) =>
+      this.withinRange(this.soldQty(product), this.filters.soldRange)
+    );
+
+    if (this.filters.kitProduct !== null) {
+      result = result.filter(
+        (product) => product.kitProduct === this.filters.kitProduct
+      );
+    }
+
+    if (this.filters.hasVariation !== null) {
+      result = result.filter((product) =>
+        this.filters.hasVariation
+          ? product.variationId !== null
+          : product.variationId === null
+      );
     }
 
     const sorted = [...result];
@@ -373,9 +700,76 @@ export class ProductGridComponent {
     this.currentPage = 1;
   }
 
+  updateRange(
+    key: 'priceRange' | 'stockRange' | 'soldRange',
+    minValue: number,
+    maxValue: number
+  ): void {
+    const sanitizedMin = Number.isFinite(minValue) ? Math.max(0, minValue) : 0;
+    const sanitizedMax = Number.isFinite(maxValue) ? Math.max(0, maxValue) : 0;
+    const normalized: [number, number] = [
+      Math.min(sanitizedMin, sanitizedMax),
+      Math.max(sanitizedMin, sanitizedMax),
+    ];
+
+    this.filters = { ...this.filters, [key]: normalized };
+    this.onFilterChange();
+  }
+
+  toggleBrand(brand: string): void {
+    const selected = this.filters.brand.includes(brand)
+      ? this.filters.brand.filter((item) => item !== brand)
+      : [...this.filters.brand, brand];
+    this.filters = { ...this.filters, brand: selected };
+    this.onFilterChange();
+  }
+
+  toggleMarketplace(platform: string): void {
+    const selected = this.filters.marketplace.includes(platform)
+      ? this.filters.marketplace.filter((item) => item !== platform)
+      : [...this.filters.marketplace, platform];
+    this.filters = { ...this.filters, marketplace: selected };
+    this.onFilterChange();
+  }
+
+  toggleStatus(status: StatusFilter): void {
+    const selected = this.filters.status.includes(status)
+      ? this.filters.status.filter((item) => item !== status)
+      : [...this.filters.status, status];
+    this.filters = { ...this.filters, status: selected };
+    this.onFilterChange();
+  }
+
+  setKitFilter(value: boolean | null): void {
+    this.filters = { ...this.filters, kitProduct: value };
+    this.onFilterChange();
+  }
+
+  setVariationFilter(value: boolean | null): void {
+    this.filters = { ...this.filters, hasVariation: value };
+    this.onFilterChange();
+  }
+
+  setSoldPeriod(period: SoldPeriod): void {
+    this.filters = { ...this.filters, soldPeriod: period };
+    this.onFilterChange();
+  }
+
   resetFilters(): void {
-    this.search = '';
-    this.selectedBrand = '';
+    this.filters = {
+      search: '',
+      brand: [],
+      marketplace: [],
+      status: [],
+      priceRange: [0, 10000],
+      stockRange: [0, 10000],
+      soldRange: [0, 10000],
+      soldPeriod: 'all',
+      soldDateRange: [null, null],
+      kitProduct: null,
+      hasVariation: null,
+      tags: [],
+    };
     this.pageSize = 25;
     this.currentPage = 1;
     this.sortKey = null;
@@ -390,8 +784,44 @@ export class ProductGridComponent {
     this.currentPage = Math.min(this.totalPages(total), this.currentPage + 1);
   }
 
+  soldQty(product: Product): number {
+    switch (this.filters.soldPeriod) {
+      case 'lastMonth':
+        return product.soldQtyLastMonth;
+      case 'lastQuarter':
+        return product.soldQtyLastQuarter;
+      case 'lastYear':
+        return product.soldQtyLastYear;
+      default:
+        return product.soldQty;
+    }
+  }
+
+  soldPeriodLabel(period: SoldPeriod): string {
+    const match = this.soldPeriods.find((option) => option.value === period);
+    return match ? match.label : 'All time';
+  }
+
+  statusLabel(status: StatusFilter): string {
+    return status === 'not_listed' ? 'Not listed' : status;
+  }
+
+  statusCount(status: StatusFilter): number {
+    if (status === 'not_listed') {
+      return this.products.filter((product) => product.marketplaces.length === 0)
+        .length;
+    }
+    return this.products.filter((product) =>
+      product.marketplaces.some((market) => market.status === status)
+    ).length;
+  }
+
   trackById(_: number, product: Product): string {
     return product.id;
+  }
+
+  private withinRange(value: number, range: [number, number]): boolean {
+    return value >= range[0] && value <= range[1];
   }
 
   private compareProducts(
@@ -419,14 +849,24 @@ export class ProductGridComponent {
         return product.vendorSku;
       case 'brand':
         return product.brand;
+      case 'productId':
+        return product.productId;
+      case 'variationId':
+        return product.variationId ?? '';
+      case 'vendorName':
+        return product.vendorName;
       case 'salePrice':
         return product.salePrice;
       case 'stockQty':
         return product.stockQty;
+      case 'soldQty':
+        return this.soldQty(product);
       case 'restockStatus':
         return this.restockRank[product.restockStatus];
       case 'marketplaces':
         return product.marketplaces.length;
+      case 'productType':
+        return product.productType;
       default:
         return product.name;
     }
