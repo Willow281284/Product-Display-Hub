@@ -11,10 +11,19 @@ import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { brands, marketplacePlatforms, mockProducts } from '@/data/mockProducts';
-import { FilterState, Product, SoldPeriod, ProductType, KitComponent } from '@/types/product';
+import { FilterState, Product, SoldPeriod, ProductType, KitComponent, MarketplaceStatus } from '@/types/product';
 import { Tag, tagColors } from '@/types/tag';
 import { TagService } from '@/app/services/tag.service';
 import * as XLSX from 'xlsx';
+import {
+  Offer,
+  formatOfferDiscount,
+  getOfferDaysRemaining,
+  getOfferStatus,
+  offerStatusConfig,
+  offerTypeLabels,
+} from '@/types/offer';
+import { OfferService } from '@/app/services/offer.service';
 
 type SortKey =
   | 'name'
@@ -178,6 +187,15 @@ const manualInventoryFields: ManualFieldConfig[] = [
 
 const manualTabOptions = ['basic', 'type', 'identifiers', 'pricing', 'inventory'] as const;
 type ManualTab = (typeof manualTabOptions)[number];
+
+interface MarketplaceRow {
+  platform: string;
+  status: MarketplaceStatus['status'];
+  price: number;
+  stock: number;
+  priceSync: boolean;
+  inventorySync: boolean;
+}
 
 interface ColumnConfig {
   id: string;
@@ -1068,6 +1086,399 @@ interface ColumnConfig {
           </div>
         </div>
 
+        <div
+          *ngIf="productDialogOpen && selectedProduct"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        >
+          <div class="w-full max-w-4xl rounded-lg bg-card p-4 shadow-lg">
+            <div class="flex items-center justify-between border-b border-border pb-3">
+              <div>
+                <h3 class="text-lg font-semibold">{{ selectedProduct.name }}</h3>
+                <p class="text-xs text-muted-foreground">
+                  Edit product details and inventory.
+                </p>
+              </div>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                (click)="closeProductDialog()"
+              >
+                Close
+              </button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                [class.bg-muted]="productDialogTab === 'overview'"
+                (click)="productDialogTab = 'overview'"
+              >
+                Overview
+              </button>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                [class.bg-muted]="productDialogTab === 'inventory'"
+                (click)="productDialogTab = 'inventory'"
+              >
+                Inventory
+              </button>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                [class.bg-muted]="productDialogTab === 'marketplaces'"
+                (click)="productDialogTab = 'marketplaces'"
+              >
+                Marketplaces
+              </button>
+            </div>
+
+            <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+              <div *ngIf="productDialogTab === 'overview'" class="grid gap-4 sm:grid-cols-2">
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Product name
+                  <input
+                    type="text"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="productDraft.name"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Brand
+                  <input
+                    type="text"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="productDraft.brand"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Vendor
+                  <input
+                    type="text"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="productDraft.vendorName"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Sale price
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="productDraft.salePrice"
+                  />
+                </label>
+              </div>
+
+              <div *ngIf="productDialogTab === 'inventory'" class="grid gap-4 sm:grid-cols-2">
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Stock qty
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="productDraft.stockQty"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Purchased qty
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="productDraft.purchaseQty"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Sold qty
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="productDraft.soldQty"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Return qty
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="productDraft.returnQty"
+                  />
+                </label>
+              </div>
+
+              <div *ngIf="productDialogTab === 'marketplaces'" class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs text-muted-foreground">
+                    Listing status per marketplace.
+                  </p>
+                  <button
+                    type="button"
+                    class="rounded-full border border-border px-3 py-1 text-xs"
+                    (click)="openMarketplaceDialog(selectedProduct)"
+                  >
+                    Manage marketplaces
+                  </button>
+                </div>
+                <div class="grid gap-2">
+                  <div
+                    *ngFor="let marketplace of selectedProduct.marketplaces"
+                    class="flex items-center justify-between rounded-md border border-border px-3 py-2 text-xs"
+                  >
+                    <span class="capitalize">{{ marketplace.platform }}</span>
+                    <span class="text-muted-foreground">{{ marketplace.status }}</span>
+                  </div>
+                  <p
+                    *ngIf="selectedProduct.marketplaces.length === 0"
+                    class="text-xs text-muted-foreground"
+                  >
+                    No active marketplaces.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+              <button
+                type="button"
+                class="rounded-md border border-border px-3 py-1 text-xs"
+                (click)="closeProductDialog()"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                (click)="saveProductDialog()"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="marketplaceDialogOpen && marketplaceDialogProduct"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        >
+          <div class="w-full max-w-4xl rounded-lg bg-card p-4 shadow-lg">
+            <div class="flex items-center justify-between border-b border-border pb-3">
+              <div>
+                <h3 class="text-lg font-semibold">Marketplace listings</h3>
+                <p class="text-xs text-muted-foreground">
+                  {{ marketplaceDialogProduct.name }}
+                </p>
+              </div>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                (click)="closeMarketplaceDialog()"
+              >
+                Close
+              </button>
+            </div>
+
+            <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+              <div class="grid gap-2">
+                <div
+                  *ngFor="let row of marketplaceRows"
+                  class="grid items-center gap-2 rounded-md border border-border px-3 py-2 text-xs sm:grid-cols-[120px_120px_1fr_1fr_90px_90px]"
+                >
+                  <span class="capitalize font-semibold">{{ row.platform }}</span>
+                  <select
+                    class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [(ngModel)]="row.status"
+                  >
+                    <option value="live">Live</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="error">Error</option>
+                    <option value="not_listed">Not listed</option>
+                  </select>
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [(ngModel)]="row.price"
+                    placeholder="Sale price"
+                  />
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [(ngModel)]="row.stock"
+                    placeholder="Stock"
+                  />
+                  <label class="flex items-center gap-1 text-xs">
+                    <input type="checkbox" [(ngModel)]="row.priceSync" />
+                    Price sync
+                  </label>
+                  <label class="flex items-center gap-1 text-xs">
+                    <input type="checkbox" [(ngModel)]="row.inventorySync" />
+                    Inv sync
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+              <button
+                type="button"
+                class="rounded-md border border-border px-3 py-1 text-xs"
+                (click)="closeMarketplaceDialog()"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                (click)="saveMarketplaceDialog()"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="offerDialogOpen"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        >
+          <div class="w-full max-w-3xl rounded-lg bg-card p-4 shadow-lg">
+            <div class="flex items-center justify-between border-b border-border pb-3">
+              <div>
+                <h3 class="text-lg font-semibold">Offers</h3>
+                <p class="text-xs text-muted-foreground">
+                  Create and manage offers for selected products.
+                </p>
+              </div>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                (click)="closeOfferDialog()"
+              >
+                Close
+              </button>
+            </div>
+
+            <div class="mt-4 space-y-4">
+              <div class="rounded-md border border-border bg-muted/30 p-3">
+                <p class="text-xs font-semibold">Existing offers</p>
+                <div class="mt-2 space-y-2">
+                  <div
+                    *ngFor="let offer of offersForDialog()"
+                    class="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border px-3 py-2 text-xs"
+                  >
+                    <div>
+                      <p class="font-semibold">{{ offer.name }}</p>
+                      <p class="text-[10px] text-muted-foreground">
+                        {{ offerLabel(offer) }} · {{ offerStatusLabel(offer) }}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      class="rounded-full border border-destructive px-3 py-1 text-xs text-destructive"
+                      (click)="deleteOffer(offer.id)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                  <p *ngIf="offersForDialog().length === 0" class="text-xs text-muted-foreground">
+                    No offers yet.
+                  </p>
+                </div>
+              </div>
+
+              <div class="grid gap-3 rounded-md border border-border p-3">
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Offer name
+                  <input
+                    type="text"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="offerDialogName"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Offer type
+                  <select
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="offerDialogType"
+                  >
+                    <option *ngFor="let type of offerTypes" [value]="type">
+                      {{ offerTypeLabels[type] }}
+                    </option>
+                  </select>
+                </label>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Discount %
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="offerDialogDiscountPercent"
+                      [disabled]="offerDialogType === 'fixed_discount' || offerDialogType === 'free_shipping'"
+                    />
+                  </label>
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Discount $
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="offerDialogDiscountAmount"
+                      [disabled]="offerDialogType !== 'fixed_discount'"
+                    />
+                  </label>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Start date
+                    <input
+                      type="date"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="offerDialogStartDate"
+                    />
+                  </label>
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    End date
+                    <input
+                      type="date"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="offerDialogEndDate"
+                    />
+                  </label>
+                </div>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Description
+                  <textarea
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    rows="2"
+                    [(ngModel)]="offerDialogDescription"
+                  ></textarea>
+                </label>
+                <div>
+                  <p class="text-xs text-muted-foreground">Marketplaces</p>
+                  <div class="mt-2 grid grid-cols-2 gap-2">
+                    <label
+                      *ngFor="let platform of marketplaces"
+                      class="flex items-center gap-2 text-xs capitalize"
+                    >
+                      <input
+                        type="checkbox"
+                        class="h-4 w-4"
+                        [checked]="offerDialogMarketplaces.includes(platform)"
+                        (change)="toggleOfferMarketplace(platform)"
+                      />
+                      <span>{{ platform }}</span>
+                    </label>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                  (click)="saveOfferDialog()"
+                >
+                  Save offer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <ng-container *ngIf="filteredProducts() as filtered">
           <ng-container *ngIf="paginatedProducts(filtered) as visible">
             <div *ngIf="selectedCount > 0" class="mx-4 rounded-lg border border-border bg-muted/30 px-4 py-3">
@@ -1268,6 +1679,17 @@ interface ColumnConfig {
                     ></span>
                   </th>
                   <th
+                    *ngIf="isColumnVisible('offers')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    [style.width.px]="columnWidth('offers')"
+                  >
+                    Offers
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'offers')"
+                    ></span>
+                  </th>
+                  <th
                     *ngIf="isColumnVisible('vendorName')"
                     class="sticky top-0 z-10 bg-card relative px-4 py-3"
                     [style.width.px]="columnWidth('vendorName')"
@@ -1420,9 +1842,13 @@ interface ColumnConfig {
                         class="h-12 w-12 rounded-md border border-border object-cover"
                       />
                       <div class="space-y-1">
-                        <p class="font-medium text-foreground">
+                        <button
+                          type="button"
+                          class="text-left font-medium text-foreground hover:underline"
+                          (click)="openProductDialog(product)"
+                        >
                           {{ product.name }}
-                        </p>
+                        </button>
                         <p class="text-xs text-muted-foreground">
                           SKU {{ product.vendorSku }} · ID {{ product.productId }}
                         </p>
@@ -1508,6 +1934,41 @@ interface ColumnConfig {
                     </div>
                   </td>
                   <td
+                    *ngIf="isColumnVisible('offers')"
+                    class="px-4 py-4"
+                    [style.width.px]="columnWidth('offers')"
+                  >
+                    <div class="flex flex-col gap-2">
+                      <ng-container *ngIf="bestOffer(product.id) as offer; else noOffer">
+                        <span
+                          class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                          [ngClass]="offerStatusClass(offer)"
+                        >
+                          {{ offerLabel(offer) }}
+                        </span>
+                        <span class="text-[10px] text-muted-foreground">
+                          {{ offerStatusLabel(offer) }}
+                        </span>
+                        <button
+                          type="button"
+                          class="rounded-full border border-border px-2 py-0.5 text-[10px]"
+                          (click)="openOfferDialog([product.id])"
+                        >
+                          Manage offers
+                        </button>
+                      </ng-container>
+                      <ng-template #noOffer>
+                        <button
+                          type="button"
+                          class="rounded-full border border-border px-2 py-0.5 text-[10px]"
+                          (click)="openOfferDialog([product.id])"
+                        >
+                          Create offer
+                        </button>
+                      </ng-template>
+                    </div>
+                  </td>
+                  <td
                     *ngIf="isColumnVisible('vendorName')"
                     class="px-4 py-4"
                     [style.width.px]="columnWidth('vendorName')"
@@ -1532,16 +1993,22 @@ interface ColumnConfig {
                     class="px-4 py-4"
                     [style.width.px]="columnWidth('marketplaces')"
                   >
-                    <div class="text-sm font-medium">
-                      {{
-                        product.marketplaces.length > 0
-                          ? product.marketplaces.length + ' active'
-                          : 'Not listed'
-                      }}
-                    </div>
-                    <div class="text-xs text-muted-foreground">
-                      {{ marketplaceSummary(product) }}
-                    </div>
+                    <button
+                      type="button"
+                      class="text-left"
+                      (click)="openMarketplaceDialog(product)"
+                    >
+                      <div class="text-sm font-medium">
+                        {{
+                          product.marketplaces.length > 0
+                            ? product.marketplaces.length + ' active'
+                            : 'Not listed'
+                        }}
+                      </div>
+                      <div class="text-xs text-muted-foreground">
+                        {{ marketplaceSummary(product) }}
+                      </div>
+                    </button>
                   </td>
                   <td
                     *ngIf="isColumnVisible('salePrice')"
@@ -1626,6 +2093,7 @@ interface ColumnConfig {
 })
 export class ProductGridComponent implements OnInit {
   private readonly tagService = inject(TagService);
+  private readonly offerService = inject(OfferService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -1640,6 +2108,8 @@ export class ProductGridComponent implements OnInit {
   readonly manualIdentifierFields = manualIdentifierFields;
   readonly manualPricingFields = manualPricingFields;
   readonly manualInventoryFields = manualInventoryFields;
+  readonly offerTypeLabels = offerTypeLabels;
+  readonly offerTypes = this.offerService.getOfferTypeOptions();
 
   csvDialogOpen = false;
   csvMode: 'create' | 'update' = 'create';
@@ -1663,6 +2133,7 @@ export class ProductGridComponent implements OnInit {
     { id: 'name', label: 'Product', visible: true, sortable: true },
     { id: 'productType', label: 'Type', visible: true, sortable: true },
     { id: 'tags', label: 'Tags', visible: true },
+    { id: 'offers', label: 'Offers', visible: true },
     { id: 'vendorName', label: 'Vendor', visible: true, sortable: true },
     { id: 'brand', label: 'Brand', visible: true, sortable: true },
     { id: 'marketplaces', label: 'Marketplaces', visible: true },
@@ -1676,6 +2147,7 @@ export class ProductGridComponent implements OnInit {
     name: 320,
     productType: 140,
     tags: 240,
+    offers: 200,
     vendorName: 200,
     brand: 160,
     marketplaces: 200,
@@ -1692,12 +2164,33 @@ export class ProductGridComponent implements OnInit {
 
   tags: Tag[] = [];
   productTags: Record<string, string[]> = {};
+  offers: Offer[] = [];
 
   tagFormOpen = false;
   editingTag: Tag | null = null;
   tagName = '';
   tagColor = tagColors[0].value;
   tagPickerProductId: string | null = null;
+
+  productDialogOpen = false;
+  productDialogTab: 'overview' | 'inventory' | 'marketplaces' = 'overview';
+  selectedProduct: Product | null = null;
+  productDraft: Partial<Product> = {};
+
+  marketplaceDialogOpen = false;
+  marketplaceDialogProduct: Product | null = null;
+  marketplaceRows: MarketplaceRow[] = [];
+
+  offerDialogOpen = false;
+  offerDialogProductIds: string[] = [];
+  offerDialogName = '';
+  offerDialogType: Offer['type'] = 'percent_discount';
+  offerDialogDiscountPercent = '';
+  offerDialogDiscountAmount = '';
+  offerDialogStartDate = '';
+  offerDialogEndDate = '';
+  offerDialogMarketplaces: string[] = [];
+  offerDialogDescription = '';
 
   bulkSalePrice = '';
   bulkStockQty = '';
@@ -1777,6 +2270,13 @@ export class ProductGridComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((productTags) => {
         this.productTags = productTags;
+        this.cdr.markForCheck();
+      });
+
+    this.offerService.offers$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((offers) => {
+        this.offers = offers;
         this.cdr.markForCheck();
       });
   }
@@ -2368,8 +2868,221 @@ export class ProductGridComponent implements OnInit {
     URL.revokeObjectURL(url);
   }
 
+  openProductDialog(product: Product): void {
+    this.selectedProduct = product;
+    this.productDraft = { ...product };
+    this.productDialogTab = 'overview';
+    this.productDialogOpen = true;
+  }
+
+  closeProductDialog(): void {
+    this.productDialogOpen = false;
+    this.selectedProduct = null;
+    this.productDraft = {};
+  }
+
+  saveProductDialog(): void {
+    if (!this.selectedProduct) return;
+    const updated = { ...this.selectedProduct, ...this.productDraft } as Product;
+    updated.salePrice = this.toNumber(
+      this.productDraft.salePrice as number | string | undefined,
+      this.selectedProduct.salePrice
+    );
+    updated.stockQty = Math.round(
+      this.toNumber(
+        this.productDraft.stockQty as number | string | undefined,
+        this.selectedProduct.stockQty
+      )
+    );
+    updated.purchaseQty = Math.round(
+      this.toNumber(
+        this.productDraft.purchaseQty as number | string | undefined,
+        this.selectedProduct.purchaseQty
+      )
+    );
+    updated.soldQty = Math.round(
+      this.toNumber(
+        this.productDraft.soldQty as number | string | undefined,
+        this.selectedProduct.soldQty
+      )
+    );
+    updated.returnQty = Math.round(
+      this.toNumber(
+        this.productDraft.returnQty as number | string | undefined,
+        this.selectedProduct.returnQty
+      )
+    );
+
+    const recalculated = this.recalculateProduct(updated);
+    this.products = this.products.map((product) =>
+      product.id === recalculated.id ? recalculated : product
+    );
+    this.closeProductDialog();
+    this.cdr.markForCheck();
+  }
+
+  openMarketplaceDialog(product: Product): void {
+    this.marketplaceDialogProduct = product;
+    const existing = new Map(
+      product.marketplaces.map((marketplace) => [marketplace.platform, marketplace])
+    );
+    this.marketplaceRows = this.marketplaces.map((platform) => {
+      const current = existing.get(platform);
+      return {
+        platform,
+        status: current?.status ?? 'not_listed',
+        price: current?.status ? product.salePrice : 0,
+        stock: current?.status ? product.stockQty : 0,
+        priceSync: current?.status === 'live',
+        inventorySync: current?.status === 'live',
+      };
+    });
+    this.marketplaceDialogOpen = true;
+  }
+
+  closeMarketplaceDialog(): void {
+    this.marketplaceDialogOpen = false;
+    this.marketplaceDialogProduct = null;
+    this.marketplaceRows = [];
+  }
+
+  saveMarketplaceDialog(): void {
+    if (!this.marketplaceDialogProduct) return;
+    const marketplaces = this.marketplaceRows
+      .filter((row) => row.status !== 'not_listed')
+      .map((row) => ({
+        platform: row.platform as MarketplaceStatus['platform'],
+        status: row.status,
+      }));
+
+    const updated = {
+      ...this.marketplaceDialogProduct,
+      marketplaces,
+    };
+    this.products = this.products.map((product) =>
+      product.id === updated.id ? updated : product
+    );
+    this.closeMarketplaceDialog();
+    this.cdr.markForCheck();
+  }
+
+  openOfferDialog(productIds: string[]): void {
+    if (productIds.length === 0) {
+      window.alert('Select at least one product to create an offer.');
+      return;
+    }
+    this.offerDialogOpen = true;
+    this.offerDialogProductIds = productIds;
+    this.offerDialogName = '';
+    this.offerDialogType = 'percent_discount';
+    this.offerDialogDiscountPercent = '';
+    this.offerDialogDiscountAmount = '';
+    this.offerDialogDescription = '';
+    this.offerDialogMarketplaces = [];
+    const today = new Date();
+    const end = new Date();
+    end.setDate(today.getDate() + 7);
+    this.offerDialogStartDate = this.toDateInput(today);
+    this.offerDialogEndDate = this.toDateInput(end);
+  }
+
+  closeOfferDialog(): void {
+    this.offerDialogOpen = false;
+    this.offerDialogProductIds = [];
+  }
+
+  offersForDialog(): Offer[] {
+    const ids = new Set(this.offerDialogProductIds);
+    return this.offers.filter((offer) =>
+      offer.productIds.some((id) => ids.has(id))
+    );
+  }
+
+  toggleOfferMarketplace(platform: string): void {
+    if (this.offerDialogMarketplaces.includes(platform)) {
+      this.offerDialogMarketplaces = this.offerDialogMarketplaces.filter(
+        (item) => item !== platform
+      );
+      return;
+    }
+    this.offerDialogMarketplaces = [...this.offerDialogMarketplaces, platform];
+  }
+
+  saveOfferDialog(): void {
+    if (!this.offerDialogName.trim()) {
+      window.alert('Offer name is required.');
+      return;
+    }
+    const startDate = new Date(this.offerDialogStartDate);
+    const endDate = new Date(this.offerDialogEndDate);
+    if (!this.offerDialogStartDate || !this.offerDialogEndDate) {
+      window.alert('Start and end dates are required.');
+      return;
+    }
+    if (endDate < startDate) {
+      window.alert('End date must be after start date.');
+      return;
+    }
+
+    const offer: Omit<Offer, 'id' | 'createdAt' | 'updatedAt'> = {
+      name: this.offerDialogName.trim(),
+      description: this.offerDialogDescription.trim(),
+      type: this.offerDialogType,
+      scope: 'product',
+      discountPercent: this.offerDialogDiscountPercent
+        ? this.toNumber(this.offerDialogDiscountPercent, 0)
+        : undefined,
+      discountAmount: this.offerDialogDiscountAmount
+        ? this.toNumber(this.offerDialogDiscountAmount, 0)
+        : undefined,
+      startDate,
+      endDate,
+      productIds: [...this.offerDialogProductIds],
+      marketplaces: [...this.offerDialogMarketplaces],
+      isActive: true,
+      condition:
+        this.offerDialogType === 'quantity_discount' ||
+        this.offerDialogType === 'bulk_purchase'
+          ? { minQty: 2 }
+          : this.offerDialogType === 'bogo_half' ||
+            this.offerDialogType === 'bogo_free'
+            ? { buyQty: 1, getQty: 1 }
+            : undefined,
+    };
+
+    this.offerService.addOffer(offer);
+    this.closeOfferDialog();
+  }
+
+  deleteOffer(offerId: string): void {
+    this.offerService.deleteOffer(offerId);
+  }
+
+  bestOffer(productId: string): Offer | null {
+    return this.offerService.getBestOfferForProduct(productId);
+  }
+
+  offerLabel(offer: Offer): string {
+    return formatOfferDiscount(offer);
+  }
+
+  offerStatusLabel(offer: Offer): string {
+    const status = getOfferStatus(offer);
+    const config = offerStatusConfig[status];
+    if (status === 'ending_soon') {
+      return `${config.label} (${getOfferDaysRemaining(offer)}d left)`;
+    }
+    return config.label;
+  }
+
+  offerStatusClass(offer: Offer): string {
+    const status = getOfferStatus(offer);
+    const config = offerStatusConfig[status];
+    return `${config.bgColor} ${config.color}`;
+  }
+
   openBulkOffer(): void {
-    window.alert('Bulk offer flow is not wired yet.');
+    this.openOfferDialog(Array.from(this.selectedProductIds));
   }
 
   openBulkListing(): void {
@@ -2818,6 +3531,13 @@ export class ProductGridComponent implements OnInit {
     if (value === undefined || value === null || value === '') return fallback;
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : fallback;
+  }
+
+  private toDateInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private withinRange(value: number, range: [number, number]): boolean {
