@@ -46,222 +46,455 @@ interface ColumnConfig {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="mx-auto w-full max-w-6xl px-4 pb-10 pt-6">
-      <div class="flex flex-col gap-4 rounded-lg border border-border bg-card p-6">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 class="text-2xl font-semibold">Products</h2>
-            <p class="text-sm text-muted-foreground">
-              Browse and manage the catalog from your Lovable data set.
-            </p>
-          </div>
-          <button
-            type="button"
-            class="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted"
-            (click)="resetFilters()"
-          >
-            Reset filters
-          </button>
-        </div>
-
-        <div class="grid gap-4 lg:grid-cols-12">
-          <label class="flex flex-col gap-2 lg:col-span-5">
-            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
-              >Search</span
-            >
-            <input
-              type="search"
-              class="rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-              placeholder="Search by name, SKU, brand, vendor, or product ID"
-              [(ngModel)]="filters.search"
-              (ngModelChange)="onFilterChange()"
-            />
-          </label>
-          <label class="flex flex-col gap-2 lg:col-span-3">
-            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
-              >Product type</span
-            >
-            <select
-              class="rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-              [ngModel]="filters.kitProduct"
-              (ngModelChange)="setKitFilter($event)"
-            >
-              <option [ngValue]="null">All products</option>
-              <option [ngValue]="true">Kit products</option>
-              <option [ngValue]="false">Single products</option>
-            </select>
-          </label>
-          <label class="flex flex-col gap-2 lg:col-span-2">
-            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
-              >Variation</span
-            >
-            <select
-              class="rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-              [ngModel]="filters.hasVariation"
-              (ngModelChange)="setVariationFilter($event)"
-            >
-              <option [ngValue]="null">All</option>
-              <option [ngValue]="true">Has variation</option>
-              <option [ngValue]="false">No variation</option>
-            </select>
-          </label>
-          <label class="flex flex-col gap-2 lg:col-span-2">
-            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
-              >Rows</span
-            >
-            <select
-              class="rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-              [(ngModel)]="pageSize"
-              (ngModelChange)="onPageSizeChange()"
-            >
-              <option [value]="10">10</option>
-              <option [value]="25">25</option>
-              <option [value]="50">50</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="grid gap-4 lg:grid-cols-12">
-          <details class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
-            <summary class="cursor-pointer text-sm font-medium">
-              Brands
-              <span class="text-xs text-muted-foreground">
-                ({{ filters.brand.length || 'all' }})
-              </span>
-            </summary>
-            <div class="mt-3 max-h-52 space-y-2 overflow-y-auto pr-2">
-              <label
-                *ngFor="let brand of brands"
-                class="flex items-center gap-2 text-sm"
+    <section class="w-full px-4 pb-10 pt-6">
+      <div class="flex flex-col gap-4 rounded-lg border border-border bg-card">
+        <div class="flex flex-col gap-3 border-b border-border bg-card px-4 py-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
               >
-                <input
-                  type="checkbox"
-                  class="h-4 w-4"
-                  [checked]="filters.brand.includes(brand)"
-                  (change)="toggleBrand(brand)"
-                />
-                <span>{{ brand }}</span>
-              </label>
-            </div>
-          </details>
-
-          <details class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
-            <summary class="cursor-pointer text-sm font-medium">
-              Marketplaces
-              <span class="text-xs text-muted-foreground">
-                ({{ filters.marketplace.length || 'all' }})
-              </span>
-            </summary>
-            <div class="mt-3 max-h-52 space-y-2 overflow-y-auto pr-2">
-              <label
-                *ngFor="let platform of marketplaces"
-                class="flex items-center gap-2 text-sm capitalize"
-              >
-                <input
-                  type="checkbox"
-                  class="h-4 w-4"
-                  [checked]="filters.marketplace.includes(platform)"
-                  (change)="toggleMarketplace(platform)"
-                />
-                <span>{{ platform }}</span>
-              </label>
-            </div>
-          </details>
-
-          <details class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
-            <summary class="cursor-pointer text-sm font-medium">
-              Status
-              <span class="text-xs text-muted-foreground">
-                ({{ filters.status.length || 'all' }})
-              </span>
-            </summary>
-            <div class="mt-3 space-y-2">
-              <label *ngFor="let status of statusOptions" class="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  class="h-4 w-4"
-                  [checked]="filters.status.includes(status)"
-                  (change)="toggleStatus(status)"
-                />
-                <span class="flex-1 capitalize">{{ statusLabel(status) }}</span>
-                <span class="text-xs text-muted-foreground">
-                  {{ statusCount(status) }}
+                Brand
+                <span class="text-muted-foreground">
+                  ({{ filters.brand.length || 'all' }})
                 </span>
-              </label>
-            </div>
-          </details>
-
-          <details class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
-            <summary class="cursor-pointer text-sm font-medium">
-              Tags
-              <span class="text-xs text-muted-foreground">
-                ({{ filters.tags.length || 'all' }})
-              </span>
-            </summary>
-            <div class="mt-3 space-y-2">
-              <div class="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  class="rounded-md border border-border px-2 py-1 text-xs hover:bg-muted"
-                  (click)="openTagForm()"
-                >
-                  Create tag
-                </button>
-                <p *ngIf="tags.length === 0" class="text-xs text-muted-foreground">
-                  No tags yet. Create one to start organizing products.
-                </p>
-              </div>
-
-              <div class="space-y-2" *ngIf="tags.length > 0">
+              </summary>
+              <div
+                class="absolute z-20 mt-2 max-h-64 w-56 overflow-y-auto rounded-md border border-border bg-background p-3 shadow-lg"
+              >
                 <label
-                  *ngFor="let tag of tags"
-                  class="flex items-center gap-2 text-sm"
+                  *ngFor="let brand of brands"
+                  class="flex items-center gap-2 py-1 text-xs"
                 >
                   <input
                     type="checkbox"
                     class="h-4 w-4"
-                    [checked]="filters.tags.includes(tag.id)"
-                    (change)="toggleTagFilter(tag.id)"
+                    [checked]="filters.brand.includes(brand)"
+                    (change)="toggleBrand(brand)"
                   />
-                  <span
-                    class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
-                    [style.backgroundColor]="tag.color"
-                  >
-                    {{ tag.name }}
-                  </span>
-                  <div class="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
-                    <button type="button" (click)="editTag(tag)">Edit</button>
-                    <button type="button" (click)="deleteTag(tag)">Delete</button>
-                  </div>
+                  <span>{{ brand }}</span>
                 </label>
               </div>
-            </div>
-          </details>
-        </div>
+            </details>
 
-        <div class="flex flex-wrap items-center gap-3">
-          <details class="rounded-md border border-border bg-muted/30 px-3 py-2">
-            <summary class="cursor-pointer text-sm font-medium">Columns</summary>
-            <div class="mt-3 grid gap-2 sm:grid-cols-2">
-              <label
-                *ngFor="let column of columns"
-                class="flex items-center gap-2 text-xs"
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
               >
-                <input
-                  type="checkbox"
-                  class="h-4 w-4"
-                  [checked]="column.visible"
-                  (change)="toggleColumn(column.id)"
-                />
-                <span>{{ column.label }}</span>
-              </label>
+                Marketplace
+                <span class="text-muted-foreground">
+                  ({{ filters.marketplace.length || 'all' }})
+                </span>
+              </summary>
+              <div
+                class="absolute z-20 mt-2 max-h-64 w-56 overflow-y-auto rounded-md border border-border bg-background p-3 shadow-lg"
+              >
+                <label
+                  *ngFor="let platform of marketplaces"
+                  class="flex items-center gap-2 py-1 text-xs capitalize"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4"
+                    [checked]="filters.marketplace.includes(platform)"
+                    (change)="toggleMarketplace(platform)"
+                  />
+                  <span>{{ platform }}</span>
+                </label>
+              </div>
+            </details>
+
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+              >
+                Status
+                <span class="text-muted-foreground">
+                  ({{ filters.status.length || 'all' }})
+                </span>
+              </summary>
+              <div
+                class="absolute z-20 mt-2 w-48 rounded-md border border-border bg-background p-3 shadow-lg"
+              >
+                <label
+                  *ngFor="let status of statusOptions"
+                  class="flex items-center gap-2 py-1 text-xs"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4"
+                    [checked]="filters.status.includes(status)"
+                    (change)="toggleStatus(status)"
+                  />
+                  <span class="flex-1 capitalize">{{ statusLabel(status) }}</span>
+                  <span class="text-[10px] text-muted-foreground">
+                    {{ statusCount(status) }}
+                  </span>
+                </label>
+              </div>
+            </details>
+
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+              >
+                Price
+                <span class="text-muted-foreground">
+                  {{
+                    filters.priceRange[0] > 0 || filters.priceRange[1] < 10000
+                      ? '$' + filters.priceRange[0] + ' - ' + filters.priceRange[1]
+                      : 'all'
+                  }}
+                </span>
+              </summary>
+              <div
+                class="absolute z-20 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-lg"
+              >
+                <div class="grid grid-cols-2 gap-3">
+                  <label class="text-xs text-muted-foreground">
+                    Min
+                    <input
+                      type="number"
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      [ngModel]="filters.priceRange[0]"
+                      (ngModelChange)="updateRange('priceRange', $event, filters.priceRange[1])"
+                    />
+                  </label>
+                  <label class="text-xs text-muted-foreground">
+                    Max
+                    <input
+                      type="number"
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      [ngModel]="filters.priceRange[1]"
+                      (ngModelChange)="updateRange('priceRange', filters.priceRange[0], $event)"
+                    />
+                  </label>
+                </div>
+              </div>
+            </details>
+
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+              >
+                Stock
+                <span class="text-muted-foreground">
+                  {{
+                    filters.stockRange[0] > 0 || filters.stockRange[1] < 10000
+                      ? filters.stockRange[0] + ' - ' + filters.stockRange[1]
+                      : 'all'
+                  }}
+                </span>
+              </summary>
+              <div
+                class="absolute z-20 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-lg"
+              >
+                <div class="grid grid-cols-2 gap-3">
+                  <label class="text-xs text-muted-foreground">
+                    Min
+                    <input
+                      type="number"
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      [ngModel]="filters.stockRange[0]"
+                      (ngModelChange)="updateRange('stockRange', $event, filters.stockRange[1])"
+                    />
+                  </label>
+                  <label class="text-xs text-muted-foreground">
+                    Max
+                    <input
+                      type="number"
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      [ngModel]="filters.stockRange[1]"
+                      (ngModelChange)="updateRange('stockRange', filters.stockRange[0], $event)"
+                    />
+                  </label>
+                </div>
+              </div>
+            </details>
+
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+              >
+                Sold
+                <span class="text-muted-foreground">
+                  {{
+                    filters.soldRange[0] > 0 || filters.soldRange[1] < 10000
+                      ? filters.soldRange[0] + ' - ' + filters.soldRange[1]
+                      : 'all'
+                  }}
+                </span>
+              </summary>
+              <div
+                class="absolute z-20 mt-2 w-72 rounded-md border border-border bg-background p-3 shadow-lg"
+              >
+                <div class="grid grid-cols-2 gap-3">
+                  <label class="text-xs text-muted-foreground">
+                    Min
+                    <input
+                      type="number"
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      [ngModel]="filters.soldRange[0]"
+                      (ngModelChange)="updateRange('soldRange', $event, filters.soldRange[1])"
+                    />
+                  </label>
+                  <label class="text-xs text-muted-foreground">
+                    Max
+                    <input
+                      type="number"
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      [ngModel]="filters.soldRange[1]"
+                      (ngModelChange)="updateRange('soldRange', filters.soldRange[0], $event)"
+                    />
+                  </label>
+                </div>
+                <label class="mt-3 block text-xs text-muted-foreground">
+                  Period
+                  <select
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [ngModel]="filters.soldPeriod"
+                    (ngModelChange)="setSoldPeriod($event)"
+                  >
+                    <option *ngFor="let option of soldPeriods" [value]="option.value">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+            </details>
+
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+              >
+                Type
+                <span class="text-muted-foreground">
+                  {{
+                    filters.kitProduct === null
+                      ? 'all'
+                      : filters.kitProduct
+                        ? 'kit'
+                        : 'single'
+                  }}
+                </span>
+              </summary>
+              <div
+                class="absolute z-20 mt-2 w-48 rounded-md border border-border bg-background p-3 shadow-lg"
+              >
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="kitFilter"
+                    class="h-4 w-4"
+                    [checked]="filters.kitProduct === null"
+                    (change)="setKitFilter(null)"
+                  />
+                  <span>All products</span>
+                </label>
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="kitFilter"
+                    class="h-4 w-4"
+                    [checked]="filters.kitProduct === true"
+                    (change)="setKitFilter(true)"
+                  />
+                  <span>Kit products</span>
+                </label>
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="kitFilter"
+                    class="h-4 w-4"
+                    [checked]="filters.kitProduct === false"
+                    (change)="setKitFilter(false)"
+                  />
+                  <span>Single products</span>
+                </label>
+              </div>
+            </details>
+
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+              >
+                Variation
+                <span class="text-muted-foreground">
+                  {{
+                    filters.hasVariation === null
+                      ? 'all'
+                      : filters.hasVariation
+                        ? 'has'
+                        : 'none'
+                  }}
+                </span>
+              </summary>
+              <div
+                class="absolute z-20 mt-2 w-44 rounded-md border border-border bg-background p-3 shadow-lg"
+              >
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="variationFilter"
+                    class="h-4 w-4"
+                    [checked]="filters.hasVariation === null"
+                    (change)="setVariationFilter(null)"
+                  />
+                  <span>All</span>
+                </label>
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="variationFilter"
+                    class="h-4 w-4"
+                    [checked]="filters.hasVariation === true"
+                    (change)="setVariationFilter(true)"
+                  />
+                  <span>Has variation</span>
+                </label>
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="variationFilter"
+                    class="h-4 w-4"
+                    [checked]="filters.hasVariation === false"
+                    (change)="setVariationFilter(false)"
+                  />
+                  <span>No variation</span>
+                </label>
+              </div>
+            </details>
+
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+              >
+                Tags
+                <span class="text-muted-foreground">
+                  ({{ filters.tags.length || 'all' }})
+                </span>
+              </summary>
+              <div
+                class="absolute z-20 mt-2 w-56 rounded-md border border-border bg-background p-3 shadow-lg"
+              >
+                <div class="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-2 py-1 text-xs hover:bg-muted"
+                    (click)="openTagForm()"
+                  >
+                    Create tag
+                  </button>
+                  <p *ngIf="tags.length === 0" class="text-xs text-muted-foreground">
+                    No tags yet.
+                  </p>
+                </div>
+                <div class="mt-2 space-y-2" *ngIf="tags.length > 0">
+                  <label
+                    *ngFor="let tag of tags"
+                    class="flex items-center gap-2 text-xs"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="filters.tags.includes(tag.id)"
+                      (change)="toggleTagFilter(tag.id)"
+                    />
+                    <span
+                      class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                      [style.backgroundColor]="tag.color"
+                    >
+                      {{ tag.name }}
+                    </span>
+                    <div class="ml-auto flex items-center gap-2 text-[10px] text-muted-foreground">
+                      <button type="button" (click)="editTag(tag)">Edit</button>
+                      <button type="button" (click)="deleteTag(tag)">Delete</button>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </details>
+
+            <div class="ml-auto flex flex-1 items-center gap-2">
+              <input
+                type="search"
+                class="w-full max-w-[420px] rounded-full border border-border bg-background px-4 py-2 text-xs focus:border-primary focus:outline-none"
+                placeholder="Search products..."
+                [(ngModel)]="filters.search"
+                (ngModelChange)="onFilterChange()"
+              />
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-2 text-xs"
+              >
+                Custom Filters
+              </button>
+              <details class="relative">
+                <summary
+                  class="cursor-pointer rounded-full border border-border px-3 py-2 text-xs"
+                >
+                  Columns
+                </summary>
+                <div
+                  class="absolute right-0 z-20 mt-2 w-56 rounded-md border border-border bg-background p-3 shadow-lg"
+                >
+                  <label
+                    *ngFor="let column of columns"
+                    class="flex items-center gap-2 py-1 text-xs"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="column.visible"
+                      (change)="toggleColumn(column.id)"
+                    />
+                    <span>{{ column.label }}</span>
+                  </label>
+                </div>
+              </details>
             </div>
-          </details>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              class="rounded-full border border-border px-3 py-1 text-xs"
+              (click)="updateViaCsv()"
+            >
+              Update via CSV
+            </button>
+            <button
+              type="button"
+              class="rounded-full border border-destructive px-3 py-1 text-xs text-destructive"
+              (click)="resetFilters()"
+            >
+              Clear all
+            </button>
+            <button
+              type="button"
+              class="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+              (click)="createProduct()"
+            >
+              Create Product
+            </button>
+            <label class="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
+              Rows
+              <select
+                class="rounded-full border border-border bg-background px-2 py-1 text-xs"
+                [(ngModel)]="pageSize"
+                (ngModelChange)="onPageSizeChange()"
+              >
+                <option [value]="10">10</option>
+                <option [value]="25">25</option>
+                <option [value]="50">50</option>
+              </select>
+            </label>
+          </div>
         </div>
 
         <div
           *ngIf="tagFormOpen"
-          class="rounded-lg border border-border bg-background p-4"
+          class="mx-4 rounded-lg border border-border bg-background p-4"
         >
           <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -345,100 +578,62 @@ interface ColumnConfig {
           </div>
         </div>
 
-        <div class="grid gap-4 lg:grid-cols-12">
-          <div class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
-            <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Price range
-            </p>
-            <div class="mt-3 grid grid-cols-2 gap-3">
-              <label class="text-xs text-muted-foreground">
-                Min
-                <input
-                  type="number"
-                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [ngModel]="filters.priceRange[0]"
-                  (ngModelChange)="updateRange('priceRange', $event, filters.priceRange[1])"
-                />
-              </label>
-              <label class="text-xs text-muted-foreground">
-                Max
-                <input
-                  type="number"
-                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [ngModel]="filters.priceRange[1]"
-                  (ngModelChange)="updateRange('priceRange', filters.priceRange[0], $event)"
-                />
-              </label>
-            </div>
-          </div>
-
-          <div class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
-            <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Stock range
-            </p>
-            <div class="mt-3 grid grid-cols-2 gap-3">
-              <label class="text-xs text-muted-foreground">
-                Min
-                <input
-                  type="number"
-                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [ngModel]="filters.stockRange[0]"
-                  (ngModelChange)="updateRange('stockRange', $event, filters.stockRange[1])"
-                />
-              </label>
-              <label class="text-xs text-muted-foreground">
-                Max
-                <input
-                  type="number"
-                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [ngModel]="filters.stockRange[1]"
-                  (ngModelChange)="updateRange('stockRange', filters.stockRange[0], $event)"
-                />
-              </label>
-            </div>
-          </div>
-
-          <div class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
-            <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Sold range
-            </p>
-            <div class="mt-3 grid grid-cols-2 gap-3">
-              <label class="text-xs text-muted-foreground">
-                Min
-                <input
-                  type="number"
-                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [ngModel]="filters.soldRange[0]"
-                  (ngModelChange)="updateRange('soldRange', $event, filters.soldRange[1])"
-                />
-              </label>
-              <label class="text-xs text-muted-foreground">
-                Max
-                <input
-                  type="number"
-                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [ngModel]="filters.soldRange[1]"
-                  (ngModelChange)="updateRange('soldRange', filters.soldRange[0], $event)"
-                />
-              </label>
-            </div>
-            <label class="mt-3 block text-xs text-muted-foreground">
-              Period
-              <select
-                class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
-                [ngModel]="filters.soldPeriod"
-                (ngModelChange)="setSoldPeriod($event)"
-              >
-                <option *ngFor="let option of soldPeriods" [value]="option.value">
-                  {{ option.label }}
-                </option>
-              </select>
-            </label>
-          </div>
-        </div>
-
         <ng-container *ngIf="filteredProducts() as filtered">
-          <div class="flex flex-wrap items-center justify-between gap-2 text-sm">
+          <ng-container *ngIf="paginatedProducts(filtered) as visible">
+            <div *ngIf="selectedCount > 0" class="mx-4 rounded-lg border border-border bg-muted/30 px-4 py-3">
+              <div class="flex flex-wrap items-center gap-3 text-sm">
+                <span class="font-semibold">
+                  {{ selectedCount }} selected
+                </span>
+                <button
+                  type="button"
+                  class="rounded-full border border-border px-3 py-1 text-xs"
+                  (click)="selectAllFiltered(filtered)"
+                >
+                  Select all filtered ({{ filtered.length }})
+                </button>
+                <button
+                  type="button"
+                  class="rounded-full border border-border px-3 py-1 text-xs"
+                  (click)="clearSelection()"
+                >
+                  Clear selection
+                </button>
+                <label class="flex items-center gap-2 text-xs text-muted-foreground">
+                  Add tag
+                  <select
+                    class="rounded-full border border-border bg-background px-2 py-1 text-xs"
+                    (change)="bulkAddTag($any($event.target).value)"
+                  >
+                    <option value="">Choose</option>
+                    <option *ngFor="let tag of tags" [value]="tag.id">
+                      {{ tag.name }}
+                    </option>
+                  </select>
+                </label>
+                <label class="flex items-center gap-2 text-xs text-muted-foreground">
+                  Remove tag
+                  <select
+                    class="rounded-full border border-border bg-background px-2 py-1 text-xs"
+                    (change)="bulkRemoveTag($any($event.target).value)"
+                  >
+                    <option value="">Choose</option>
+                    <option *ngFor="let tag of tags" [value]="tag.id">
+                      {{ tag.name }}
+                    </option>
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  class="rounded-full border border-destructive px-3 py-1 text-xs text-destructive"
+                  (click)="bulkDelete()"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 px-4 text-sm">
             <p class="text-muted-foreground">
               Showing {{ pageStart(filtered.length) }}-{{ pageEnd(filtered.length) }}
               of {{ filtered.length }} products
@@ -448,10 +643,20 @@ interface ColumnConfig {
             </p>
           </div>
 
-          <div class="overflow-x-auto rounded-lg border border-border">
+          <div class="mx-4 overflow-x-auto rounded-lg border border-border">
             <table class="w-full min-w-[1250px] text-sm">
               <thead class="bg-muted/40 text-left text-xs uppercase tracking-wide">
                 <tr>
+                  <th
+                    class="sticky top-0 z-10 bg-card px-4 py-3 text-left"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="allVisibleSelected(visible)"
+                      (change)="toggleSelectVisible(visible)"
+                    />
+                  </th>
                   <th
                     *ngIf="isColumnVisible('name')"
                     class="sticky top-0 z-10 bg-card relative px-4 py-3"
@@ -629,9 +834,17 @@ interface ColumnConfig {
               </thead>
               <tbody>
                 <tr
-                  *ngFor="let product of paginatedProducts(filtered); trackBy: trackById"
+                  *ngFor="let product of visible; trackBy: trackById"
                   class="border-t border-border"
                 >
+                  <td class="px-4 py-4">
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="isSelected(product.id)"
+                      (change)="toggleSelectProduct(product.id)"
+                    />
+                  </td>
                   <td
                     *ngIf="isColumnVisible('name')"
                     class="px-4 py-4"
@@ -817,7 +1030,7 @@ interface ColumnConfig {
           </div>
 
           <div
-            class="flex flex-col items-center justify-between gap-3 text-sm sm:flex-row"
+            class="flex flex-col items-center justify-between gap-3 px-4 pb-6 text-sm sm:flex-row"
           >
             <div class="text-muted-foreground">
               Page {{ currentPage }} of {{ totalPages(filtered.length) }}
@@ -842,6 +1055,7 @@ interface ColumnConfig {
             </div>
           </div>
         </ng-container>
+      </ng-container>
       </div>
     </section>
   `,
@@ -930,6 +1144,7 @@ export class ProductGridComponent implements OnInit {
   currentPage = 1;
   sortKey: SortKey | null = null;
   sortDirection: SortDirection | null = null;
+  selectedProductIds = new Set<string>();
 
   readonly restockLabels: Record<Product['restockStatus'], string> = {
     in_stock: 'In stock',
@@ -1190,6 +1405,68 @@ export class ProductGridComponent implements OnInit {
     this.currentPage = 1;
     this.sortKey = null;
     this.sortDirection = null;
+  }
+
+  updateViaCsv(): void {
+    window.alert('CSV import is not wired yet.');
+  }
+
+  createProduct(): void {
+    window.alert('Create product flow is not wired yet.');
+  }
+
+  get selectedCount(): number {
+    return this.selectedProductIds.size;
+  }
+
+  isSelected(productId: string): boolean {
+    return this.selectedProductIds.has(productId);
+  }
+
+  toggleSelectProduct(productId: string): void {
+    const next = new Set(this.selectedProductIds);
+    if (next.has(productId)) {
+      next.delete(productId);
+    } else {
+      next.add(productId);
+    }
+    this.selectedProductIds = next;
+  }
+
+  allVisibleSelected(visible: Product[]): boolean {
+    return visible.length > 0 && visible.every((item) => this.selectedProductIds.has(item.id));
+  }
+
+  toggleSelectVisible(visible: Product[]): void {
+    const next = new Set(this.selectedProductIds);
+    if (this.allVisibleSelected(visible)) {
+      visible.forEach((product) => next.delete(product.id));
+    } else {
+      visible.forEach((product) => next.add(product.id));
+    }
+    this.selectedProductIds = next;
+  }
+
+  selectAllFiltered(filtered: Product[]): void {
+    this.selectedProductIds = new Set(filtered.map((product) => product.id));
+  }
+
+  clearSelection(): void {
+    this.selectedProductIds = new Set();
+  }
+
+  bulkAddTag(tagId: string): void {
+    if (!tagId) return;
+    this.tagService.bulkAddTag(Array.from(this.selectedProductIds), tagId);
+  }
+
+  bulkRemoveTag(tagId: string): void {
+    if (!tagId) return;
+    this.tagService.bulkRemoveTag(Array.from(this.selectedProductIds), tagId);
+  }
+
+  bulkDelete(): void {
+    window.alert('Bulk delete is not wired yet.');
   }
 
   isColumnVisible(columnId: string): boolean {
