@@ -2096,6 +2096,10 @@ export class ProductGridComponent implements OnInit {
   private readonly offerService = inject(OfferService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly filtersStorageKey = 'product-filters';
+  private readonly columnsStorageKey = 'product-columns';
+  private readonly columnWidthsStorageKey = 'product-column-widths';
+  private readonly pageSizeStorageKey = 'product-page-size';
 
   products: Product[] = [...mockProducts];
   readonly brands = brands;
@@ -2129,7 +2133,7 @@ export class ProductGridComponent implements OnInit {
   kitProductId = '';
   kitQuantity = 1;
 
-  readonly columns: ColumnConfig[] = [
+  columns: ColumnConfig[] = [
     { id: 'name', label: 'Product', visible: true, sortable: true },
     { id: 'productType', label: 'Type', visible: true, sortable: true },
     { id: 'tags', label: 'Tags', visible: true },
@@ -2254,6 +2258,8 @@ export class ProductGridComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.restorePreferences();
+
     this.tagService.tags$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((tags) => {
@@ -2418,10 +2424,12 @@ export class ProductGridComponent implements OnInit {
 
   onFilterChange(): void {
     this.currentPage = 1;
+    this.saveFilters();
   }
 
   onPageSizeChange(): void {
     this.currentPage = 1;
+    this.savePageSize();
   }
 
   updateRange(
@@ -2498,6 +2506,8 @@ export class ProductGridComponent implements OnInit {
     this.currentPage = 1;
     this.sortKey = null;
     this.sortDirection = null;
+    this.saveFilters();
+    this.savePageSize();
   }
 
   manualTabLabel(tab: ManualTab): string {
@@ -3094,9 +3104,11 @@ export class ProductGridComponent implements OnInit {
   }
 
   toggleColumn(columnId: string): void {
-    const column = this.columns.find((item) => item.id === columnId);
-    if (!column) return;
-    column.visible = !column.visible;
+    this.columns = this.columns.map((column) =>
+      column.id === columnId ? { ...column, visible: !column.visible } : column
+    );
+    this.saveColumns();
+    this.cdr.markForCheck();
   }
 
   columnWidth(columnId: string): number {
@@ -3125,6 +3137,7 @@ export class ProductGridComponent implements OnInit {
       this.resizingColumnId = null;
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      this.saveColumnWidths();
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -3542,6 +3555,138 @@ export class ProductGridComponent implements OnInit {
 
   private withinRange(value: number, range: [number, number]): boolean {
     return value >= range[0] && value <= range[1];
+  }
+
+  private restorePreferences(): void {
+    const savedFilters = this.loadFilters();
+    if (savedFilters) {
+      this.filters = savedFilters;
+    }
+
+    const savedPageSize = this.loadPageSize();
+    if (savedPageSize) {
+      this.pageSize = savedPageSize;
+    }
+
+    const savedColumns = this.loadColumns();
+    if (savedColumns) {
+      this.columns = this.columns.map((column) => {
+        const saved = savedColumns[column.id];
+        return saved !== undefined ? { ...column, visible: saved } : column;
+      });
+    }
+
+    const savedWidths = this.loadColumnWidths();
+    if (savedWidths) {
+      this.columnWidths = {
+        ...this.columnWidths,
+        ...savedWidths,
+      };
+    }
+  }
+
+  private saveFilters(): void {
+    try {
+      const payload = {
+        ...this.filters,
+        soldDateRange: this.filters.soldDateRange.map((date) =>
+          date ? date.toISOString() : null
+        ),
+      };
+      localStorage.setItem(this.filtersStorageKey, JSON.stringify(payload));
+    } catch (error) {
+      console.warn('Failed to save filters', error);
+    }
+  }
+
+  private loadFilters(): FilterState | null {
+    try {
+      const stored = localStorage.getItem(this.filtersStorageKey);
+      if (!stored) return null;
+      const parsed = JSON.parse(stored) as FilterState & {
+        soldDateRange?: Array<string | null>;
+      };
+      const soldDateRange =
+        parsed.soldDateRange?.map((value) =>
+          value ? new Date(value) : null
+        ) ?? [null, null];
+      return {
+        ...parsed,
+        soldDateRange: soldDateRange as [Date | null, Date | null],
+      };
+    } catch (error) {
+      console.warn('Failed to load filters', error);
+      return null;
+    }
+  }
+
+  private saveColumns(): void {
+    try {
+      const payload = this.columns.reduce<Record<string, boolean>>(
+        (acc, column) => {
+          acc[column.id] = column.visible;
+          return acc;
+        },
+        {}
+      );
+      localStorage.setItem(this.columnsStorageKey, JSON.stringify(payload));
+    } catch (error) {
+      console.warn('Failed to save columns', error);
+    }
+  }
+
+  private loadColumns(): Record<string, boolean> | null {
+    try {
+      const stored = localStorage.getItem(this.columnsStorageKey);
+      return stored ? (JSON.parse(stored) as Record<string, boolean>) : null;
+    } catch (error) {
+      console.warn('Failed to load columns', error);
+      return null;
+    }
+  }
+
+  private saveColumnWidths(): void {
+    try {
+      localStorage.setItem(
+        this.columnWidthsStorageKey,
+        JSON.stringify(this.columnWidths)
+      );
+    } catch (error) {
+      console.warn('Failed to save column widths', error);
+    }
+  }
+
+  private loadColumnWidths(): Record<string, number> | null {
+    try {
+      const stored = localStorage.getItem(this.columnWidthsStorageKey);
+      return stored ? (JSON.parse(stored) as Record<string, number>) : null;
+    } catch (error) {
+      console.warn('Failed to load column widths', error);
+      return null;
+    }
+  }
+
+  private savePageSize(): void {
+    try {
+      localStorage.setItem(
+        this.pageSizeStorageKey,
+        JSON.stringify(this.pageSize)
+      );
+    } catch (error) {
+      console.warn('Failed to save page size', error);
+    }
+  }
+
+  private loadPageSize(): number | null {
+    try {
+      const stored = localStorage.getItem(this.pageSizeStorageKey);
+      if (!stored) return null;
+      const value = JSON.parse(stored) as number;
+      return Number.isFinite(value) ? value : null;
+    } catch (error) {
+      console.warn('Failed to load page size', error);
+      return null;
+    }
   }
 
   private compareProducts(
