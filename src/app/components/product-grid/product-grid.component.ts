@@ -1,9 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { brands, marketplacePlatforms, mockProducts } from '@/data/mockProducts';
 import { FilterState, Product, SoldPeriod } from '@/types/product';
+import { Tag, tagColors } from '@/types/tag';
+import { TagService } from '@/app/services/tag.service';
 
 type SortKey =
   | 'name'
@@ -172,6 +182,139 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
               </label>
             </div>
           </details>
+
+          <details class="rounded-md border border-border bg-muted/30 p-3 lg:col-span-4">
+            <summary class="cursor-pointer text-sm font-medium">
+              Tags
+              <span class="text-xs text-muted-foreground">
+                ({{ filters.tags.length || 'all' }})
+              </span>
+            </summary>
+            <div class="mt-3 space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  class="rounded-md border border-border px-2 py-1 text-xs hover:bg-muted"
+                  (click)="openTagForm()"
+                >
+                  Create tag
+                </button>
+                <p *ngIf="tags.length === 0" class="text-xs text-muted-foreground">
+                  No tags yet. Create one to start organizing products.
+                </p>
+              </div>
+
+              <div class="space-y-2" *ngIf="tags.length > 0">
+                <label
+                  *ngFor="let tag of tags"
+                  class="flex items-center gap-2 text-sm"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-4 w-4"
+                    [checked]="filters.tags.includes(tag.id)"
+                    (change)="toggleTagFilter(tag.id)"
+                  />
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                    [style.backgroundColor]="tag.color"
+                  >
+                    {{ tag.name }}
+                  </span>
+                  <div class="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
+                    <button type="button" (click)="editTag(tag)">Edit</button>
+                    <button type="button" (click)="deleteTag(tag)">Delete</button>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div
+          *ngIf="tagFormOpen"
+          class="rounded-lg border border-border bg-background p-4"
+        >
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 class="text-sm font-semibold">
+                {{ editingTag ? 'Edit tag' : 'Create tag' }}
+              </h3>
+              <p class="text-xs text-muted-foreground">
+                Tags help group products for quick filtering.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted"
+              (click)="cancelTagForm()"
+            >
+              Close
+            </button>
+          </div>
+
+          <div class="mt-4 grid gap-4 lg:grid-cols-3">
+            <label class="flex flex-col gap-2 text-xs text-muted-foreground">
+              Tag name
+              <input
+                type="text"
+                class="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+                [(ngModel)]="tagName"
+                placeholder="Enter tag name"
+                maxlength="30"
+              />
+            </label>
+
+            <div class="lg:col-span-2">
+              <p class="text-xs text-muted-foreground">Pick a color</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <button
+                  *ngFor="let color of tagColors"
+                  type="button"
+                  class="h-7 w-7 rounded-full border border-border"
+                  [style.backgroundColor]="color.value"
+                  [class.ring-2]="tagColor === color.value"
+                  [class.ring-offset-2]="tagColor === color.value"
+                  (click)="setTagColor(color.value)"
+                  [attr.aria-label]="color.name"
+                ></button>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="color"
+                    class="h-7 w-7 cursor-pointer rounded-md border border-border"
+                    [value]="tagColor"
+                    (input)="setTagColor($any($event.target).value)"
+                  />
+                  <input
+                    type="text"
+                    class="w-24 rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                    [value]="tagColor"
+                    (input)="setTagColor($any($event.target).value)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center gap-3">
+            <button
+              type="button"
+              class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+              [disabled]="!tagName.trim() || !tagColor"
+              (click)="saveTag()"
+            >
+              {{ editingTag ? 'Save changes' : 'Create tag' }}
+            </button>
+            <span class="text-xs text-muted-foreground">
+              Preview:
+              <span
+                class="ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                [style.backgroundColor]="tagColor || '#64748b'"
+              >
+                {{ tagName || 'Tag name' }}
+              </span>
+            </span>
+          </div>
         </div>
 
         <div class="grid gap-4 lg:grid-cols-12">
@@ -278,7 +421,7 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
           </div>
 
           <div class="overflow-x-auto rounded-lg border border-border">
-            <table class="w-full min-w-[1100px] text-sm">
+            <table class="w-full min-w-[1250px] text-sm">
               <thead class="bg-muted/40 text-left text-xs uppercase tracking-wide">
                 <tr>
                   <th class="px-4 py-3">
@@ -300,6 +443,9 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Type
                       <span class="text-[10px]">{{ sortIcon('productType') }}</span>
                     </button>
+                  </th>
+                  <th class="px-4 py-3">
+                    Tags
                   </th>
                   <th class="px-4 py-3">
                     <button
@@ -410,6 +556,62 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                     </div>
                   </td>
                   <td class="px-4 py-4">
+                    <div class="flex flex-wrap items-center gap-1">
+                      <span
+                        *ngFor="let tag of getProductTags(product.id)"
+                        class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                        [style.backgroundColor]="tag.color"
+                      >
+                        {{ tag.name }}
+                        <button
+                          type="button"
+                          class="rounded-full px-1 text-[10px] hover:bg-white/20"
+                          (click)="removeTagFromProduct(product.id, tag.id)"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                      <button
+                        *ngIf="tags.length > 0"
+                        type="button"
+                        class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+                        (click)="toggleTagPicker(product.id)"
+                      >
+                        {{ tagPickerProductId === product.id ? 'Close' : 'Add tag' }}
+                      </button>
+                      <button
+                        *ngIf="tags.length === 0"
+                        type="button"
+                        class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+                        (click)="openTagForm()"
+                      >
+                        Create tag
+                      </button>
+                    </div>
+                    <div
+                      *ngIf="tagPickerProductId === product.id"
+                      class="mt-2 flex flex-col gap-2 rounded-md border border-border bg-background p-2"
+                    >
+                      <label
+                        *ngFor="let tag of tags"
+                        class="flex items-center gap-2 text-xs"
+                      >
+                        <input
+                          type="checkbox"
+                          class="h-4 w-4"
+                          [checked]="hasTag(product.id, tag.id)"
+                          (change)="toggleProductTag(product.id, tag.id)"
+                        />
+                        <span
+                          class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                          [style.backgroundColor]="tag.color"
+                        >
+                          {{ tag.name }}
+                        </span>
+                      </label>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
                     <div class="text-sm font-medium">{{ product.vendorName }}</div>
                     <div class="text-xs text-muted-foreground">
                       {{ product.manufacturerPart }}
@@ -430,14 +632,7 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       }}
                     </div>
                     <div class="text-xs text-muted-foreground">
-                      {{
-                        product.marketplaces.length > 0
-                          ? product.marketplaces
-                              .slice(0, 2)
-                              .map((market) => market.platform)
-                              .join(', ')
-                          : 'No marketplace data'
-                      }}
+                      {{ marketplaceSummary(product) }}
                     </div>
                   </td>
                   <td class="px-4 py-4 text-right">
@@ -504,10 +699,24 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductGridComponent {
+export class ProductGridComponent implements OnInit {
+  private readonly tagService = inject(TagService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+
   readonly products = mockProducts;
   readonly brands = brands;
   readonly marketplaces = marketplacePlatforms;
+  readonly tagColors = tagColors;
+
+  tags: Tag[] = [];
+  productTags: Record<string, string[]> = {};
+
+  tagFormOpen = false;
+  editingTag: Tag | null = null;
+  tagName = '';
+  tagColor = tagColors[0].value;
+  tagPickerProductId: string | null = null;
 
   readonly soldPeriods: Array<{ value: SoldPeriod; label: string }> = [
     { value: 'all', label: 'All time' },
@@ -563,6 +772,27 @@ export class ProductGridComponent {
     low_stock: 2,
     in_stock: 3,
   };
+
+  ngOnInit(): void {
+    this.tagService.tags$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((tags) => {
+        this.tags = tags;
+        const validIds = new Set(tags.map((tag) => tag.id));
+        const filtered = this.filters.tags.filter((id) => validIds.has(id));
+        if (filtered.length !== this.filters.tags.length) {
+          this.filters = { ...this.filters, tags: filtered };
+        }
+        this.cdr.markForCheck();
+      });
+
+    this.tagService.productTags$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((productTags) => {
+        this.productTags = productTags;
+        this.cdr.markForCheck();
+      });
+  }
 
   filteredProducts(): Product[] {
     const searchTerm = this.filters.search.trim().toLowerCase();
@@ -647,6 +877,13 @@ export class ProductGridComponent {
           ? product.variationId !== null
           : product.variationId === null
       );
+    }
+
+    if (this.filters.tags.length > 0) {
+      result = result.filter((product) => {
+        const assigned = this.productTags[product.id] || [];
+        return this.filters.tags.some((tagId) => assigned.includes(tagId));
+      });
     }
 
     const sorted = [...result];
@@ -802,6 +1039,16 @@ export class ProductGridComponent {
     return match ? match.label : 'All time';
   }
 
+  marketplaceSummary(product: Product): string {
+    if (product.marketplaces.length === 0) {
+      return 'No marketplace data';
+    }
+    return product.marketplaces
+      .slice(0, 2)
+      .map((market) => market.platform)
+      .join(', ');
+  }
+
   statusLabel(status: StatusFilter): string {
     return status === 'not_listed' ? 'Not listed' : status;
   }
@@ -818,6 +1065,83 @@ export class ProductGridComponent {
 
   trackById(_: number, product: Product): string {
     return product.id;
+  }
+
+  toggleTagFilter(tagId: string): void {
+    const selected = this.filters.tags.includes(tagId)
+      ? this.filters.tags.filter((id) => id !== tagId)
+      : [...this.filters.tags, tagId];
+    this.filters = { ...this.filters, tags: selected };
+    this.onFilterChange();
+  }
+
+  getProductTags(productId: string): Tag[] {
+    const ids = this.productTags[productId] || [];
+    return this.tags.filter((tag) => ids.includes(tag.id));
+  }
+
+  hasTag(productId: string, tagId: string): boolean {
+    return (this.productTags[productId] || []).includes(tagId);
+  }
+
+  toggleProductTag(productId: string, tagId: string): void {
+    this.tagService.toggleProductTag(productId, tagId);
+  }
+
+  removeTagFromProduct(productId: string, tagId: string): void {
+    if (this.hasTag(productId, tagId)) {
+      this.tagService.toggleProductTag(productId, tagId);
+    }
+  }
+
+  toggleTagPicker(productId: string): void {
+    this.tagPickerProductId =
+      this.tagPickerProductId === productId ? null : productId;
+  }
+
+  openTagForm(): void {
+    this.tagFormOpen = true;
+    this.editingTag = null;
+    this.tagName = '';
+    this.tagColor = tagColors[0].value;
+  }
+
+  editTag(tag: Tag): void {
+    this.tagFormOpen = true;
+    this.editingTag = tag;
+    this.tagName = tag.name;
+    this.tagColor = tag.color;
+  }
+
+  cancelTagForm(): void {
+    this.tagFormOpen = false;
+    this.editingTag = null;
+    this.tagName = '';
+    this.tagColor = tagColors[0].value;
+  }
+
+  setTagColor(color: string): void {
+    this.tagColor = color;
+  }
+
+  saveTag(): void {
+    const trimmedName = this.tagName.trim();
+    if (!trimmedName || !this.tagColor) return;
+
+    const tag: Tag = {
+      id: this.editingTag?.id ?? `tag-${Date.now()}`,
+      name: trimmedName,
+      color: this.tagColor,
+    };
+    this.tagService.addTag(tag);
+    this.tagFormOpen = false;
+    this.editingTag = null;
+  }
+
+  deleteTag(tag: Tag): void {
+    if (window.confirm(`Delete tag "${tag.name}"?`)) {
+      this.tagService.deleteTag(tag.id);
+    }
   }
 
   private withinRange(value: number, range: [number, number]): boolean {
