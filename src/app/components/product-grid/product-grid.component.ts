@@ -11,9 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { brands, marketplacePlatforms, mockProducts } from '@/data/mockProducts';
-import { FilterState, Product, SoldPeriod } from '@/types/product';
+import { FilterState, Product, SoldPeriod, ProductType, KitComponent } from '@/types/product';
 import { Tag, tagColors } from '@/types/tag';
 import { TagService } from '@/app/services/tag.service';
+import * as XLSX from 'xlsx';
 
 type SortKey =
   | 'name'
@@ -32,6 +33,127 @@ type SortKey =
 type SortDirection = 'asc' | 'desc';
 
 type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
+
+interface CsvFieldConfig {
+  id: string;
+  label: string;
+  required?: boolean;
+}
+
+interface ManualFieldConfig {
+  id: string;
+  label: string;
+  placeholder: string;
+  required?: boolean;
+  type?: string;
+}
+
+const csvFields: CsvFieldConfig[] = [
+  { id: 'name', label: 'Product Name', required: true },
+  { id: 'vendorSku', label: 'SKU', required: true },
+  { id: 'brand', label: 'Brand' },
+  { id: 'productId', label: 'Product ID' },
+  { id: 'vendorName', label: 'Vendor' },
+  { id: 'manufacturerPart', label: 'MPN' },
+  { id: 'asin', label: 'ASIN' },
+  { id: 'fnsku', label: 'FNSKU' },
+  { id: 'gtin', label: 'GTIN' },
+  { id: 'ean', label: 'EAN' },
+  { id: 'isbn', label: 'ISBN' },
+  { id: 'landedCost', label: 'Landed Cost' },
+  { id: 'shippingCost', label: 'Shipping Cost' },
+  { id: 'salePrice', label: 'Sale Price' },
+  { id: 'purchaseQty', label: 'Purchased Qty' },
+  { id: 'soldQty', label: 'Sold Qty' },
+  { id: 'stockQty', label: 'Stock Qty' },
+  { id: 'returnQty', label: 'Return Qty' },
+];
+
+const csvIdentifierOptions: CsvFieldConfig[] = [
+  { id: 'vendorSku', label: 'SKU' },
+  { id: 'productId', label: 'Product ID' },
+  { id: 'gtin', label: 'UPC/GTIN' },
+  { id: 'asin', label: 'ASIN' },
+  { id: 'fnsku', label: 'FNSKU' },
+  { id: 'ean', label: 'EAN' },
+  { id: 'isbn', label: 'ISBN' },
+  { id: 'manufacturerPart', label: 'MPN' },
+];
+
+const csvSampleProducts: Record<string, string>[] = [
+  {
+    name: 'Wireless Bluetooth Headphones',
+    vendorSku: 'WBH-001',
+    brand: 'TechSound',
+    productId: 'PROD-001',
+    vendorName: 'Tech Distributors Inc',
+    manufacturerPart: 'TS-WBH-2024',
+    asin: 'B0EXAMPLE01',
+    fnsku: 'X0EXAMPLE01',
+    gtin: '0123456789012',
+    ean: '1234567890123',
+    isbn: '',
+    landedCost: '45.99',
+    shippingCost: '5.99',
+    salePrice: '89.99',
+    purchaseQty: '500',
+    soldQty: '125',
+    stockQty: '375',
+    returnQty: '8',
+  },
+  {
+    name: 'USB-C Fast Charging Cable 6ft',
+    vendorSku: 'USB-C-6FT',
+    brand: 'PowerLink',
+    productId: 'PROD-002',
+    vendorName: 'Cable World LLC',
+    manufacturerPart: 'PL-USBC-6',
+    asin: 'B0EXAMPLE02',
+    fnsku: 'X0EXAMPLE02',
+    gtin: '0123456789013',
+    ean: '1234567890124',
+    isbn: '',
+    landedCost: '3.50',
+    shippingCost: '1.00',
+    salePrice: '12.99',
+    purchaseQty: '1000',
+    soldQty: '450',
+    stockQty: '550',
+    returnQty: '12',
+  },
+];
+
+const manualBasicFields: ManualFieldConfig[] = [
+  { id: 'name', label: 'Product Name', required: true, placeholder: 'Enter product name' },
+  { id: 'vendorSku', label: 'SKU', required: true, placeholder: 'Enter SKU' },
+  { id: 'brand', label: 'Brand', placeholder: 'Enter brand' },
+  { id: 'vendorName', label: 'Vendor', placeholder: 'Enter vendor name' },
+];
+
+const manualIdentifierFields: ManualFieldConfig[] = [
+  { id: 'asin', label: 'ASIN', placeholder: 'Amazon Standard Identification Number' },
+  { id: 'fnsku', label: 'FNSKU', placeholder: 'Fulfillment Network SKU' },
+  { id: 'gtin', label: 'GTIN', placeholder: 'Global Trade Item Number' },
+  { id: 'ean', label: 'EAN', placeholder: 'European Article Number' },
+  { id: 'isbn', label: 'ISBN', placeholder: 'International Standard Book Number' },
+  { id: 'manufacturerPart', label: 'MPN', placeholder: 'Manufacturer Part Number' },
+];
+
+const manualPricingFields: ManualFieldConfig[] = [
+  { id: 'landedCost', label: 'Landed Cost', placeholder: '0.00', type: 'number' },
+  { id: 'shippingCost', label: 'Shipping Cost', placeholder: '0.00', type: 'number' },
+  { id: 'salePrice', label: 'Sale Price', placeholder: '0.00', type: 'number' },
+];
+
+const manualInventoryFields: ManualFieldConfig[] = [
+  { id: 'purchaseQty', label: 'Purchase Qty', placeholder: '0', type: 'number' },
+  { id: 'stockQty', label: 'Stock Qty', placeholder: '0', type: 'number' },
+  { id: 'soldQty', label: 'Sold Qty', placeholder: '0', type: 'number' },
+  { id: 'returnQty', label: 'Return Qty', placeholder: '0', type: 'number' },
+];
+
+const manualTabOptions = ['basic', 'type', 'identifiers', 'pricing', 'inventory'] as const;
+type ManualTab = (typeof manualTabOptions)[number];
 
 interface ColumnConfig {
   id: string;
@@ -459,7 +581,7 @@ interface ColumnConfig {
             <button
               type="button"
               class="rounded-full border border-border px-3 py-1 text-xs"
-              (click)="updateViaCsv()"
+              (click)="openCsvDialog('update')"
             >
               Update via CSV
             </button>
@@ -470,13 +592,58 @@ interface ColumnConfig {
             >
               Clear all
             </button>
-            <button
-              type="button"
-              class="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-              (click)="createProduct()"
-            >
-              Create Product
-            </button>
+            <details class="relative">
+              <summary
+                class="cursor-pointer rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+              >
+                Create Product
+              </summary>
+              <div
+                class="absolute z-20 mt-2 w-56 rounded-md border border-border bg-background p-2 shadow-lg"
+              >
+                <button
+                  type="button"
+                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                  (click)="openManualDialog('single')"
+                >
+                  Manual entry
+                  <span class="text-muted-foreground">+</span>
+                </button>
+                <button
+                  type="button"
+                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                  (click)="openManualDialog('kit')"
+                >
+                  Create kit product
+                  <span class="text-muted-foreground">▢</span>
+                </button>
+                <button
+                  type="button"
+                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                  (click)="openCsvDialog('create')"
+                >
+                  CSV or Excel
+                  <span class="text-muted-foreground">CSV</span>
+                </button>
+                <div class="my-2 border-t border-border"></div>
+                <button
+                  type="button"
+                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                  (click)="importMarketplace('Amazon')"
+                >
+                  Import from Amazon
+                  <span class="text-orange-500">Amazon</span>
+                </button>
+                <button
+                  type="button"
+                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                  (click)="importMarketplace('Shopify')"
+                >
+                  Import from Shopify
+                  <span class="text-green-500">Shopify</span>
+                </button>
+              </div>
+            </details>
             <label class="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
               Rows
               <select
@@ -578,6 +745,305 @@ interface ColumnConfig {
           </div>
         </div>
 
+        <div
+          *ngIf="manualDialogOpen"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        >
+          <div class="w-full max-w-3xl rounded-lg bg-card p-4 shadow-lg">
+            <div class="flex items-center justify-between border-b border-border pb-3">
+              <div>
+                <h3 class="text-lg font-semibold">Create new product</h3>
+                <p class="text-xs text-muted-foreground">
+                  Fill in the product details. Required fields are marked.
+                </p>
+              </div>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                (click)="closeManualDialog()"
+              >
+                Close
+              </button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button
+                *ngFor="let tab of manualTabs"
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                [class.bg-muted]="manualTab === tab"
+                (click)="manualTab = tab"
+              >
+                {{ manualTabLabel(tab) }}
+              </button>
+            </div>
+
+            <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+              <div *ngIf="manualTab === 'basic'" class="grid gap-4">
+                <label *ngFor="let field of manualBasicFields" class="grid gap-1 text-xs">
+                  <span class="text-muted-foreground">
+                    {{ field.label }} <span *ngIf="field.required" class="text-destructive">*</span>
+                  </span>
+                  <input
+                    [type]="field.type || 'text'"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [placeholder]="field.placeholder"
+                    [(ngModel)]="manualForm[field.id]"
+                  />
+                </label>
+              </div>
+
+              <div *ngIf="manualTab === 'type'" class="grid gap-4">
+                <label class="flex items-center gap-2 text-sm">
+                  <input
+                    type="radio"
+                    name="manualProductType"
+                    class="h-4 w-4"
+                    [checked]="manualProductType === 'single'"
+                    (change)="manualProductType = 'single'"
+                  />
+                  <span>Single product</span>
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input
+                    type="radio"
+                    name="manualProductType"
+                    class="h-4 w-4"
+                    [checked]="manualProductType === 'kit'"
+                    (change)="manualProductType = 'kit'"
+                  />
+                  <span>Kit product</span>
+                </label>
+
+                <div *ngIf="manualProductType === 'kit'" class="grid gap-3 rounded-lg border border-border bg-muted/30 p-3">
+                  <p class="text-xs font-semibold text-muted-foreground">Kit components</p>
+                  <div class="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+                    <label class="text-xs text-muted-foreground">
+                      Product
+                      <select
+                        class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                        [(ngModel)]="kitProductId"
+                      >
+                        <option value="">Select product</option>
+                        <option *ngFor="let product of products" [value]="product.id">
+                          {{ product.name }}
+                        </option>
+                      </select>
+                    </label>
+                    <label class="text-xs text-muted-foreground">
+                      Qty
+                      <input
+                        type="number"
+                        class="mt-1 w-20 rounded-md border border-border bg-background px-2 py-1 text-xs"
+                        [(ngModel)]="kitQuantity"
+                        min="1"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      class="rounded-md border border-border px-3 py-1 text-xs"
+                      (click)="addKitComponent()"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div *ngIf="kitComponents.length > 0" class="space-y-2">
+                    <div
+                      *ngFor="let component of kitComponents; let i = index"
+                      class="flex items-center justify-between rounded-md border border-border px-2 py-1 text-xs"
+                    >
+                      <span>
+                        {{ kitProductName(component.productId) }} × {{ component.quantity }}
+                      </span>
+                      <button
+                        type="button"
+                        class="text-destructive"
+                        (click)="removeKitComponent(i)"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="manualTab === 'identifiers'" class="grid gap-4">
+                <label *ngFor="let field of manualIdentifierFields" class="grid gap-1 text-xs">
+                  <span class="text-muted-foreground">{{ field.label }}</span>
+                  <input
+                    [type]="field.type || 'text'"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [placeholder]="field.placeholder"
+                    [(ngModel)]="manualForm[field.id]"
+                  />
+                </label>
+              </div>
+
+              <div *ngIf="manualTab === 'pricing'" class="grid gap-4">
+                <label *ngFor="let field of manualPricingFields" class="grid gap-1 text-xs">
+                  <span class="text-muted-foreground">{{ field.label }}</span>
+                  <input
+                    [type]="field.type || 'text'"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [placeholder]="field.placeholder"
+                    [(ngModel)]="manualForm[field.id]"
+                  />
+                </label>
+              </div>
+
+              <div *ngIf="manualTab === 'inventory'" class="grid gap-4">
+                <label *ngFor="let field of manualInventoryFields" class="grid gap-1 text-xs">
+                  <span class="text-muted-foreground">{{ field.label }}</span>
+                  <input
+                    [type]="field.type || 'text'"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [placeholder]="field.placeholder"
+                    [(ngModel)]="manualForm[field.id]"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+              <button
+                type="button"
+                class="rounded-md border border-border px-3 py-1 text-xs"
+                (click)="closeManualDialog()"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                (click)="saveManualProduct()"
+              >
+                Save product
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="csvDialogOpen"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        >
+          <div class="w-full max-w-3xl rounded-lg bg-card p-4 shadow-lg">
+            <div class="flex items-center justify-between border-b border-border pb-3">
+              <div>
+                <h3 class="text-lg font-semibold">
+                  {{ csvMode === 'create' ? 'Import Products' : 'Update Products' }}
+                </h3>
+                <p class="text-xs text-muted-foreground">
+                  {{ csvStep === 'upload' ? 'Upload a CSV or Excel file.' : 'Map CSV columns to product fields.' }}
+                </p>
+              </div>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs"
+                (click)="closeCsvDialog()"
+              >
+                Close
+              </button>
+            </div>
+
+            <div *ngIf="csvStep === 'upload'" class="mt-4 space-y-4">
+              <div class="rounded-lg border border-border bg-muted/30 p-3">
+                <p class="text-xs font-semibold">Need a template?</p>
+                <p class="text-xs text-muted-foreground">
+                  Download a CSV template with sample data.
+                </p>
+                <button
+                  type="button"
+                  class="mt-2 rounded-md border border-border px-3 py-1 text-xs"
+                  (click)="downloadCsvTemplate()"
+                >
+                  Download template
+                </button>
+              </div>
+
+              <div class="rounded-lg border border-border bg-muted/30 p-3">
+                <p class="text-xs font-semibold">
+                  {{ csvMode === 'update' ? 'Match products by' : 'Identifiers in file' }}
+                </p>
+                <div class="mt-2 grid grid-cols-2 gap-2">
+                  <label
+                    *ngFor="let field of csvIdentifierOptions"
+                    class="flex items-center gap-2 text-xs"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="csvMatchFields.includes(field.id)"
+                      (change)="toggleCsvMatchField(field.id)"
+                    />
+                    <span>{{ field.label }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="rounded-lg border border-dashed border-border p-4 text-center">
+                <p class="text-xs text-muted-foreground">
+                  {{ csvFileName ? csvFileName : 'No file selected' }}
+                </p>
+                <input
+                  type="file"
+                  accept=".csv,.xlsx,.xls"
+                  class="mt-3 w-full text-xs"
+                  (change)="onCsvFileChange($event)"
+                />
+                <p *ngIf="csvError" class="mt-2 text-xs text-destructive">{{ csvError }}</p>
+              </div>
+            </div>
+
+            <div *ngIf="csvStep === 'mapping'" class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+              <div class="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-xs">
+                <span>{{ csvFileName }}</span>
+                <span class="text-muted-foreground">{{ csvRows.length }} rows</span>
+              </div>
+              <div class="mt-3 space-y-2">
+                <div
+                  *ngFor="let field of csvFields"
+                  class="flex items-center gap-3"
+                >
+                  <div class="w-40 text-xs font-medium">
+                    {{ field.label }}
+                    <span *ngIf="csvFieldRequired(field.id)" class="text-destructive">*</span>
+                  </div>
+                  <select
+                    class="flex-1 rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [ngModel]="csvFieldMapping[field.id] || '_skip'"
+                    (ngModelChange)="setCsvFieldMapping(field.id, $event)"
+                  >
+                    <option value="_skip">Skip</option>
+                    <option *ngFor="let header of csvHeaders" [value]="header">
+                      {{ header }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+              <button
+                type="button"
+                class="rounded-md border border-border px-3 py-1 text-xs"
+                (click)="csvStep === 'mapping' ? resetCsvDialog() : closeCsvDialog()"
+              >
+                {{ csvStep === 'mapping' ? 'Back' : 'Cancel' }}
+              </button>
+              <button
+                *ngIf="csvStep === 'mapping'"
+                type="button"
+                class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                [disabled]="!csvCanImport"
+                (click)="importCsvData()"
+              >
+                {{ csvMode === 'create' ? 'Create products' : 'Update products' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
         <ng-container *ngIf="filteredProducts() as filtered">
           <ng-container *ngIf="paginatedProducts(filtered) as visible">
             <div *ngIf="selectedCount > 0" class="mx-4 rounded-lg border border-border bg-muted/30 px-4 py-3">
@@ -623,6 +1089,79 @@ interface ColumnConfig {
                     </option>
                   </select>
                 </label>
+                <details class="relative">
+                  <summary
+                    class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs"
+                  >
+                    Update pricing
+                  </summary>
+                  <div
+                    class="absolute z-20 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-lg"
+                  >
+                    <div class="grid gap-2">
+                      <label class="text-xs text-muted-foreground">
+                        Sale price
+                        <input
+                          type="number"
+                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                          [(ngModel)]="bulkSalePrice"
+                        />
+                      </label>
+                      <label class="text-xs text-muted-foreground">
+                        Stock qty
+                        <input
+                          type="number"
+                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                          [(ngModel)]="bulkStockQty"
+                        />
+                      </label>
+                      <label class="text-xs text-muted-foreground">
+                        Landed cost
+                        <input
+                          type="number"
+                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                          [(ngModel)]="bulkLandedCost"
+                        />
+                      </label>
+                      <label class="text-xs text-muted-foreground">
+                        Purchased qty
+                        <input
+                          type="number"
+                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                          [(ngModel)]="bulkPurchaseQty"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                        (click)="applyBulkPricing()"
+                      >
+                        Apply updates
+                      </button>
+                    </div>
+                  </div>
+                </details>
+                <button
+                  type="button"
+                  class="rounded-full border border-border px-3 py-1 text-xs"
+                  (click)="exportSelectedCsv(filtered)"
+                >
+                  Export CSV
+                </button>
+                <button
+                  type="button"
+                  class="rounded-full border border-border px-3 py-1 text-xs"
+                  (click)="openBulkOffer()"
+                >
+                  Create offer
+                </button>
+                <button
+                  type="button"
+                  class="rounded-full border border-border px-3 py-1 text-xs"
+                  (click)="openBulkListing()"
+                >
+                  Bulk listing
+                </button>
                 <button
                   type="button"
                   class="rounded-full border border-destructive px-3 py-1 text-xs text-destructive"
@@ -1066,10 +1605,35 @@ export class ProductGridComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly products = mockProducts;
+  products: Product[] = [...mockProducts];
   readonly brands = brands;
   readonly marketplaces = marketplacePlatforms;
   readonly tagColors = tagColors;
+  readonly csvFields = csvFields;
+  readonly csvIdentifierOptions = csvIdentifierOptions;
+  readonly manualTabs = manualTabOptions;
+  readonly manualBasicFields = manualBasicFields;
+  readonly manualIdentifierFields = manualIdentifierFields;
+  readonly manualPricingFields = manualPricingFields;
+  readonly manualInventoryFields = manualInventoryFields;
+
+  csvDialogOpen = false;
+  csvMode: 'create' | 'update' = 'create';
+  csvStep: 'upload' | 'mapping' = 'upload';
+  csvFileName = '';
+  csvHeaders: string[] = [];
+  csvRows: string[][] = [];
+  csvFieldMapping: Record<string, string> = {};
+  csvMatchFields: string[] = ['vendorSku'];
+  csvError = '';
+
+  manualDialogOpen = false;
+  manualTab: ManualTab = 'basic';
+  manualForm: Record<string, string> = {};
+  manualProductType: ProductType = 'single';
+  kitComponents: KitComponent[] = [];
+  kitProductId = '';
+  kitQuantity = 1;
 
   readonly columns: ColumnConfig[] = [
     { id: 'name', label: 'Product', visible: true, sortable: true },
@@ -1110,6 +1674,11 @@ export class ProductGridComponent implements OnInit {
   tagName = '';
   tagColor = tagColors[0].value;
   tagPickerProductId: string | null = null;
+
+  bulkSalePrice = '';
+  bulkStockQty = '';
+  bulkLandedCost = '';
+  bulkPurchaseQty = '';
 
   readonly soldPeriods: Array<{ value: SoldPeriod; label: string }> = [
     { value: 'all', label: 'All time' },
@@ -1407,12 +1976,205 @@ export class ProductGridComponent implements OnInit {
     this.sortDirection = null;
   }
 
-  updateViaCsv(): void {
-    window.alert('CSV import is not wired yet.');
+  manualTabLabel(tab: ManualTab): string {
+    switch (tab) {
+      case 'basic':
+        return 'Basic Info';
+      case 'type':
+        return 'Type';
+      case 'identifiers':
+        return 'Identifiers';
+      case 'pricing':
+        return 'Pricing';
+      case 'inventory':
+        return 'Inventory';
+      default:
+        return 'Details';
+    }
   }
 
-  createProduct(): void {
-    window.alert('Create product flow is not wired yet.');
+  openManualDialog(type: ProductType): void {
+    this.manualDialogOpen = true;
+    this.manualProductType = type;
+    this.manualTab = 'basic';
+    this.manualForm = {};
+    this.kitComponents = [];
+    this.kitProductId = '';
+    this.kitQuantity = 1;
+  }
+
+  closeManualDialog(): void {
+    this.manualDialogOpen = false;
+    this.manualForm = {};
+    this.kitComponents = [];
+  }
+
+  addKitComponent(): void {
+    if (!this.kitProductId) return;
+    const quantity = Math.max(1, Number(this.kitQuantity || 1));
+    this.kitComponents = [
+      ...this.kitComponents,
+      { productId: this.kitProductId, quantity },
+    ];
+    this.kitProductId = '';
+    this.kitQuantity = 1;
+  }
+
+  removeKitComponent(index: number): void {
+    this.kitComponents = this.kitComponents.filter((_, i) => i !== index);
+  }
+
+  kitProductName(productId: string): string {
+    return this.products.find((product) => product.id === productId)?.name ?? productId;
+  }
+
+  saveManualProduct(): void {
+    const missingRequired = manualBasicFields
+      .filter((field) => field.required && !this.manualForm[field.id]?.trim())
+      .map((field) => field.label);
+
+    if (missingRequired.length > 0) {
+      window.alert(`Missing required fields: ${missingRequired.join(', ')}`);
+      return;
+    }
+
+    const product = this.createProductFromInput({
+      ...this.manualForm,
+      productType: this.manualProductType,
+    });
+
+    if (this.manualProductType === 'kit') {
+      product.kitProduct = true;
+      product.productType = 'kit';
+      product.kitComponents = [...this.kitComponents];
+    }
+
+    this.products = [product, ...this.products];
+    this.closeManualDialog();
+    this.cdr.markForCheck();
+  }
+
+  openCsvDialog(mode: 'create' | 'update'): void {
+    this.csvDialogOpen = true;
+    this.csvMode = mode;
+    this.resetCsvDialog();
+  }
+
+  closeCsvDialog(): void {
+    this.csvDialogOpen = false;
+    this.resetCsvDialog();
+  }
+
+  resetCsvDialog(): void {
+    this.csvStep = 'upload';
+    this.csvFileName = '';
+    this.csvHeaders = [];
+    this.csvRows = [];
+    this.csvFieldMapping = {};
+    this.csvMatchFields = ['vendorSku'];
+    this.csvError = '';
+  }
+
+  toggleCsvMatchField(fieldId: string): void {
+    if (this.csvMatchFields.includes(fieldId)) {
+      if (this.csvMatchFields.length === 1) return;
+      this.csvMatchFields = this.csvMatchFields.filter((id) => id !== fieldId);
+      return;
+    }
+    this.csvMatchFields = [...this.csvMatchFields, fieldId];
+  }
+
+  async onCsvFileChange(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.csvError = '';
+    this.csvFileName = file.name;
+    const extension = file.name.split('.').pop()?.toLowerCase();
+
+    try {
+      if (extension === 'csv') {
+        const text = await file.text();
+        const { headers, rows } = this.parseCsv(text);
+        this.setCsvData(headers, rows);
+      } else if (extension === 'xlsx' || extension === 'xls') {
+        const buffer = await file.arrayBuffer();
+        const { headers, rows } = this.parseExcel(buffer);
+        this.setCsvData(headers, rows);
+      } else {
+        this.csvError = 'Unsupported file type. Please upload CSV or Excel.';
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      this.csvError = 'Failed to read file. Please try again.';
+      return;
+    }
+  }
+
+  downloadCsvTemplate(): void {
+    const headers = csvFields.map((field) => field.label);
+    const rows = csvSampleProducts.map((product) =>
+      csvFields.map((field) => {
+        const value = product[field.id] || '';
+        return value.includes(',') || value.includes('"')
+          ? `"${value.replace(/"/g, '""')}"`
+          : value;
+      })
+    );
+    const csvContent = [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `product_import_template_${this.csvMode}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  setCsvFieldMapping(fieldId: string, value: string): void {
+    this.csvFieldMapping = { ...this.csvFieldMapping, [fieldId]: value };
+  }
+
+  csvFieldRequired(fieldId: string): boolean {
+    if (this.csvMode === 'create') {
+      return csvFields.find((field) => field.id === fieldId)?.required ?? false;
+    }
+    return this.csvMatchFields.includes(fieldId);
+  }
+
+  get csvCanImport(): boolean {
+    if (this.csvMode === 'create') {
+      return csvFields
+        .filter((field) => field.required)
+        .every((field) => this.csvFieldMapping[field.id] && this.csvFieldMapping[field.id] !== '_skip');
+    }
+    return this.csvMatchFields.some(
+      (fieldId) => this.csvFieldMapping[fieldId] && this.csvFieldMapping[fieldId] !== '_skip'
+    );
+  }
+
+  importCsvData(): void {
+    const mapped = this.mapCsvRows();
+    if (mapped.length === 0) {
+      window.alert('No valid rows found. Please check your mapping.');
+      return;
+    }
+
+    if (this.csvMode === 'create') {
+      const created = mapped.map((record) => this.createProductFromInput(record));
+      this.products = [...created, ...this.products];
+    } else {
+      this.products = this.applyCsvUpdates(this.products, mapped);
+    }
+
+    this.closeCsvDialog();
+    this.cdr.markForCheck();
+  }
+
+  importMarketplace(source: 'Amazon' | 'Shopify'): void {
+    window.alert(`Import from ${source} is not wired yet.`);
   }
 
   get selectedCount(): number {
@@ -1466,7 +2228,128 @@ export class ProductGridComponent implements OnInit {
   }
 
   bulkDelete(): void {
-    window.alert('Bulk delete is not wired yet.');
+    if (this.selectedProductIds.size === 0) return;
+    if (!window.confirm(`Delete ${this.selectedProductIds.size} products?`)) return;
+
+    const selectedIds = new Set(this.selectedProductIds);
+    this.products = this.products.filter((product) => !selectedIds.has(product.id));
+    this.tagService.removeProducts(Array.from(selectedIds));
+    this.clearSelection();
+    this.cdr.markForCheck();
+  }
+
+  applyBulkPricing(): void {
+    if (this.selectedProductIds.size === 0) return;
+
+    const updates: Partial<Product> = {};
+    if (this.bulkSalePrice) updates.salePrice = this.toNumber(this.bulkSalePrice, 0);
+    if (this.bulkStockQty) updates.stockQty = Math.round(this.toNumber(this.bulkStockQty, 0));
+    if (this.bulkLandedCost) updates.landedCost = this.toNumber(this.bulkLandedCost, 0);
+    if (this.bulkPurchaseQty) updates.purchaseQty = Math.round(this.toNumber(this.bulkPurchaseQty, 0));
+
+    if (Object.keys(updates).length === 0) {
+      window.alert('Enter at least one field to update.');
+      return;
+    }
+
+    const selectedIds = new Set(this.selectedProductIds);
+    this.products = this.products.map((product) => {
+      if (!selectedIds.has(product.id)) return product;
+      const updated = { ...product, ...updates };
+      return this.recalculateProduct(updated);
+    });
+
+    this.bulkSalePrice = '';
+    this.bulkStockQty = '';
+    this.bulkLandedCost = '';
+    this.bulkPurchaseQty = '';
+    this.cdr.markForCheck();
+  }
+
+  exportSelectedCsv(filtered: Product[]): void {
+    const selectedIds = new Set(this.selectedProductIds);
+    const selectedProducts = filtered.filter((product) => selectedIds.has(product.id));
+    if (selectedProducts.length === 0) {
+      window.alert('No selected products to export.');
+      return;
+    }
+
+    const headers = [
+      'ID',
+      'Name',
+      'SKU',
+      'Brand',
+      'Product ID',
+      'Variation ID',
+      'Vendor',
+      'MPN',
+      'ASIN',
+      'FNSKU',
+      'GTIN',
+      'EAN',
+      'ISBN',
+      'Landed Cost',
+      'Shipping Cost',
+      'Sale Price',
+      'Purchased Qty',
+      'Sold Qty',
+      'Stock Qty',
+      'Return Qty',
+      'Profit Margin %',
+      'Profit Amount',
+      'Kit Product',
+      'Marketplaces',
+    ];
+
+    const rows = selectedProducts.map((product) =>
+      [
+        product.id,
+        product.name,
+        product.vendorSku,
+        product.brand,
+        product.productId,
+        product.variationId ?? '',
+        product.vendorName,
+        product.manufacturerPart,
+        product.asin,
+        product.fnsku,
+        product.gtin,
+        product.ean,
+        product.isbn,
+        product.landedCost,
+        product.shippingCost,
+        product.salePrice,
+        product.purchaseQty,
+        product.soldQty,
+        product.stockQty,
+        product.returnQty,
+        product.grossProfitPercent,
+        product.grossProfitAmount,
+        product.kitProduct ? 'Yes' : 'No',
+        product.marketplaces.map((market) => `${market.platform}:${market.status}`).join(';'),
+      ].map((value) =>
+        typeof value === 'string' && (value.includes(',') || value.includes('"'))
+          ? `"${value.replace(/"/g, '""')}"`
+          : value
+      )
+    );
+
+    const csvContent = [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `products-export-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  openBulkOffer(): void {
+    window.alert('Bulk offer flow is not wired yet.');
+  }
+
+  openBulkListing(): void {
+    window.alert('Bulk listing flow is not wired yet.');
   }
 
   isColumnVisible(columnId: string): boolean {
@@ -1640,6 +2523,206 @@ export class ProductGridComponent implements OnInit {
     if (window.confirm(`Delete tag "${tag.name}"?`)) {
       this.tagService.deleteTag(tag.id);
     }
+  }
+
+  private setCsvData(headers: string[], rows: string[][]): void {
+    this.csvHeaders = headers;
+    this.csvRows = rows;
+    this.csvFieldMapping = this.autoMapCsvFields(headers);
+    this.csvStep = 'mapping';
+    this.cdr.markForCheck();
+  }
+
+  private parseCsv(text: string): { headers: string[]; rows: string[][] } {
+    const lines = text.split(/\r?\n/).filter((line) => line.trim());
+    const headers = lines[0]?.split(',').map((header) => header.replace(/^"|"$/g, '').trim()) || [];
+    const rows = lines.slice(1).map((line) => {
+      const result: string[] = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i += 1) {
+        const char = line[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    });
+    return { headers, rows };
+  }
+
+  private parseExcel(buffer: ArrayBuffer): { headers: string[]; rows: string[][] } {
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const data = XLSX.utils.sheet_to_json<string[]>(sheet, { header: 1, raw: false });
+    const [headerRow, ...rows] = data;
+    const headers = (headerRow || []).map((header) => `${header}`.trim());
+    const parsedRows = rows.map((row) => row.map((cell) => `${cell ?? ''}`.trim()));
+    return { headers, rows: parsedRows };
+  }
+
+  private autoMapCsvFields(headers: string[]): Record<string, string> {
+    const normalized = (value: string) => value.toLowerCase().replace(/[_\s]/g, '');
+    const mapping: Record<string, string> = {};
+    csvFields.forEach((field) => {
+      const match = headers.find(
+        (header) =>
+          normalized(header) === normalized(field.label) ||
+          normalized(header) === normalized(field.id)
+      );
+      if (match) {
+        mapping[field.id] = match;
+      }
+    });
+    return mapping;
+  }
+
+  private mapCsvRows(): Record<string, string>[] {
+    return this.csvRows
+      .map((row) => {
+        const record: Record<string, string> = {};
+        Object.entries(this.csvFieldMapping).forEach(([fieldId, header]) => {
+          if (!header || header === '_skip') return;
+          const headerIndex = this.csvHeaders.indexOf(header);
+          if (headerIndex === -1) return;
+          record[fieldId] = row[headerIndex] || '';
+        });
+        return record;
+      })
+      .filter((record) => record.name || record.vendorSku);
+  }
+
+  private applyCsvUpdates(products: Product[], updates: Record<string, string>[]): Product[] {
+    if (this.csvMatchFields.length === 0) return products;
+    return products.map((product) => {
+      const match = updates.find((record) =>
+        this.csvMatchFields.some((fieldId) => {
+          const value = record[fieldId];
+          if (!value) return false;
+          return (product as Record<string, string | number | null>)[fieldId] === value;
+        })
+      );
+      if (!match) return product;
+      return this.updateProductFromRecord(product, match);
+    });
+  }
+
+  private createProductFromInput(input: Record<string, string>): Product {
+    const id = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const salePrice = this.toNumber(input.salePrice, 0);
+    const landedCost = this.toNumber(input.landedCost, 0);
+    const shippingCost = this.toNumber(input.shippingCost, 0);
+    const purchaseQty = Math.round(this.toNumber(input.purchaseQty, 0));
+    const soldQty = Math.round(this.toNumber(input.soldQty, 0));
+    const returnQty = Math.round(this.toNumber(input.returnQty, 0));
+    const stockQty = Math.round(this.toNumber(input.stockQty, Math.max(purchaseQty - soldQty + returnQty, 0)));
+
+    const base: Product = {
+      id,
+      image: input.image || `https://picsum.photos/seed/${id}/100/100`,
+      name: input.name || 'New Product',
+      vendorSku: input.vendorSku || `SKU-${id}`,
+      manufacturerPart: input.manufacturerPart || '',
+      asin: input.asin || '',
+      fnsku: input.fnsku || '',
+      gtin: input.gtin || '',
+      ean: input.ean || '',
+      isbn: input.isbn || '',
+      inventoryDifference: 0,
+      productId: input.productId || id,
+      variationId: null,
+      variation: null,
+      vendorName: input.vendorName || '',
+      brand: input.brand || '',
+      kitProduct: false,
+      productType: (input.productType as ProductType) || 'single',
+      kitComponents: [],
+      landedCost,
+      shippingCost,
+      salePrice,
+      purchaseQty,
+      soldQty,
+      soldQtyLastMonth: Math.min(soldQty, 20),
+      soldQtyLastQuarter: Math.min(soldQty, 50),
+      soldQtyLastYear: soldQty,
+      stockQty,
+      returnQty,
+      grossProfitPercent: 0,
+      grossProfitAmount: 0,
+      marketplaces: [],
+      velocity: 0,
+      stockDays: 0,
+      restockStatus: 'in_stock',
+      suggestedRestockQty: 0,
+    };
+
+    return this.recalculateProduct(base);
+  }
+
+  private updateProductFromRecord(product: Product, record: Record<string, string>): Product {
+    const updated: Product = { ...product };
+    const numericFields = new Set(['salePrice', 'landedCost', 'shippingCost']);
+    const intFields = new Set(['purchaseQty', 'soldQty', 'stockQty', 'returnQty']);
+
+    Object.entries(record).forEach(([field, value]) => {
+      if (!value) return;
+      if (numericFields.has(field)) {
+        (updated as Record<string, number>)[field] = this.toNumber(value, updated[field as keyof Product] as number);
+      } else if (intFields.has(field)) {
+        (updated as Record<string, number>)[field] = Math.round(
+          this.toNumber(value, updated[field as keyof Product] as number)
+        );
+      } else if (field in updated) {
+        (updated as Record<string, string>)[field] = value;
+      }
+    });
+
+    return this.recalculateProduct(updated);
+  }
+
+  private recalculateProduct(product: Product): Product {
+    const grossProfitAmount = product.salePrice - product.landedCost - product.shippingCost;
+    const grossProfitPercent = product.salePrice
+      ? Math.round(((grossProfitAmount / product.salePrice) * 100) * 100) / 100
+      : 0;
+
+    const velocity = Math.round((product.soldQtyLastMonth / 30) * 100) / 100;
+    const stockDays = velocity > 0 ? Math.round(product.stockQty / velocity) : product.stockQty > 0 ? 999 : 0;
+    let restockStatus: Product['restockStatus'];
+    if (product.stockQty === 0) {
+      restockStatus = 'out_of_stock';
+    } else if (stockDays <= 7) {
+      restockStatus = 'reorder_now';
+    } else if (stockDays <= 30) {
+      restockStatus = 'low_stock';
+    } else {
+      restockStatus = 'in_stock';
+    }
+
+    const suggestedRestockQty = velocity > 0 ? Math.max(0, Math.ceil(velocity * 60 - product.stockQty)) : 0;
+
+    return {
+      ...product,
+      grossProfitAmount: Math.round(grossProfitAmount * 100) / 100,
+      grossProfitPercent,
+      velocity,
+      stockDays,
+      restockStatus,
+      suggestedRestockQty,
+    };
+  }
+
+  private toNumber(value: string | number | undefined, fallback: number): number {
+    if (value === undefined || value === null || value === '') return fallback;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
   }
 
   private withinRange(value: number, range: [number, number]): boolean {
