@@ -205,6 +205,11 @@ interface ColumnConfig {
   align?: 'left' | 'right';
 }
 
+interface ColumnPreferences {
+  order: string[];
+  visibility: Record<string, boolean>;
+}
+
 @Component({
   selector: 'app-product-grid',
   standalone: true,
@@ -219,7 +224,16 @@ interface ColumnConfig {
             <details class="relative">
               <summary
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by brand"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 22h18" />
+                    <path d="M6 22V4h12v18" />
+                    <path d="M9 10h6" />
+                    <path d="M9 14h6" />
+                  </svg>
+                </span>
                 Brand
                 <span class="text-muted-foreground">
                   ({{ filters.brand.length || 'all' }})
@@ -246,7 +260,15 @@ interface ColumnConfig {
             <details class="relative">
               <summary
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by marketplace"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 9l2-5h14l2 5" />
+                    <path d="M5 9v11h14V9" />
+                    <path d="M9 20V9h6v11" />
+                  </svg>
+                </span>
                 Marketplace
                 <span class="text-muted-foreground">
                   ({{ filters.marketplace.length || 'all' }})
@@ -273,7 +295,13 @@ interface ColumnConfig {
             <details class="relative">
               <summary
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by status"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <polyline points="3 12 7 12 9 6 13 18 16 10 21 10" />
+                  </svg>
+                </span>
                 Status
                 <span class="text-muted-foreground">
                   ({{ filters.status.length || 'all' }})
@@ -303,7 +331,14 @@ interface ColumnConfig {
             <details class="relative">
               <summary
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by price"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M12 1v22" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </span>
                 Price
                 <span class="text-muted-foreground">
                   {{
@@ -342,7 +377,14 @@ interface ColumnConfig {
             <details class="relative">
               <summary
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by stock"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                    <path d="M3 7v10l9 4 9-4V7" />
+                  </svg>
+                </span>
                 Stock
                 <span class="text-muted-foreground">
                   {{
@@ -381,7 +423,14 @@ interface ColumnConfig {
             <details class="relative">
               <summary
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by sold units"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <polyline points="3 17 9 11 13 15 21 7" />
+                    <path d="M21 7v6h-6" />
+                  </svg>
+                </span>
                 Sold
                 <span class="text-muted-foreground">
                   {{
@@ -432,7 +481,14 @@ interface ColumnConfig {
             <details class="relative">
               <summary
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by product type"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                    <path d="M3 7v10l9 4 9-4V7" />
+                  </svg>
+                </span>
                 Type
                 <span class="text-muted-foreground">
                   {{
@@ -483,7 +539,15 @@ interface ColumnConfig {
             <details class="relative">
               <summary
                 class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by variations"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M12 2l9 5-9 5-9-5 9-5z" />
+                    <path d="M3 12l9 5 9-5" />
+                    <path d="M3 17l9 5 9-5" />
+                  </svg>
+                </span>
                 Variation
                 <span class="text-muted-foreground">
                   {{
@@ -533,8 +597,15 @@ interface ColumnConfig {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                title="Filter by tags"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M20 13l-7 7-10-10V3h7l10 10z" />
+                    <circle cx="7.5" cy="7.5" r="1.5" />
+                  </svg>
+                </span>
                 Tags
                 <span class="text-muted-foreground">
                   ({{ filters.tags.length || 'all' }})
@@ -592,13 +663,26 @@ interface ColumnConfig {
               <button
                 type="button"
                 class="rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
+                title="Custom filters"
               >
+                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
+                  </svg>
+                </span>
                 Custom Filters
               </button>
               <details class="relative">
                 <summary
                   class="cursor-pointer rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
+                  title="Columns"
                 >
+                  <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <rect x="3" y="4" width="7" height="16" />
+                      <rect x="14" y="4" width="7" height="16" />
+                    </svg>
+                  </span>
                   Columns
                 </summary>
                 <div
@@ -1637,7 +1721,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('name')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('name')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('name')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('name', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -1655,7 +1750,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('productType')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('productType')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('productType')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('productType', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -1673,7 +1779,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('tags')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('tags')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('tags')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('tags', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     Tags
                     <span
                       class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
@@ -1684,7 +1801,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('offers')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('offers')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('offers')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('offers', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     Offers
                     <span
                       class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
@@ -1695,7 +1823,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('vendorName')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('vendorName')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('vendorName')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('vendorName', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -1713,7 +1852,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('brand')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('brand')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('brand')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('brand', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -1731,7 +1881,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('marketplaces')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('marketplaces')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('marketplaces')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('marketplaces', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -1749,7 +1910,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('salePrice')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('salePrice')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('salePrice')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('salePrice', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
@@ -1767,7 +1939,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('soldQty')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('soldQty')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('soldQty')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('soldQty', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
@@ -1785,7 +1968,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('stockQty')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('stockQty')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('stockQty')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('stockQty', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
@@ -1803,7 +1997,18 @@ interface ColumnConfig {
                     *ngIf="isColumnVisible('restockStatus')"
                     class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('restockStatus')"
+                    (dragover)="allowColumnDrop($event)"
+                    (drop)="onColumnDrop('restockStatus')"
                   >
+                    <span
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      draggable="true"
+                      title="Drag to reorder"
+                      (dragstart)="startColumnDrag('restockStatus', $event)"
+                      (dragend)="endColumnDrag()"
+                    >
+                      ⋮⋮
+                    </span>
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -1880,7 +2085,7 @@ interface ColumnConfig {
                     class="px-4 py-4"
                     [style.width.px]="columnWidth('tags')"
                   >
-                    <div class="flex flex-wrap items-center gap-1">
+                    <div class="relative flex flex-wrap items-center gap-1">
                       <span
                         *ngFor="let tag of getProductTags(product.id)"
                         class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
@@ -1914,7 +2119,7 @@ interface ColumnConfig {
                     </div>
                     <div
                       *ngIf="tagPickerProductId === product.id"
-                      class="mt-2 flex flex-col gap-2 rounded-md border border-border bg-background p-2"
+                      class="absolute left-0 top-full z-20 mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur animate-in fade-in slide-in-from-top-1"
                     >
                       <label
                         *ngFor="let tag of tags"
@@ -2077,6 +2282,15 @@ interface ColumnConfig {
                 Previous
               </button>
               <button
+                *ngFor="let page of visiblePages(filtered.length)"
+                type="button"
+                class="rounded-md border border-border px-3 py-2 text-sm transition hover:bg-muted"
+                [class.bg-muted]="page === currentPage"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+              <button
                 type="button"
                 class="rounded-md border border-border px-3 py-2 text-sm disabled:opacity-50"
                 [disabled]="currentPage >= totalPages(filtered.length)"
@@ -2102,6 +2316,7 @@ export class ProductGridComponent implements OnInit {
   private readonly columnsStorageKey = 'product-columns';
   private readonly columnWidthsStorageKey = 'product-column-widths';
   private readonly pageSizeStorageKey = 'product-page-size';
+  private draggedColumnId: string | null = null;
 
   products: Product[] = [...mockProducts];
   readonly brands = brands;
@@ -3113,6 +3328,42 @@ export class ProductGridComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
+  startColumnDrag(columnId: string, event: DragEvent): void {
+    this.draggedColumnId = columnId;
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('text/plain', columnId);
+      event.dataTransfer.effectAllowed = 'move';
+    }
+  }
+
+  endColumnDrag(): void {
+    this.draggedColumnId = null;
+  }
+
+  allowColumnDrop(event: DragEvent): void {
+    event.preventDefault();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+  }
+
+  onColumnDrop(targetId: string): void {
+    if (!this.draggedColumnId || this.draggedColumnId === targetId) return;
+    const fromIndex = this.columns.findIndex(
+      (column) => column.id === this.draggedColumnId
+    );
+    const toIndex = this.columns.findIndex(
+      (column) => column.id === targetId
+    );
+    if (fromIndex === -1 || toIndex === -1) return;
+    const updated = [...this.columns];
+    const [moved] = updated.splice(fromIndex, 1);
+    updated.splice(toIndex, 0, moved);
+    this.columns = updated;
+    this.saveColumns();
+    this.cdr.markForCheck();
+  }
+
   columnWidth(columnId: string): number {
     return this.columnWidths[columnId] ?? 150;
   }
@@ -3152,6 +3403,22 @@ export class ProductGridComponent implements OnInit {
 
   nextPage(total: number): void {
     this.currentPage = Math.min(this.totalPages(total), this.currentPage + 1);
+  }
+
+  goToPage(page: number): void {
+    const total = this.totalPages(this.filteredProducts().length);
+    this.currentPage = Math.min(Math.max(1, page), total);
+  }
+
+  visiblePages(totalItems: number): number[] {
+    const total = this.totalPages(totalItems);
+    const maxPages = 5;
+    const current = this.currentPage;
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + maxPages - 1);
+    start = Math.max(1, end - maxPages + 1);
+
+    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
   }
 
   soldQty(product: Product): number {
@@ -3572,10 +3839,24 @@ export class ProductGridComponent implements OnInit {
 
     const savedColumns = this.loadColumns();
     if (savedColumns) {
+      const visibility =
+        'visibility' in savedColumns ? savedColumns.visibility : savedColumns;
       this.columns = this.columns.map((column) => {
-        const saved = savedColumns[column.id];
+        const saved = visibility[column.id];
         return saved !== undefined ? { ...column, visible: saved } : column;
       });
+
+      if ('order' in savedColumns) {
+        const order = savedColumns.order;
+        const map = new Map(this.columns.map((column) => [column.id, column]));
+        const ordered = order
+          .map((id) => map.get(id))
+          .filter((column): column is ColumnConfig => Boolean(column));
+        const remaining = this.columns.filter(
+          (column) => !order.includes(column.id)
+        );
+        this.columns = [...ordered, ...remaining];
+      }
     }
 
     const savedWidths = this.loadColumnWidths();
@@ -3624,23 +3905,28 @@ export class ProductGridComponent implements OnInit {
 
   private saveColumns(): void {
     try {
-      const payload = this.columns.reduce<Record<string, boolean>>(
-        (acc, column) => {
-          acc[column.id] = column.visible;
-          return acc;
-        },
-        {}
-      );
+      const payload: ColumnPreferences = {
+        order: this.columns.map((column) => column.id),
+        visibility: this.columns.reduce<Record<string, boolean>>(
+          (acc, column) => {
+            acc[column.id] = column.visible;
+            return acc;
+          },
+          {}
+        ),
+      };
       localStorage.setItem(this.columnsStorageKey, JSON.stringify(payload));
     } catch (error) {
       console.warn('Failed to save columns', error);
     }
   }
 
-  private loadColumns(): Record<string, boolean> | null {
+  private loadColumns(): ColumnPreferences | Record<string, boolean> | null {
     try {
       const stored = localStorage.getItem(this.columnsStorageKey);
-      return stored ? (JSON.parse(stored) as Record<string, boolean>) : null;
+      return stored
+        ? (JSON.parse(stored) as ColumnPreferences | Record<string, boolean>)
+        : null;
     } catch (error) {
       console.warn('Failed to load columns', error);
       return null;
