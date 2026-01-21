@@ -3839,18 +3839,21 @@ export class ProductGridComponent implements OnInit {
 
     const savedColumns = this.loadColumns();
     if (savedColumns) {
-      const visibility =
-        'visibility' in savedColumns ? savedColumns.visibility : savedColumns;
+      const visibility = this.isColumnPreferences(savedColumns)
+        ? savedColumns.visibility
+        : savedColumns;
       this.columns = this.columns.map((column) => {
         const saved = visibility[column.id];
         return saved !== undefined ? { ...column, visible: saved } : column;
       });
 
-      if ('order' in savedColumns) {
-        const order = savedColumns.order;
+      const order = this.isColumnPreferences(savedColumns)
+        ? savedColumns.order
+        : null;
+      if (order && Array.isArray(order)) {
         const map = new Map(this.columns.map((column) => [column.id, column]));
         const ordered = order
-          .map((id) => map.get(id))
+          .map((id: string) => map.get(id))
           .filter((column): column is ColumnConfig => Boolean(column));
         const remaining = this.columns.filter(
           (column) => !order.includes(column.id)
@@ -3931,6 +3934,19 @@ export class ProductGridComponent implements OnInit {
       console.warn('Failed to load columns', error);
       return null;
     }
+  }
+
+  private isColumnPreferences(
+    value: ColumnPreferences | Record<string, boolean>
+  ): value is ColumnPreferences {
+    const candidate = value as ColumnPreferences;
+    return (
+      typeof value === 'object' &&
+      value !== null &&
+      Array.isArray(candidate.order) &&
+      typeof candidate.visibility === 'object' &&
+      candidate.visibility !== null
+    );
   }
 
   private saveColumnWidths(): void {
