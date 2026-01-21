@@ -210,13 +210,15 @@ interface ColumnConfig {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="w-full px-4 pb-10 pt-6">
-      <div class="flex flex-col gap-4 rounded-lg border border-border bg-card">
-        <div class="flex flex-col gap-3 border-b border-border bg-card px-4 py-3">
+    <section class="w-full px-4 pb-10 pt-6 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-4 rounded-2xl border border-border bg-card shadow-sm">
+        <div
+          class="sticky top-0 z-30 flex flex-col gap-3 rounded-t-2xl border-b border-border bg-card/95 px-4 py-3 shadow-sm backdrop-blur"
+        >
           <div class="flex flex-wrap items-center gap-2">
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
               >
                 Brand
                 <span class="text-muted-foreground">
@@ -224,7 +226,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 max-h-64 w-56 overflow-y-auto rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label
                   *ngFor="let brand of brands"
@@ -243,7 +245,7 @@ interface ColumnConfig {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
               >
                 Marketplace
                 <span class="text-muted-foreground">
@@ -251,7 +253,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 max-h-64 w-56 overflow-y-auto rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label
                   *ngFor="let platform of marketplaces"
@@ -270,7 +272,7 @@ interface ColumnConfig {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
               >
                 Status
                 <span class="text-muted-foreground">
@@ -278,7 +280,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-48 rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label
                   *ngFor="let status of statusOptions"
@@ -300,7 +302,7 @@ interface ColumnConfig {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
               >
                 Price
                 <span class="text-muted-foreground">
@@ -312,7 +314,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <div class="grid grid-cols-2 gap-3">
                   <label class="text-xs text-muted-foreground">
@@ -339,7 +341,7 @@ interface ColumnConfig {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
               >
                 Stock
                 <span class="text-muted-foreground">
@@ -351,7 +353,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <div class="grid grid-cols-2 gap-3">
                   <label class="text-xs text-muted-foreground">
@@ -378,7 +380,7 @@ interface ColumnConfig {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
               >
                 Sold
                 <span class="text-muted-foreground">
@@ -390,7 +392,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-72 rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 w-72 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <div class="grid grid-cols-2 gap-3">
                   <label class="text-xs text-muted-foreground">
@@ -429,7 +431,7 @@ interface ColumnConfig {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
               >
                 Type
                 <span class="text-muted-foreground">
@@ -443,7 +445,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-48 rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
@@ -480,7 +482,7 @@ interface ColumnConfig {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium"
+                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
               >
                 Variation
                 <span class="text-muted-foreground">
@@ -494,7 +496,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-44 rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 w-44 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
@@ -539,7 +541,7 @@ interface ColumnConfig {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-56 rounded-md border border-border bg-background p-3 shadow-lg"
+                class="absolute z-20 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <div class="flex flex-wrap items-center gap-2">
                   <button
@@ -582,25 +584,25 @@ interface ColumnConfig {
             <div class="ml-auto flex flex-1 items-center gap-2">
               <input
                 type="search"
-                class="w-full max-w-[420px] rounded-full border border-border bg-background px-4 py-2 text-xs focus:border-primary focus:outline-none"
+                class="w-full max-w-[420px] rounded-full border border-border bg-background px-4 py-2 text-xs transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                 placeholder="Search products..."
                 [(ngModel)]="filters.search"
                 (ngModelChange)="onFilterChange()"
               />
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-2 text-xs"
+                class="rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
               >
                 Custom Filters
               </button>
               <details class="relative">
                 <summary
-                  class="cursor-pointer rounded-full border border-border px-3 py-2 text-xs"
+                  class="cursor-pointer rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
                 >
                   Columns
                 </summary>
                 <div
-                  class="absolute right-0 z-20 mt-2 w-56 rounded-md border border-border bg-background p-3 shadow-lg"
+                  class="absolute right-0 z-20 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
                 >
                   <label
                     *ngFor="let column of columns"
@@ -641,7 +643,7 @@ interface ColumnConfig {
                 Create Product
               </summary>
               <div
-                class="absolute z-20 mt-2 w-56 rounded-md border border-border bg-background p-2 shadow-lg"
+                class="absolute z-20 mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
               >
                 <button
                   type="button"
@@ -789,9 +791,9 @@ interface ColumnConfig {
 
         <div
           *ngIf="manualDialogOpen"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
         >
-          <div class="w-full max-w-3xl rounded-lg bg-card p-4 shadow-lg">
+          <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
             <div class="flex items-center justify-between border-b border-border pb-3">
               <div>
                 <h3 class="text-lg font-semibold">Create new product</h3>
@@ -967,9 +969,9 @@ interface ColumnConfig {
 
         <div
           *ngIf="csvDialogOpen"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
         >
-          <div class="w-full max-w-3xl rounded-lg bg-card p-4 shadow-lg">
+          <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
             <div class="flex items-center justify-between border-b border-border pb-3">
               <div>
                 <h3 class="text-lg font-semibold">
@@ -1088,9 +1090,9 @@ interface ColumnConfig {
 
         <div
           *ngIf="productDialogOpen && selectedProduct"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
         >
-          <div class="w-full max-w-4xl rounded-lg bg-card p-4 shadow-lg">
+          <div class="w-full max-w-4xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
             <div class="flex items-center justify-between border-b border-border pb-3">
               <div>
                 <h3 class="text-lg font-semibold">{{ selectedProduct.name }}</h3>
@@ -1257,9 +1259,9 @@ interface ColumnConfig {
 
         <div
           *ngIf="marketplaceDialogOpen && marketplaceDialogProduct"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
         >
-          <div class="w-full max-w-4xl rounded-lg bg-card p-4 shadow-lg">
+          <div class="w-full max-w-4xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
             <div class="flex items-center justify-between border-b border-border pb-3">
               <div>
                 <h3 class="text-lg font-semibold">Marketplace listings</h3>
@@ -1337,9 +1339,9 @@ interface ColumnConfig {
 
         <div
           *ngIf="offerDialogOpen"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
         >
-          <div class="w-full max-w-3xl rounded-lg bg-card p-4 shadow-lg">
+          <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
             <div class="flex items-center justify-between border-b border-border pb-3">
               <div>
                 <h3 class="text-lg font-semibold">Offers</h3>
@@ -1481,7 +1483,7 @@ interface ColumnConfig {
 
         <ng-container *ngIf="filteredProducts() as filtered">
           <ng-container *ngIf="paginatedProducts(filtered) as visible">
-            <div *ngIf="selectedCount > 0" class="mx-4 rounded-lg border border-border bg-muted/30 px-4 py-3">
+            <div *ngIf="selectedCount > 0" class="mx-4 rounded-lg border border-border bg-muted/50 px-4 py-3 backdrop-blur">
               <div class="flex flex-wrap items-center gap-3 text-sm">
                 <span class="font-semibold">
                   {{ selectedCount }} selected
@@ -1531,7 +1533,7 @@ interface ColumnConfig {
                     Update pricing
                   </summary>
                   <div
-                    class="absolute z-20 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-lg"
+                    class="absolute z-20 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
                   >
                     <div class="grid gap-2">
                       <label class="text-xs text-muted-foreground">
@@ -1617,12 +1619,12 @@ interface ColumnConfig {
             </p>
           </div>
 
-          <div class="mx-4 overflow-x-auto rounded-lg border border-border">
+          <div class="mx-4 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
             <table class="w-full min-w-[1250px] text-sm">
-              <thead class="bg-muted/40 text-left text-xs uppercase tracking-wide">
+              <thead class="bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
                 <tr>
                   <th
-                    class="sticky top-0 z-10 bg-card px-4 py-3 text-left"
+                    class="sticky top-0 z-10 bg-card/95 px-4 py-3 text-left"
                   >
                     <input
                       type="checkbox"
@@ -1633,7 +1635,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('name')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('name')"
                   >
                     <button
@@ -1651,7 +1653,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('productType')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('productType')"
                   >
                     <button
@@ -1669,7 +1671,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('tags')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('tags')"
                   >
                     Tags
@@ -1680,7 +1682,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('offers')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('offers')"
                   >
                     Offers
@@ -1691,7 +1693,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('vendorName')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('vendorName')"
                   >
                     <button
@@ -1709,7 +1711,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('brand')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('brand')"
                   >
                     <button
@@ -1727,7 +1729,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('marketplaces')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('marketplaces')"
                   >
                     <button
@@ -1745,7 +1747,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('salePrice')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3 text-right"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('salePrice')"
                   >
                     <button
@@ -1763,7 +1765,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('soldQty')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3 text-right"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('soldQty')"
                   >
                     <button
@@ -1781,7 +1783,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('stockQty')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3 text-right"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('stockQty')"
                   >
                     <button
@@ -1799,7 +1801,7 @@ interface ColumnConfig {
                   </th>
                   <th
                     *ngIf="isColumnVisible('restockStatus')"
-                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('restockStatus')"
                   >
                     <button
@@ -1820,7 +1822,7 @@ interface ColumnConfig {
               <tbody>
                 <tr
                   *ngFor="let product of visible; trackBy: trackById"
-                  class="border-t border-border"
+                  class="border-t border-border transition hover:bg-muted/40"
                 >
                   <td class="px-4 py-4">
                     <input
