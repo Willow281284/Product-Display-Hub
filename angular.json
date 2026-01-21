@@ -68,7 +68,6 @@
       }
     }
   },
-  "defaultProject": "lovable-angular",
   "cli": {
     "analytics": false
   }

@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
@@ -5,6 +6,7 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-product-edit-page',
   standalone: true,
+  imports: [AsyncPipe],
   template: `
     <section class="mx-auto w-full max-w-6xl p-6">
       <div class="flex flex-col gap-4 rounded-lg border border-border bg-card p-6">
