@@ -33,6 +33,14 @@ type SortDirection = 'asc' | 'desc';
 
 type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
 
+interface ColumnConfig {
+  id: string;
+  label: string;
+  visible: boolean;
+  sortable?: boolean;
+  align?: 'left' | 'right';
+}
+
 @Component({
   selector: 'app-product-grid',
   standalone: true,
@@ -231,6 +239,26 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
           </details>
         </div>
 
+        <div class="flex flex-wrap items-center gap-3">
+          <details class="rounded-md border border-border bg-muted/30 px-3 py-2">
+            <summary class="cursor-pointer text-sm font-medium">Columns</summary>
+            <div class="mt-3 grid gap-2 sm:grid-cols-2">
+              <label
+                *ngFor="let column of columns"
+                class="flex items-center gap-2 text-xs"
+              >
+                <input
+                  type="checkbox"
+                  class="h-4 w-4"
+                  [checked]="column.visible"
+                  (change)="toggleColumn(column.id)"
+                />
+                <span>{{ column.label }}</span>
+              </label>
+            </div>
+          </details>
+        </div>
+
         <div
           *ngIf="tagFormOpen"
           class="rounded-lg border border-border bg-background p-4"
@@ -424,7 +452,11 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
             <table class="w-full min-w-[1250px] text-sm">
               <thead class="bg-muted/40 text-left text-xs uppercase tracking-wide">
                 <tr>
-                  <th class="px-4 py-3">
+                  <th
+                    *ngIf="isColumnVisible('name')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    [style.width.px]="columnWidth('name')"
+                  >
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -433,8 +465,16 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Product
                       <span class="text-[10px]">{{ sortIcon('name') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'name')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3">
+                  <th
+                    *ngIf="isColumnVisible('productType')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    [style.width.px]="columnWidth('productType')"
+                  >
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -443,11 +483,27 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Type
                       <span class="text-[10px]">{{ sortIcon('productType') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'productType')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3">
+                  <th
+                    *ngIf="isColumnVisible('tags')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    [style.width.px]="columnWidth('tags')"
+                  >
                     Tags
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'tags')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3">
+                  <th
+                    *ngIf="isColumnVisible('vendorName')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    [style.width.px]="columnWidth('vendorName')"
+                  >
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -456,8 +512,16 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Vendor
                       <span class="text-[10px]">{{ sortIcon('vendorName') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'vendorName')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3">
+                  <th
+                    *ngIf="isColumnVisible('brand')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    [style.width.px]="columnWidth('brand')"
+                  >
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -466,8 +530,16 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Brand
                       <span class="text-[10px]">{{ sortIcon('brand') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'brand')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3">
+                  <th
+                    *ngIf="isColumnVisible('marketplaces')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    [style.width.px]="columnWidth('marketplaces')"
+                  >
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -476,8 +548,16 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Marketplaces
                       <span class="text-[10px]">{{ sortIcon('marketplaces') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'marketplaces')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3 text-right">
+                  <th
+                    *ngIf="isColumnVisible('salePrice')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3 text-right"
+                    [style.width.px]="columnWidth('salePrice')"
+                  >
                     <button
                       type="button"
                       class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
@@ -486,8 +566,16 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Price
                       <span class="text-[10px]">{{ sortIcon('salePrice') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'salePrice')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3 text-right">
+                  <th
+                    *ngIf="isColumnVisible('soldQty')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3 text-right"
+                    [style.width.px]="columnWidth('soldQty')"
+                  >
                     <button
                       type="button"
                       class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
@@ -496,8 +584,16 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Sold
                       <span class="text-[10px]">{{ sortIcon('soldQty') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'soldQty')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3 text-right">
+                  <th
+                    *ngIf="isColumnVisible('stockQty')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3 text-right"
+                    [style.width.px]="columnWidth('stockQty')"
+                  >
                     <button
                       type="button"
                       class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
@@ -506,8 +602,16 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Stock
                       <span class="text-[10px]">{{ sortIcon('stockQty') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'stockQty')"
+                    ></span>
                   </th>
-                  <th class="px-4 py-3">
+                  <th
+                    *ngIf="isColumnVisible('restockStatus')"
+                    class="sticky top-0 z-10 bg-card relative px-4 py-3"
+                    [style.width.px]="columnWidth('restockStatus')"
+                  >
                     <button
                       type="button"
                       class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
@@ -516,6 +620,10 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Restock
                       <span class="text-[10px]">{{ sortIcon('restockStatus') }}</span>
                     </button>
+                    <span
+                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                      (mousedown)="startResize($event, 'restockStatus')"
+                    ></span>
                   </th>
                 </tr>
               </thead>
@@ -524,7 +632,11 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                   *ngFor="let product of paginatedProducts(filtered); trackBy: trackById"
                   class="border-t border-border"
                 >
-                  <td class="px-4 py-4">
+                  <td
+                    *ngIf="isColumnVisible('name')"
+                    class="px-4 py-4"
+                    [style.width.px]="columnWidth('name')"
+                  >
                     <div class="flex items-center gap-3">
                       <img
                         [src]="product.image"
@@ -547,7 +659,11 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       </div>
                     </div>
                   </td>
-                  <td class="px-4 py-4">
+                  <td
+                    *ngIf="isColumnVisible('productType')"
+                    class="px-4 py-4"
+                    [style.width.px]="columnWidth('productType')"
+                  >
                     <div class="text-sm font-medium capitalize">
                       {{ product.productType }}
                     </div>
@@ -555,7 +671,11 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       {{ product.variation.type }} · {{ product.variation.value }}
                     </div>
                   </td>
-                  <td class="px-4 py-4">
+                  <td
+                    *ngIf="isColumnVisible('tags')"
+                    class="px-4 py-4"
+                    [style.width.px]="columnWidth('tags')"
+                  >
                     <div class="flex flex-wrap items-center gap-1">
                       <span
                         *ngFor="let tag of getProductTags(product.id)"
@@ -611,19 +731,31 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       </label>
                     </div>
                   </td>
-                  <td class="px-4 py-4">
+                  <td
+                    *ngIf="isColumnVisible('vendorName')"
+                    class="px-4 py-4"
+                    [style.width.px]="columnWidth('vendorName')"
+                  >
                     <div class="text-sm font-medium">{{ product.vendorName }}</div>
                     <div class="text-xs text-muted-foreground">
                       {{ product.manufacturerPart }}
                     </div>
                   </td>
-                  <td class="px-4 py-4">
+                  <td
+                    *ngIf="isColumnVisible('brand')"
+                    class="px-4 py-4"
+                    [style.width.px]="columnWidth('brand')"
+                  >
                     <div class="text-sm font-medium">{{ product.brand }}</div>
                     <div class="text-xs text-muted-foreground">
                       ASIN {{ product.asin }}
                     </div>
                   </td>
-                  <td class="px-4 py-4">
+                  <td
+                    *ngIf="isColumnVisible('marketplaces')"
+                    class="px-4 py-4"
+                    [style.width.px]="columnWidth('marketplaces')"
+                  >
                     <div class="text-sm font-medium">
                       {{
                         product.marketplaces.length > 0
@@ -635,7 +767,11 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       {{ marketplaceSummary(product) }}
                     </div>
                   </td>
-                  <td class="px-4 py-4 text-right">
+                  <td
+                    *ngIf="isColumnVisible('salePrice')"
+                    class="px-4 py-4 text-right"
+                    [style.width.px]="columnWidth('salePrice')"
+                  >
                     <p class="font-medium">
                       {{ product.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
                     </p>
@@ -643,19 +779,31 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
                       Margin {{ product.grossProfitPercent }}%
                     </p>
                   </td>
-                  <td class="px-4 py-4 text-right">
+                  <td
+                    *ngIf="isColumnVisible('soldQty')"
+                    class="px-4 py-4 text-right"
+                    [style.width.px]="columnWidth('soldQty')"
+                  >
                     <p class="font-medium">{{ soldQty(product) }}</p>
                     <p class="text-xs text-muted-foreground">
                       {{ soldPeriodLabel(filters.soldPeriod) }}
                     </p>
                   </td>
-                  <td class="px-4 py-4 text-right">
+                  <td
+                    *ngIf="isColumnVisible('stockQty')"
+                    class="px-4 py-4 text-right"
+                    [style.width.px]="columnWidth('stockQty')"
+                  >
                     <p class="font-medium">{{ product.stockQty }}</p>
                     <p class="text-xs text-muted-foreground">
                       {{ product.stockDays }} days
                     </p>
                   </td>
-                  <td class="px-4 py-4">
+                  <td
+                    *ngIf="isColumnVisible('restockStatus')"
+                    class="px-4 py-4"
+                    [style.width.px]="columnWidth('restockStatus')"
+                  >
                     <span
                       class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
                       [ngClass]="restockClasses[product.restockStatus]"
@@ -708,6 +856,37 @@ export class ProductGridComponent implements OnInit {
   readonly brands = brands;
   readonly marketplaces = marketplacePlatforms;
   readonly tagColors = tagColors;
+
+  readonly columns: ColumnConfig[] = [
+    { id: 'name', label: 'Product', visible: true, sortable: true },
+    { id: 'productType', label: 'Type', visible: true, sortable: true },
+    { id: 'tags', label: 'Tags', visible: true },
+    { id: 'vendorName', label: 'Vendor', visible: true, sortable: true },
+    { id: 'brand', label: 'Brand', visible: true, sortable: true },
+    { id: 'marketplaces', label: 'Marketplaces', visible: true },
+    { id: 'salePrice', label: 'Price', visible: true, sortable: true, align: 'right' },
+    { id: 'soldQty', label: 'Sold', visible: true, sortable: true, align: 'right' },
+    { id: 'stockQty', label: 'Stock', visible: true, sortable: true, align: 'right' },
+    { id: 'restockStatus', label: 'Restock', visible: true, sortable: true },
+  ];
+
+  private readonly defaultColumnWidths: Record<string, number> = {
+    name: 320,
+    productType: 140,
+    tags: 240,
+    vendorName: 200,
+    brand: 160,
+    marketplaces: 200,
+    salePrice: 140,
+    soldQty: 120,
+    stockQty: 120,
+    restockStatus: 150,
+  };
+
+  private resizingColumnId: string | null = null;
+  private resizeStartX = 0;
+  private resizeStartWidth = 0;
+  columnWidths: Record<string, number> = { ...this.defaultColumnWidths };
 
   tags: Tag[] = [];
   productTags: Record<string, string[]> = {};
@@ -1011,6 +1190,48 @@ export class ProductGridComponent implements OnInit {
     this.currentPage = 1;
     this.sortKey = null;
     this.sortDirection = null;
+  }
+
+  isColumnVisible(columnId: string): boolean {
+    return this.columns.find((column) => column.id === columnId)?.visible ?? true;
+  }
+
+  toggleColumn(columnId: string): void {
+    const column = this.columns.find((item) => item.id === columnId);
+    if (!column) return;
+    column.visible = !column.visible;
+  }
+
+  columnWidth(columnId: string): number {
+    return this.columnWidths[columnId] ?? 150;
+  }
+
+  startResize(event: MouseEvent, columnId: string): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.resizingColumnId = columnId;
+    this.resizeStartX = event.clientX;
+    this.resizeStartWidth = this.columnWidth(columnId);
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (!this.resizingColumnId) return;
+      const diff = moveEvent.clientX - this.resizeStartX;
+      const nextWidth = Math.max(80, this.resizeStartWidth + diff);
+      this.columnWidths = {
+        ...this.columnWidths,
+        [this.resizingColumnId]: nextWidth,
+      };
+      this.cdr.markForCheck();
+    };
+
+    const handleMouseUp = () => {
+      this.resizingColumnId = null;
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   }
 
   previousPage(): void {
