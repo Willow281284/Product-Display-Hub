@@ -90,6 +90,30 @@ export class TagService {
     saveProductTags(next);
   }
 
+  bulkAddTag(productIds: string[], tagId: string): void {
+    if (!tagId || productIds.length === 0) return;
+    const next = { ...this.productTagsSubject.value };
+    productIds.forEach((productId) => {
+      const current = next[productId] || [];
+      if (!current.includes(tagId)) {
+        next[productId] = [...current, tagId];
+      }
+    });
+    this.productTagsSubject.next(next);
+    saveProductTags(next);
+  }
+
+  bulkRemoveTag(productIds: string[], tagId: string): void {
+    if (!tagId || productIds.length === 0) return;
+    const next = { ...this.productTagsSubject.value };
+    productIds.forEach((productId) => {
+      const current = next[productId] || [];
+      next[productId] = current.filter((id) => id !== tagId);
+    });
+    this.productTagsSubject.next(next);
+    saveProductTags(next);
+  }
+
   clearTagFromAllProducts(tagId: string): void {
     const next: Record<string, string[]> = {};
     Object.entries(this.productTagsSubject.value).forEach(([productId, ids]) => {
