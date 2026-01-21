@@ -223,10 +223,10 @@ interface ColumnPreferences {
           <div class="flex flex-wrap items-center gap-2">
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by brand"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 22h18" />
                     <path d="M6 22V4h12v18" />
@@ -237,6 +237,11 @@ interface ColumnPreferences {
                 Brand
                 <span class="text-muted-foreground">
                   ({{ filters.brand.length || 'all' }})
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -259,10 +264,10 @@ interface ColumnPreferences {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by marketplace"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 9l2-5h14l2 5" />
                     <path d="M5 9v11h14V9" />
@@ -272,6 +277,11 @@ interface ColumnPreferences {
                 Marketplace
                 <span class="text-muted-foreground">
                   ({{ filters.marketplace.length || 'all' }})
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -294,10 +304,10 @@ interface ColumnPreferences {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by status"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <polyline points="3 12 7 12 9 6 13 18 16 10 21 10" />
                   </svg>
@@ -305,6 +315,11 @@ interface ColumnPreferences {
                 Status
                 <span class="text-muted-foreground">
                   ({{ filters.status.length || 'all' }})
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -330,10 +345,10 @@ interface ColumnPreferences {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by price"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M12 1v22" />
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
@@ -346,6 +361,11 @@ interface ColumnPreferences {
                       ? '$' + filters.priceRange[0] + ' - ' + filters.priceRange[1]
                       : 'all'
                   }}
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -376,10 +396,10 @@ interface ColumnPreferences {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by stock"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 7l9-4 9 4-9 4-9-4z" />
                     <path d="M3 7v10l9 4 9-4V7" />
@@ -392,6 +412,11 @@ interface ColumnPreferences {
                       ? filters.stockRange[0] + ' - ' + filters.stockRange[1]
                       : 'all'
                   }}
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -422,10 +447,10 @@ interface ColumnPreferences {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by sold units"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <polyline points="3 17 9 11 13 15 21 7" />
                     <path d="M21 7v6h-6" />
@@ -438,6 +463,11 @@ interface ColumnPreferences {
                       ? filters.soldRange[0] + ' - ' + filters.soldRange[1]
                       : 'all'
                   }}
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -480,10 +510,10 @@ interface ColumnPreferences {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by product type"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 7l9-4 9 4-9 4-9-4z" />
                     <path d="M3 7v10l9 4 9-4V7" />
@@ -498,6 +528,11 @@ interface ColumnPreferences {
                         ? 'kit'
                         : 'single'
                   }}
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -538,10 +573,10 @@ interface ColumnPreferences {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by variations"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M12 2l9 5-9 5-9-5 9-5z" />
                     <path d="M3 12l9 5 9-5" />
@@ -557,6 +592,11 @@ interface ColumnPreferences {
                         ? 'has'
                         : 'none'
                   }}
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -597,10 +637,10 @@ interface ColumnPreferences {
 
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium transition hover:bg-muted"
+                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by tags"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M20 13l-7 7-10-10V3h7l10 10z" />
                     <circle cx="7.5" cy="7.5" r="1.5" />
@@ -609,6 +649,11 @@ interface ColumnPreferences {
                 Tags
                 <span class="text-muted-foreground">
                   ({{ filters.tags.length || 'all' }})
+                </span>
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
               </summary>
               <div
@@ -653,13 +698,21 @@ interface ColumnPreferences {
             </details>
 
             <div class="ml-auto flex flex-1 items-center gap-2">
-              <input
-                type="search"
-                class="w-full max-w-[420px] rounded-full border border-border bg-background px-4 py-2 text-xs transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
-                placeholder="Search products..."
-                [(ngModel)]="filters.search"
-                (ngModelChange)="onFilterChange()"
-              />
+              <div class="relative w-full max-w-[420px]">
+                <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.3-4.3" />
+                  </svg>
+                </span>
+                <input
+                  type="search"
+                  class="w-full rounded-full border border-border bg-background px-9 py-2 text-xs transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  placeholder="Search products..."
+                  [(ngModel)]="filters.search"
+                  (ngModelChange)="onFilterChange()"
+                />
+              </div>
               <button
                 type="button"
                 class="rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
@@ -674,16 +727,21 @@ interface ColumnPreferences {
               </button>
               <details class="relative">
                 <summary
-                  class="cursor-pointer rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
+                  class="flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
                   title="Columns"
                 >
-                  <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                       <rect x="3" y="4" width="7" height="16" />
                       <rect x="14" y="4" width="7" height="16" />
                     </svg>
                   </span>
                   Columns
+                  <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </span>
                 </summary>
                 <div
                   class="absolute right-0 z-20 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
@@ -708,23 +766,52 @@ interface ColumnPreferences {
           <div class="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              class="rounded-full border border-border px-3 py-1 text-xs"
+              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs transition hover:bg-muted"
               (click)="openCsvDialog('update')"
+              title="Update via CSV"
             >
+              <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M3 12a9 9 0 0 1 15.5-6.4" />
+                  <path d="M21 3v6h-6" />
+                  <path d="M21 12a9 9 0 0 1-15.5 6.4" />
+                  <path d="M3 21v-6h6" />
+                </svg>
+              </span>
               Update via CSV
             </button>
             <button
               type="button"
-              class="rounded-full border border-destructive px-3 py-1 text-xs text-destructive"
+              class="flex items-center gap-2 rounded-full border border-destructive px-3 py-1 text-xs text-destructive transition hover:bg-destructive/10"
               (click)="resetFilters()"
+              title="Clear all filters"
             >
+              <span class="inline-flex h-4 w-4 items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M3 6h18" />
+                  <path d="M8 6v12" />
+                  <path d="M16 6v12" />
+                  <path d="M5 6l1-3h12l1 3" />
+                </svg>
+              </span>
               Clear all
             </button>
             <details class="relative">
               <summary
-                class="cursor-pointer rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                class="flex cursor-pointer items-center gap-2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90"
               >
+                <span class="inline-flex h-4 w-4 items-center justify-center text-primary-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M12 5v14" />
+                    <path d="M5 12h14" />
+                  </svg>
+                </span>
                 Create Product
+                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-primary-foreground/80">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
               </summary>
               <div
                 class="absolute z-20 mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
