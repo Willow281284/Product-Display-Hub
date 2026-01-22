@@ -2013,12 +2013,12 @@ interface ColumnPreferences {
                   </p>
                 </div>
 
-                <div class="mt-2 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
+                <div class="relative mt-2 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
                   <table class="w-full min-w-[1250px] text-sm">
-              <thead class="bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
+              <thead class="relative z-10 bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
                 <tr>
                   <th
-                    class="sticky top-0 z-10 bg-card/95 px-4 py-3 text-left"
+                    class="sticky top-0 z-0 bg-card/95 px-4 py-3 text-left"
                   >
                     <input
                       type="checkbox"
@@ -2029,7 +2029,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('name')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('name')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('name')"
@@ -2065,7 +2065,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('productType')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('productType')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('productType')"
@@ -2101,7 +2101,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('tags')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('tags')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('tags')"
@@ -2130,7 +2130,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('offers')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('offers')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('offers')"
@@ -2159,7 +2159,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('vendorName')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('vendorName')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('vendorName')"
@@ -2195,7 +2195,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('brand')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('brand')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('brand')"
@@ -2231,7 +2231,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('marketplaces')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('marketplaces')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('marketplaces')"
@@ -2267,7 +2267,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('salePrice')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('salePrice')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('salePrice')"
@@ -2303,7 +2303,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('soldQty')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('soldQty')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('soldQty')"
@@ -2339,7 +2339,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('stockQty')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('stockQty')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('stockQty')"
@@ -2375,7 +2375,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('restockStatus')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('restockStatus')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('restockStatus')"
