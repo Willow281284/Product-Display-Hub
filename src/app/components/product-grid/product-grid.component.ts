@@ -268,7 +268,7 @@ interface ColumnPreferences {
         </div>
 
         <div
-          class="flex flex-col gap-3 border-b border-border bg-card/95 px-4 py-3 shadow-sm backdrop-blur"
+          class="relative z-40 flex flex-col gap-3 border-b border-border bg-card/95 px-4 py-3 shadow-sm backdrop-blur"
         >
           <div class="flex flex-wrap items-center gap-2">
             <details
@@ -301,7 +301,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label
                   *ngFor="let brand of brands"
@@ -347,7 +347,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label
                   *ngFor="let platform of marketplaces"
@@ -391,7 +391,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label
                   *ngFor="let status of statusOptions"
@@ -443,7 +443,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <div class="grid grid-cols-2 gap-3">
                   <label class="text-xs text-muted-foreground">
@@ -500,7 +500,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <div class="grid grid-cols-2 gap-3">
                   <label class="text-xs text-muted-foreground">
@@ -557,7 +557,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-72 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 w-72 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <div class="grid grid-cols-2 gap-3">
                   <label class="text-xs text-muted-foreground">
@@ -628,7 +628,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
@@ -698,7 +698,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-44 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 w-44 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
@@ -761,7 +761,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
                 <div class="flex flex-wrap items-center gap-2">
                   <button
@@ -855,7 +855,7 @@ interface ColumnPreferences {
                   </span>
                 </summary>
                 <div
-                  class="absolute right-0 z-20 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                  class="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
                 >
                   <label
                     *ngFor="let column of columns"
@@ -932,7 +932,7 @@ interface ColumnPreferences {
                 </span>
               </summary>
               <div
-                class="absolute z-20 mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
+                class="absolute z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
               >
                 <button
                   type="button"
@@ -1816,7 +1816,7 @@ interface ColumnPreferences {
                       </span>
                       Tags
                     </summary>
-                    <div class="absolute z-20 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+                    <div class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
                       <p class="px-1 text-[10px] text-muted-foreground">Add tag</p>
                       <select
                         class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
@@ -1849,7 +1849,7 @@ interface ColumnPreferences {
                       </span>
                       Tags
                     </summary>
-                    <div class="absolute z-20 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+                    <div class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
                       <p class="px-1 text-[10px] text-muted-foreground">Remove tag</p>
                       <select
                         class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
@@ -1880,7 +1880,7 @@ interface ColumnPreferences {
                       </span>
                       Values
                     </summary>
-                    <div class="absolute z-20 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur">
+                    <div class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur">
                       <div class="grid gap-2">
                         <label class="text-xs text-muted-foreground">
                           Sale price
@@ -2013,12 +2013,12 @@ interface ColumnPreferences {
                   </p>
                 </div>
 
-                <div class="mt-2 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
+                <div class="relative mt-2 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
                   <table class="w-full min-w-[1250px] text-sm">
-              <thead class="bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
+              <thead class="relative z-10 bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
                 <tr>
                   <th
-                    class="sticky top-0 z-10 bg-card/95 px-4 py-3 text-left"
+                    class="sticky top-0 z-0 bg-card/95 px-4 py-3 text-left"
                   >
                     <input
                       type="checkbox"
@@ -2029,7 +2029,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('name')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('name')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('name')"
@@ -2065,7 +2065,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('productType')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('productType')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('productType')"
@@ -2101,7 +2101,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('tags')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('tags')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('tags')"
@@ -2130,7 +2130,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('offers')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('offers')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('offers')"
@@ -2159,7 +2159,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('vendorName')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('vendorName')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('vendorName')"
@@ -2195,7 +2195,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('brand')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('brand')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('brand')"
@@ -2231,7 +2231,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('marketplaces')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('marketplaces')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('marketplaces')"
@@ -2267,7 +2267,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('salePrice')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('salePrice')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('salePrice')"
@@ -2303,7 +2303,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('soldQty')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('soldQty')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('soldQty')"
@@ -2339,7 +2339,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('stockQty')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3 text-right"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
                     [style.width.px]="columnWidth('stockQty')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('stockQty')"
@@ -2375,7 +2375,7 @@ interface ColumnPreferences {
                   </th>
                   <th
                     *ngIf="isColumnVisible('restockStatus')"
-                    class="sticky top-0 z-10 bg-card/95 relative px-4 py-3"
+                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                     [style.width.px]="columnWidth('restockStatus')"
                     (dragover)="allowColumnDrop($event)"
                     (drop)="onColumnDrop('restockStatus')"
