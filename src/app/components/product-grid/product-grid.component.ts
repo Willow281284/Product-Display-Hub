@@ -216,14 +216,18 @@ interface ColumnPreferences {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="w-full px-4 pb-6 pt-4 sm:px-6 lg:px-8">
+    <section class="w-full flex flex-col h-screen bg-background">
       <div class="flex min-h-[calc(100vh-140px)] flex-col gap-0 rounded-2xl border border-border bg-card shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-card/95 px-4 py-4">
-          <div>
+        
+        <div class="flex items-center gap-3">
+          <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package w-5 h-5 text-primary"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"></path><path d="m7.5 4.27 9 5.15"></path></svg></div>  
+          <div class="flex flex-col">
             <h2 class="text-lg font-semibold text-foreground">Products</h2>
             <p class="text-xs text-muted-foreground">
               {{ filteredProducts().length }} of {{ products.length }} products
             </p>
+          </div>  
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <button
@@ -3657,7 +3661,7 @@ export class ProductGridComponent implements OnInit {
       isActive: true,
       condition:
         this.offerDialogType === 'quantity_discount' ||
-        this.offerDialogType === 'bulk_purchase'
+          this.offerDialogType === 'bulk_purchase'
           ? { minQty: 2 }
           : this.offerDialogType === 'bogo_half' ||
             this.offerDialogType === 'bogo_free'
