@@ -216,10 +216,55 @@ interface ColumnPreferences {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="w-full px-4 pb-10 pt-6 sm:px-6 lg:px-8">
-      <div class="flex flex-col gap-4 rounded-2xl border border-border bg-card shadow-sm">
+    <section class="w-full px-4 pb-6 pt-4 sm:px-6 lg:px-8">
+      <div class="flex min-h-[calc(100vh-140px)] flex-col gap-0 rounded-2xl border border-border bg-card shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-card/95 px-4 py-4">
+          <div>
+            <h2 class="text-lg font-semibold text-foreground">Products</h2>
+            <p class="text-xs text-muted-foreground">
+              {{ filteredProducts().length }} of {{ products.length }} products
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              class="rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              title="Marketplace integrations"
+            >
+              Marketplace Integrations
+            </button>
+            <button
+              type="button"
+              class="flex items-center gap-2 rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              title="Create offer"
+            >
+              Create Offer
+              <span class="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
+                {{ offers.length }}
+              </span>
+            </button>
+            <button
+              type="button"
+              class="rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              title="Offer analytics"
+            >
+              Offer Analytics
+            </button>
+            <button
+              type="button"
+              class="flex items-center gap-2 rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              title="Batch management"
+            >
+              Batch Management
+              <span class="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
+                9
+              </span>
+            </button>
+          </div>
+        </div>
+
         <div
-          class="sticky top-0 z-30 flex flex-col gap-3 rounded-t-2xl border-b border-border bg-card/95 px-4 py-3 shadow-sm backdrop-blur"
+          class="flex flex-col gap-3 border-b border-border bg-card/95 px-4 py-3 shadow-sm backdrop-blur"
         >
           <div class="flex flex-wrap items-center gap-2">
             <details
@@ -1708,13 +1753,14 @@ interface ColumnPreferences {
           </div>
         </div>
 
-        <ng-container *ngIf="filteredProducts() as filtered">
-          <ng-container *ngIf="paginatedProducts(filtered) as visible">
-            <div
-              *ngIf="selectedCount > 0"
-              class="mx-4 rounded-xl border border-emerald-900/60 bg-emerald-950/70 px-4 py-2 text-emerald-50 shadow-lg shadow-emerald-950/20"
-            >
-              <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+        <div class="flex flex-1 flex-col min-h-0">
+          <ng-container *ngIf="filteredProducts() as filtered">
+            <ng-container *ngIf="paginatedProducts(filtered) as visible">
+              <div
+                *ngIf="selectedCount > 0"
+                class="mx-4 mt-3 rounded-xl border border-emerald-900/60 bg-emerald-950/70 px-4 py-2 text-emerald-50 shadow-lg shadow-emerald-950/20"
+              >
+                <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
                 <div class="flex items-center gap-3">
                   <span class="font-semibold">
                     {{ selectedCount }} product selected
@@ -1936,21 +1982,22 @@ interface ColumnPreferences {
                     Delete
                   </button>
                 </div>
+                </div>
               </div>
-            </div>
 
-            <div class="flex flex-wrap items-center justify-between gap-2 px-4 text-sm">
-            <p class="text-muted-foreground">
-              Showing {{ pageStart(filtered.length) }}-{{ pageEnd(filtered.length) }}
-              of {{ filtered.length }} products
-            </p>
-            <p class="text-muted-foreground">
-              Total catalog: {{ products.length }} items
-            </p>
-          </div>
+              <div class="flex-1 overflow-auto px-4 pb-2 pt-3">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+                  <p>
+                    Showing {{ pageStart(filtered.length) }}-{{ pageEnd(filtered.length) }}
+                    of {{ filtered.length }} products
+                  </p>
+                  <p>
+                    Total catalog: {{ products.length }} items
+                  </p>
+                </div>
 
-          <div class="mx-4 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
-            <table class="w-full min-w-[1250px] text-sm">
+                <div class="mt-2 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
+                  <table class="w-full min-w-[1250px] text-sm">
               <thead class="bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
                 <tr>
                   <th
@@ -1958,7 +2005,7 @@ interface ColumnPreferences {
                   >
                     <input
                       type="checkbox"
-                      class="h-4 w-4"
+                      class="h-4 w-4 accent-emerald-500"
                       [checked]="allVisibleSelected(visible)"
                       (change)="toggleSelectVisible(visible)"
                     />
@@ -2355,7 +2402,7 @@ interface ColumnPreferences {
                   <td class="px-4 py-4">
                     <input
                       type="checkbox"
-                      class="h-4 w-4"
+                      class="h-4 w-4 accent-emerald-500"
                       [checked]="isSelected(product.id)"
                       (change)="toggleSelectProduct(product.id)"
                     />
@@ -2396,9 +2443,12 @@ interface ColumnPreferences {
                     class="px-4 py-4"
                     [style.width.px]="columnWidth('productType')"
                   >
-                    <div class="text-sm font-medium capitalize">
-                      {{ product.productType }}
-                    </div>
+                    <span
+                      class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold"
+                      [ngClass]="typeBadgeClass(product)"
+                    >
+                      {{ typeBadgeLabel(product) }}
+                    </span>
                     <div class="text-xs text-muted-foreground" *ngIf="product.variation">
                       {{ product.variation.type }} · {{ product.variation.value }}
                     </div>
@@ -2428,8 +2478,14 @@ interface ColumnPreferences {
                         type="button"
                         class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
                         (click)="toggleTagPicker(product.id)"
+                        title="Add tag"
                       >
-                        {{ tagPickerProductId === product.id ? 'Close' : 'Add tag' }}
+                        <span class="inline-flex h-4 w-4 items-center justify-center">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                            <path d="M12 5v14" />
+                            <path d="M5 12h14" />
+                          </svg>
+                        </span>
                       </button>
                       <button
                         *ngIf="tags.length === 0"
@@ -2586,46 +2642,53 @@ interface ColumnPreferences {
                   </td>
                 </tr>
               </tbody>
-            </table>
-          </div>
+                  </table>
+                </div>
+              </div>
 
-          <div
-            class="flex flex-col items-center justify-between gap-3 px-4 pb-6 text-sm sm:flex-row"
-          >
-            <div class="text-muted-foreground">
-              Page {{ currentPage }} of {{ totalPages(filtered.length) }}
-            </div>
-            <div class="flex items-center gap-2">
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-2 text-sm disabled:opacity-50"
-                [disabled]="currentPage === 1"
-                (click)="previousPage()"
+              <div
+                class="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card/95 px-4 py-3 text-xs text-muted-foreground backdrop-blur"
               >
-                Previous
-              </button>
-              <button
-                *ngFor="let page of visiblePages(filtered.length)"
-                type="button"
-                class="rounded-md border border-border px-3 py-2 text-sm transition hover:bg-muted"
-                [class.bg-muted]="page === currentPage"
-                (click)="goToPage(page)"
-              >
-                {{ page }}
-              </button>
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-2 text-sm disabled:opacity-50"
-                [disabled]="currentPage >= totalPages(filtered.length)"
-                (click)="nextPage(filtered.length)"
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </ng-container>
-      </ng-container>
-      </div>
+                <div class="flex items-center gap-2">
+                  <span>Shortcuts</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span>Rows per page:</span>
+                  <select
+                    class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [(ngModel)]="pageSize"
+                    (ngModelChange)="onPageSizeChange()"
+                  >
+                    <option [value]="10">10</option>
+                    <option [value]="25">25</option>
+                    <option [value]="50">50</option>
+                  </select>
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      class="rounded-md border border-border px-2 py-1 text-xs disabled:opacity-50"
+                      [disabled]="currentPage === 1"
+                      (click)="previousPage()"
+                    >
+                      &lt;
+                    </button>
+                    <span class="text-xs">
+                      Page {{ currentPage }} of {{ totalPages(filtered.length) }}
+                    </span>
+                    <button
+                      type="button"
+                      class="rounded-md border border-border px-2 py-1 text-xs disabled:opacity-50"
+                      [disabled]="currentPage >= totalPages(filtered.length)"
+                      (click)="nextPage(filtered.length)"
+                    >
+                      &gt;
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -3630,6 +3693,26 @@ export class ProductGridComponent implements OnInit {
     const status = getOfferStatus(offer);
     const config = offerStatusConfig[status];
     return `${config.bgColor} ${config.color}`;
+  }
+
+  typeBadgeLabel(product: Product): string {
+    if (product.productType === 'kit') {
+      return `Kit (${product.kitComponents?.length || 0})`;
+    }
+    if (product.productType === 'variation') {
+      return 'Variation';
+    }
+    return 'Single';
+  }
+
+  typeBadgeClass(product: Product): string {
+    if (product.productType === 'kit') {
+      return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+    }
+    if (product.productType === 'variation') {
+      return 'bg-blue-500/20 text-blue-300 border border-blue-500/30';
+    }
+    return 'bg-muted text-muted-foreground border border-border';
   }
 
   openBulkOffer(): void {
