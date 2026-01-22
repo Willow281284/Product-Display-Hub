@@ -1971,13 +1971,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('name')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('name', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
@@ -2000,13 +2007,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('productType')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('productType', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
@@ -2029,13 +2043,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('tags')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('tags', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     Tags
                     <span
@@ -2051,13 +2072,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('offers')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('offers', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     Offers
                     <span
@@ -2073,13 +2101,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('vendorName')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('vendorName', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
@@ -2102,13 +2137,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('brand')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('brand', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
@@ -2131,13 +2173,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('marketplaces')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('marketplaces', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
@@ -2160,13 +2209,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('salePrice')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('salePrice', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
@@ -2189,13 +2245,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('soldQty')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('soldQty', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
@@ -2218,13 +2281,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('stockQty')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('stockQty', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
@@ -2247,13 +2317,20 @@ interface ColumnPreferences {
                     (drop)="onColumnDrop('restockStatus')"
                   >
                     <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab text-muted-foreground text-[10px]"
+                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                       draggable="true"
                       title="Drag to reorder"
                       (dragstart)="startColumnDrag('restockStatus', $event)"
                       (dragend)="endColumnDrag()"
                     >
-                      ⋮⋮
+                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                        <circle cx="3" cy="3" r="1" />
+                        <circle cx="9" cy="3" r="1" />
+                        <circle cx="3" cy="6" r="1" />
+                        <circle cx="9" cy="6" r="1" />
+                        <circle cx="3" cy="9" r="1" />
+                        <circle cx="9" cy="9" r="1" />
+                      </svg>
                     </span>
                     <button
                       type="button"
