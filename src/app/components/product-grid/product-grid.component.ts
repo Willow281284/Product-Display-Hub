@@ -275,6 +275,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by brand"
+                data-tooltip="Filter by brand"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('brand')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -321,6 +322,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by marketplace"
+                data-tooltip="Filter by marketplace"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('marketplace')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -366,6 +368,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by status"
+                data-tooltip="Filter by status"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('status')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -412,6 +415,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by price"
+                data-tooltip="Filter by price"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('price')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -468,6 +472,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by stock"
+                data-tooltip="Filter by stock"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('stock')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -524,6 +529,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by sold units"
+                data-tooltip="Filter by sold units"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('sold')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -592,6 +598,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by product type"
+                data-tooltip="Filter by product type"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('type')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -660,6 +667,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by variations"
+                data-tooltip="Filter by variations"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('variation')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -729,6 +737,7 @@ interface ColumnPreferences {
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by tags"
+                data-tooltip="Filter by tags"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('tags')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -808,6 +817,7 @@ interface ColumnPreferences {
                 type="button"
                 class="rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
                 title="Custom filters"
+                data-tooltip="Custom filters"
               >
                 <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
@@ -824,6 +834,7 @@ interface ColumnPreferences {
                 <summary
                   class="flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
                   title="Columns"
+                  data-tooltip="Columns"
                   (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('columns')"
                 >
                   <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -865,6 +876,7 @@ interface ColumnPreferences {
               class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs transition hover:bg-muted"
               (click)="openCsvDialog('update')"
               title="Update via CSV"
+              data-tooltip="Update via CSV"
             >
               <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
@@ -881,6 +893,7 @@ interface ColumnPreferences {
               class="flex items-center gap-2 rounded-full border border-destructive px-3 py-1 text-xs text-destructive transition hover:bg-destructive/10"
               (click)="resetFilters()"
               title="Clear all filters"
+              data-tooltip="Clear all filters"
             >
               <span class="inline-flex h-4 w-4 items-center justify-center">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">

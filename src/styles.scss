@@ -144,3 +144,33 @@ All colors MUST be HSL.
     appearance: textfield;
   }
 }
+
+/* Tooltip helper using data-tooltip attribute */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(2px);
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+  border: 1px solid hsl(var(--border));
+  font-size: 11px;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 50;
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
