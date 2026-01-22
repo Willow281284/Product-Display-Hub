@@ -1710,134 +1710,232 @@ interface ColumnPreferences {
 
         <ng-container *ngIf="filteredProducts() as filtered">
           <ng-container *ngIf="paginatedProducts(filtered) as visible">
-            <div *ngIf="selectedCount > 0" class="mx-4 rounded-lg border border-border bg-muted/50 px-4 py-3 backdrop-blur">
-              <div class="flex flex-wrap items-center gap-3 text-sm">
-                <span class="font-semibold">
-                  {{ selectedCount }} selected
-                </span>
-                <button
-                  type="button"
-                  class="rounded-full border border-border px-3 py-1 text-xs"
-                  (click)="selectAllFiltered(filtered)"
-                >
-                  Select all filtered ({{ filtered.length }})
-                </button>
-                <button
-                  type="button"
-                  class="rounded-full border border-border px-3 py-1 text-xs"
-                  (click)="clearSelection()"
-                >
-                  Clear selection
-                </button>
-                <label class="flex items-center gap-2 text-xs text-muted-foreground">
-                  Add tag
-                  <select
-                    class="rounded-full border border-border bg-background px-2 py-1 text-xs"
-                    (change)="bulkAddTag($any($event.target).value)"
+            <div
+              *ngIf="selectedCount > 0"
+              class="mx-4 rounded-xl border border-emerald-900/60 bg-emerald-950/70 px-4 py-2 text-emerald-50 shadow-lg shadow-emerald-950/20"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+                <div class="flex items-center gap-3">
+                  <span class="font-semibold">
+                    {{ selectedCount }} product selected
+                  </span>
+                  <button
+                    type="button"
+                    class="text-xs text-emerald-200 hover:text-emerald-50"
+                    (click)="clearSelection()"
                   >
-                    <option value="">Choose</option>
-                    <option *ngFor="let tag of tags" [value]="tag.id">
-                      {{ tag.name }}
-                    </option>
-                  </select>
-                </label>
-                <label class="flex items-center gap-2 text-xs text-muted-foreground">
-                  Remove tag
-                  <select
-                    class="rounded-full border border-border bg-background px-2 py-1 text-xs"
-                    (change)="bulkRemoveTag($any($event.target).value)"
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    class="text-xs text-emerald-200 hover:text-emerald-50"
+                    (click)="selectAllFiltered(filtered)"
                   >
-                    <option value="">Choose</option>
-                    <option *ngFor="let tag of tags" [value]="tag.id">
-                      {{ tag.name }}
-                    </option>
-                  </select>
-                </label>
-                <details
-                  class="relative"
-                  data-dropdown="bulk-pricing"
-                  [open]="openDropdownId === 'bulk-pricing'"
-                >
-                  <summary
-                    class="cursor-pointer rounded-full border border-border px-3 py-1 text-xs"
-                    (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-pricing')"
+                    Select all ({{ filtered.length }})
+                  </button>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                  <details
+                    class="relative"
+                    data-dropdown="bulk-add-tag"
+                    [open]="openDropdownId === 'bulk-add-tag'"
                   >
-                    Update pricing
-                  </summary>
-                  <div
-                    class="absolute z-20 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-                  >
-                    <div class="grid gap-2">
-                      <label class="text-xs text-muted-foreground">
-                        Sale price
-                        <input
-                          type="number"
-                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                          [(ngModel)]="bulkSalePrice"
-                        />
-                      </label>
-                      <label class="text-xs text-muted-foreground">
-                        Stock qty
-                        <input
-                          type="number"
-                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                          [(ngModel)]="bulkStockQty"
-                        />
-                      </label>
-                      <label class="text-xs text-muted-foreground">
-                        Landed cost
-                        <input
-                          type="number"
-                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                          [(ngModel)]="bulkLandedCost"
-                        />
-                      </label>
-                      <label class="text-xs text-muted-foreground">
-                        Purchased qty
-                        <input
-                          type="number"
-                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                          [(ngModel)]="bulkPurchaseQty"
-                        />
-                      </label>
-                      <button
-                        type="button"
-                        class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-                        (click)="applyBulkPricing()"
+                    <summary
+                      class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                      (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-add-tag')"
+                    >
+                      <span class="inline-flex h-4 w-4 items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                          <path d="M12 5v14" />
+                          <path d="M5 12h14" />
+                        </svg>
+                      </span>
+                      Tags
+                    </summary>
+                    <div class="absolute z-20 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+                      <p class="px-1 text-[10px] text-muted-foreground">Add tag</p>
+                      <select
+                        class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                        (change)="bulkAddTag($any($event.target).value)"
                       >
-                        Apply updates
-                      </button>
+                        <option value="">Choose</option>
+                        <option *ngFor="let tag of tags" [value]="tag.id">
+                          {{ tag.name }}
+                        </option>
+                      </select>
                     </div>
-                  </div>
-                </details>
-                <button
-                  type="button"
-                  class="rounded-full border border-border px-3 py-1 text-xs"
-                  (click)="exportSelectedCsv(filtered)"
-                >
-                  Export CSV
-                </button>
-                <button
-                  type="button"
-                  class="rounded-full border border-border px-3 py-1 text-xs"
-                  (click)="openBulkOffer()"
-                >
-                  Create offer
-                </button>
-                <button
-                  type="button"
-                  class="rounded-full border border-border px-3 py-1 text-xs"
-                  (click)="openBulkListing()"
-                >
-                  Bulk listing
-                </button>
-                <button
-                  type="button"
-                  class="rounded-full border border-destructive px-3 py-1 text-xs text-destructive"
-                  (click)="bulkDelete()"
-                >
-                  Delete
-                </button>
+                  </details>
+
+                  <details
+                    class="relative"
+                    data-dropdown="bulk-remove-tag"
+                    [open]="openDropdownId === 'bulk-remove-tag'"
+                  >
+                    <summary
+                      class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                      (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-remove-tag')"
+                    >
+                      <span class="inline-flex h-4 w-4 items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6v12" />
+                          <path d="M16 6v12" />
+                          <path d="M5 6l1-3h12l1 3" />
+                        </svg>
+                      </span>
+                      Tags
+                    </summary>
+                    <div class="absolute z-20 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+                      <p class="px-1 text-[10px] text-muted-foreground">Remove tag</p>
+                      <select
+                        class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                        (change)="bulkRemoveTag($any($event.target).value)"
+                      >
+                        <option value="">Choose</option>
+                        <option *ngFor="let tag of tags" [value]="tag.id">
+                          {{ tag.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </details>
+
+                  <details
+                    class="relative"
+                    data-dropdown="bulk-pricing"
+                    [open]="openDropdownId === 'bulk-pricing'"
+                  >
+                    <summary
+                      class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                      (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-pricing')"
+                    >
+                      <span class="inline-flex h-4 w-4 items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                          <path d="M12 1v22" />
+                          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                      </span>
+                      Values
+                    </summary>
+                    <div class="absolute z-20 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur">
+                      <div class="grid gap-2">
+                        <label class="text-xs text-muted-foreground">
+                          Sale price
+                          <input
+                            type="number"
+                            class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                            [(ngModel)]="bulkSalePrice"
+                          />
+                        </label>
+                        <label class="text-xs text-muted-foreground">
+                          Stock qty
+                          <input
+                            type="number"
+                            class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                            [(ngModel)]="bulkStockQty"
+                          />
+                        </label>
+                        <label class="text-xs text-muted-foreground">
+                          Landed cost
+                          <input
+                            type="number"
+                            class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                            [(ngModel)]="bulkLandedCost"
+                          />
+                        </label>
+                        <label class="text-xs text-muted-foreground">
+                          Purchased qty
+                          <input
+                            type="number"
+                            class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                            [(ngModel)]="bulkPurchaseQty"
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                          (click)="applyBulkPricing()"
+                        >
+                          Apply updates
+                        </button>
+                      </div>
+                    </div>
+                  </details>
+
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                    (click)="openBulkListing()"
+                  >
+                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                        <path d="M3 7v10l9 4 9-4V7" />
+                      </svg>
+                    </span>
+                    Marketplaces
+                  </button>
+
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                    (click)="openBulkOffer()"
+                  >
+                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M20 13l-7 7-10-10V3h7l10 10z" />
+                        <circle cx="7.5" cy="7.5" r="1.5" />
+                      </svg>
+                    </span>
+                    Offer
+                  </button>
+
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                    (click)="openHistory()"
+                  >
+                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9" />
+                        <path d="M3 3v6h6" />
+                        <path d="M12 7v5l3 3" />
+                      </svg>
+                    </span>
+                    History
+                  </button>
+
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                    (click)="exportSelectedCsv(filtered)"
+                  >
+                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M12 3v12" />
+                        <path d="M7 10l5 5 5-5" />
+                        <path d="M5 21h14" />
+                      </svg>
+                    </span>
+                    CSV
+                  </button>
+
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 rounded-md border border-destructive bg-destructive px-3 py-1 text-xs font-semibold text-white transition hover:bg-destructive/90"
+                    (click)="bulkDelete()"
+                  >
+                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M3 6h18" />
+                        <path d="M8 6v12" />
+                        <path d="M16 6v12" />
+                        <path d="M5 6l1-3h12l1 3" />
+                      </svg>
+                    </span>
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -3463,6 +3561,10 @@ export class ProductGridComponent implements OnInit {
 
   openBulkListing(): void {
     window.alert('Bulk listing flow is not wired yet.');
+  }
+
+  openHistory(): void {
+    window.alert('History view is not wired yet.');
   }
 
   isColumnVisible(columnId: string): boolean {
