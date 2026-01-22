@@ -2689,6 +2689,7 @@ interface ColumnPreferences {
             </ng-container>
           </ng-container>
         </div>
+      </div>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
