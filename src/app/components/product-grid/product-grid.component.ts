@@ -717,42 +717,81 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
-              <div class="flex flex-wrap items-center gap-2">
+              <div class="flex items-center justify-between border-b border-border/70 pb-2">
+                <span class="text-[10px] uppercase tracking-wide text-muted-foreground">
+                  Filter by tags
+                </span>
                 <button
                   type="button"
-                  class="rounded-md border border-border px-2 py-1 text-xs hover:bg-muted"
+                  class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-foreground transition hover:bg-muted"
                   (click)="openTagForm()"
                 >
-                  Create tag
+                  <span class="inline-flex h-4 w-4 items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M12 5v14" />
+                      <path d="M5 12h14" />
+                    </svg>
+                  </span>
+                  New Tag
                 </button>
-                <p *ngIf="tags.length === 0" class="text-xs text-muted-foreground">
-                  No tags yet.
-                </p>
               </div>
-              <div class="mt-2 space-y-2" *ngIf="tags.length > 0">
-                <label
+              <p *ngIf="tags.length === 0" class="mt-3 text-xs text-muted-foreground">
+                No tags yet.
+              </p>
+              <div class="mt-3 space-y-1" *ngIf="tags.length > 0">
+                <div
                   *ngFor="let tag of tags"
-                  class="flex items-center gap-2 text-xs"
+                  class="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs transition hover:bg-muted/60"
                 >
                   <input
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="h-4 w-4 accent-emerald-500"
                     [checked]="filters.tags.includes(tag.id)"
                     (change)="toggleTagFilter(tag.id)"
+                    [id]="'tag-filter-' + tag.id"
                   />
-                  <span
-                    class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-white"
-                    [style.backgroundColor]="tag.color"
+                  <label
+                    class="flex flex-1 items-center gap-2 cursor-pointer"
+                    [for]="'tag-filter-' + tag.id"
                   >
-                    {{ tag.name }}
-                  </span>
-                  <div class="ml-auto flex items-center gap-2 text-[10px] text-muted-foreground">
-                    <button type="button" (click)="editTag(tag)">Edit</button>
-                    <button type="button" (click)="deleteTag(tag)">Delete</button>
+                    <span
+                      class="h-2.5 w-2.5 rounded-full"
+                      [style.backgroundColor]="tag.color"
+                    ></span>
+                    <span class="text-foreground">{{ tag.name }}</span>
+                    <span class="text-muted-foreground">
+                      ({{ tagUsageCount(tag.id) }})
+                    </span>
+                  </label>
+                  <div class="ml-auto flex items-center gap-2 text-muted-foreground">
+                    <button
+                      type="button"
+                      class="rounded p-1 transition hover:bg-muted"
+                      title="Edit tag"
+                      (click)="editTag(tag)"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="rounded p-1 text-destructive transition hover:bg-destructive/10"
+                      title="Delete tag"
+                      (click)="deleteTag(tag)"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M3 6h18" />
+                        <path d="M8 6v12" />
+                        <path d="M16 6v12" />
+                        <path d="M5 6l1-3h12l1 3" />
+                      </svg>
+                    </button>
                   </div>
-                </label>
+                </div>
               </div>
             </div>
           </details>
@@ -3870,6 +3909,12 @@ export class ProductGridComponent implements OnInit {
       : [...this.filters.tags, tagId];
     this.filters = { ...this.filters, tags: selected };
     this.onFilterChange();
+  }
+
+  tagUsageCount(tagId: string): number {
+    return Object.values(this.productTags).reduce((count, ids) => {
+      return ids.includes(tagId) ? count + 1 : count;
+    }, 0);
   }
 
   getProductTags(productId: string): Tag[] {
