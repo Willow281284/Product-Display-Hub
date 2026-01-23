@@ -282,7 +282,7 @@ interface ColumnPreferences {
                 data-tooltip="Filter by brand"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('brand')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 22h18" />
                     <path d="M6 22V4h12v18" />
@@ -290,11 +290,11 @@ interface ColumnPreferences {
                     <path d="M9 14h6" />
                   </svg>
                 </span>
-                Brand
-                <span class="text-muted-foreground">
-                  ({{ filters.brand.length || 'all' }})
+                
+                <span class="text-muted-foreground hidden xs:inline">
+                Brand  ({{ filters.brand.length || 'all' }})
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -309,7 +309,7 @@ interface ColumnPreferences {
                 >
                   <input
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.brand.includes(brand)"
                     (change)="toggleBrand(brand)"
                   />
@@ -329,18 +329,18 @@ interface ColumnPreferences {
                 data-tooltip="Filter by marketplace"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('marketplace')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 9l2-5h14l2 5" />
                     <path d="M5 9v11h14V9" />
                     <path d="M9 20V9h6v11" />
                   </svg>
                 </span>
-                Marketplace
-                <span class="text-muted-foreground">
-                  ({{ filters.marketplace.length || 'all' }})
+                
+                <span class="text-muted-foreground hidden xs:inline">
+               Marketplace   ({{ filters.marketplace.length || 'all' }})
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -355,7 +355,7 @@ interface ColumnPreferences {
                 >
                   <input
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.marketplace.includes(platform)"
                     (change)="toggleMarketplace(platform)"
                   />
@@ -375,16 +375,16 @@ interface ColumnPreferences {
                 data-tooltip="Filter by status"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('status')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <polyline points="3 12 7 12 9 6 13 18 16 10 21 10" />
                   </svg>
                 </span>
-                Status
-                <span class="text-muted-foreground">
-                  ({{ filters.status.length || 'all' }})
+                
+                <span class="text-muted-foreground hidden xs:inline">
+               Status   ({{ filters.status.length || 'all' }})
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -399,7 +399,7 @@ interface ColumnPreferences {
                 >
                   <input
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.status.includes(status)"
                     (change)="toggleStatus(status)"
                   />
@@ -422,21 +422,21 @@ interface ColumnPreferences {
                 data-tooltip="Filter by price"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('price')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M12 1v22" />
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
                   </svg>
                 </span>
-                Price
-                <span class="text-muted-foreground">
-                  {{
+               
+                <span class="text-muted-foreground hidden xs:inline">
+                 Price  {{
                     filters.priceRange[0] > 0 || filters.priceRange[1] < 10000
                       ? '$' + filters.priceRange[0] + ' - ' + filters.priceRange[1]
                       : 'all'
                   }}
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -479,21 +479,21 @@ interface ColumnPreferences {
                 data-tooltip="Filter by stock"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('stock')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 7l9-4 9 4-9 4-9-4z" />
                     <path d="M3 7v10l9 4 9-4V7" />
                   </svg>
                 </span>
-                Stock
-                <span class="text-muted-foreground">
-                  {{
+               
+                <span class="text-muted-foreground hidden xs:inline">
+                Stock   {{
                     filters.stockRange[0] > 0 || filters.stockRange[1] < 10000
                       ? filters.stockRange[0] + ' - ' + filters.stockRange[1]
                       : 'all'
                   }}
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -536,7 +536,7 @@ interface ColumnPreferences {
                 data-tooltip="Filter by sold units"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('sold')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <polyline points="3 17 9 11 13 15 21 7" />
                     <path d="M21 7v6h-6" />
@@ -550,7 +550,7 @@ interface ColumnPreferences {
                       : 'all'
                   }}
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -605,7 +605,7 @@ interface ColumnPreferences {
                 data-tooltip="Filter by product type"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('type')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 7l9-4 9 4-9 4-9-4z" />
                     <path d="M3 7v10l9 4 9-4V7" />
@@ -621,7 +621,7 @@ interface ColumnPreferences {
                         : 'single'
                   }}
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -634,7 +634,7 @@ interface ColumnPreferences {
                   <input
                     type="radio"
                     name="kitFilter"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.kitProduct === null"
                     (change)="setKitFilter(null)"
                   />
@@ -644,7 +644,7 @@ interface ColumnPreferences {
                   <input
                     type="radio"
                     name="kitFilter"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.kitProduct === true"
                     (change)="setKitFilter(true)"
                   />
@@ -654,7 +654,7 @@ interface ColumnPreferences {
                   <input
                     type="radio"
                     name="kitFilter"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.kitProduct === false"
                     (change)="setKitFilter(false)"
                   />
@@ -674,7 +674,7 @@ interface ColumnPreferences {
                 data-tooltip="Filter by variations"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('variation')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M12 2l9 5-9 5-9-5 9-5z" />
                     <path d="M3 12l9 5 9-5" />
@@ -691,7 +691,7 @@ interface ColumnPreferences {
                         : 'none'
                   }}
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -704,7 +704,7 @@ interface ColumnPreferences {
                   <input
                     type="radio"
                     name="variationFilter"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.hasVariation === null"
                     (change)="setVariationFilter(null)"
                   />
@@ -714,7 +714,7 @@ interface ColumnPreferences {
                   <input
                     type="radio"
                     name="variationFilter"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.hasVariation === true"
                     (change)="setVariationFilter(true)"
                   />
@@ -724,7 +724,7 @@ interface ColumnPreferences {
                   <input
                     type="radio"
                     name="variationFilter"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="filters.hasVariation === false"
                     (change)="setVariationFilter(false)"
                   />
@@ -744,7 +744,7 @@ interface ColumnPreferences {
                 data-tooltip="Filter by tags"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('tags')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M20 13l-7 7-10-10V3h7l10 10z" />
                     <circle cx="7.5" cy="7.5" r="1.5" />
@@ -754,7 +754,7 @@ interface ColumnPreferences {
                 <span class="text-muted-foreground">
                   ({{ filters.tags.length || 'all' }})
                 </span>
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -782,7 +782,7 @@ interface ColumnPreferences {
                   >
                     <input
                       type="checkbox"
-                      class="h-4 w-4"
+                      class="h-5 w-5"
                       [checked]="filters.tags.includes(tag.id)"
                       (change)="toggleTagFilter(tag.id)"
                     />
@@ -823,7 +823,7 @@ interface ColumnPreferences {
                 title="Custom filters"
                 data-tooltip="Custom filters"
               >
-                <span class="mr-2 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                <span class="mr-2 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
                   </svg>
@@ -841,14 +841,14 @@ interface ColumnPreferences {
                   data-tooltip="Columns"
                   (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('columns')"
                 >
-                  <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <span class="inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                       <rect x="3" y="4" width="7" height="16" />
                       <rect x="14" y="4" width="7" height="16" />
                     </svg>
                   </span>
                   Columns
-                  <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+                  <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                       <path d="M6 9l6 6 6-6" />
                     </svg>
@@ -863,7 +863,7 @@ interface ColumnPreferences {
                   >
                     <input
                       type="checkbox"
-                      class="h-4 w-4"
+                      class="h-5 w-5"
                       [checked]="column.visible"
                       (change)="toggleColumn(column.id)"
                     />
@@ -882,7 +882,7 @@ interface ColumnPreferences {
               title="Update via CSV"
               data-tooltip="Update via CSV"
             >
-              <span class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
+              <span class="inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                   <path d="M3 12a9 9 0 0 1 15.5-6.4" />
                   <path d="M21 3v6h-6" />
@@ -899,7 +899,7 @@ interface ColumnPreferences {
               title="Clear all filters"
               data-tooltip="Clear all filters"
             >
-              <span class="inline-flex h-4 w-4 items-center justify-center">
+              <span class="inline-flex h-5 w-5 items-center justify-center">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                   <path d="M3 6h18" />
                   <path d="M8 6v12" />
@@ -918,14 +918,14 @@ interface ColumnPreferences {
                 class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('create')"
               >
-                <span class="inline-flex h-4 w-4 items-center justify-center text-primary-foreground">
+                <span class="inline-flex h-5 w-5 items-center justify-center text-primary-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M12 5v14" />
                     <path d="M5 12h14" />
                   </svg>
                 </span>
                 Create Product
-                <span class="ml-1 inline-flex h-4 w-4 items-center justify-center text-primary-foreground/80">
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-primary-foreground/80">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
@@ -1131,7 +1131,7 @@ interface ColumnPreferences {
                   <input
                     type="radio"
                     name="manualProductType"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="manualProductType === 'single'"
                     (change)="manualProductType = 'single'"
                   />
@@ -1141,7 +1141,7 @@ interface ColumnPreferences {
                   <input
                     type="radio"
                     name="manualProductType"
-                    class="h-4 w-4"
+                    class="h-5 w-5"
                     [checked]="manualProductType === 'kit'"
                     (change)="manualProductType = 'kit'"
                   />
@@ -1305,7 +1305,7 @@ interface ColumnPreferences {
                   >
                     <input
                       type="checkbox"
-                      class="h-4 w-4"
+                      class="h-5 w-5"
                       [checked]="csvMatchFields.includes(field.id)"
                       (change)="toggleCsvMatchField(field.id)"
                     />
@@ -1750,7 +1750,7 @@ interface ColumnPreferences {
                     >
                       <input
                         type="checkbox"
-                        class="h-4 w-4"
+                        class="h-5 w-5"
                         [checked]="offerDialogMarketplaces.includes(platform)"
                         (change)="toggleOfferMarketplace(platform)"
                       />
@@ -1808,7 +1808,7 @@ interface ColumnPreferences {
                       class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
                       (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-add-tag')"
                     >
-                      <span class="inline-flex h-4 w-4 items-center justify-center">
+                      <span class="inline-flex h-5 w-5 items-center justify-center">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                           <path d="M12 5v14" />
                           <path d="M5 12h14" />
@@ -1839,7 +1839,7 @@ interface ColumnPreferences {
                       class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
                       (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-remove-tag')"
                     >
-                      <span class="inline-flex h-4 w-4 items-center justify-center">
+                      <span class="inline-flex h-5 w-5 items-center justify-center">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                           <path d="M3 6h18" />
                           <path d="M8 6v12" />
@@ -1872,7 +1872,7 @@ interface ColumnPreferences {
                       class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
                       (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-pricing')"
                     >
-                      <span class="inline-flex h-4 w-4 items-center justify-center">
+                      <span class="inline-flex h-5 w-5 items-center justify-center">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                           <path d="M12 1v22" />
                           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
@@ -1930,7 +1930,7 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
                     (click)="openBulkListing()"
                   >
-                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                    <span class="inline-flex h-5 w-5 items-center justify-center">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                         <path d="M3 7l9-4 9 4-9 4-9-4z" />
                         <path d="M3 7v10l9 4 9-4V7" />
@@ -1944,7 +1944,7 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
                     (click)="openBulkOffer()"
                   >
-                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                    <span class="inline-flex h-5 w-5 items-center justify-center">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                         <path d="M20 13l-7 7-10-10V3h7l10 10z" />
                         <circle cx="7.5" cy="7.5" r="1.5" />
@@ -1958,7 +1958,7 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
                     (click)="openHistory()"
                   >
-                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                    <span class="inline-flex h-5 w-5 items-center justify-center">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                         <path d="M3 12a9 9 0 1 0 9-9" />
                         <path d="M3 3v6h6" />
@@ -1973,7 +1973,7 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
                     (click)="exportSelectedCsv(filtered)"
                   >
-                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                    <span class="inline-flex h-5 w-5 items-center justify-center">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                         <path d="M12 3v12" />
                         <path d="M7 10l5 5 5-5" />
@@ -1988,7 +1988,7 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 rounded-md border border-destructive bg-destructive px-3 py-1 text-xs font-semibold text-white transition hover:bg-destructive/90"
                     (click)="bulkDelete()"
                   >
-                    <span class="inline-flex h-4 w-4 items-center justify-center">
+                    <span class="inline-flex h-5 w-5 items-center justify-center">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                         <path d="M3 6h18" />
                         <path d="M8 6v12" />
@@ -2022,7 +2022,7 @@ interface ColumnPreferences {
                   >
                     <input
                       type="checkbox"
-                      class="h-4 w-4 accent-emerald-500"
+                      class="h-5 w-5 accent-emerald-500"
                       [checked]="allVisibleSelected(visible)"
                       (change)="toggleSelectVisible(visible)"
                     />
@@ -2419,7 +2419,7 @@ interface ColumnPreferences {
                   <td class="px-4 py-4">
                     <input
                       type="checkbox"
-                      class="h-4 w-4 accent-emerald-500"
+                      class="h-5 w-5 accent-emerald-500"
                       [checked]="isSelected(product.id)"
                       (change)="toggleSelectProduct(product.id)"
                     />
@@ -2497,7 +2497,7 @@ interface ColumnPreferences {
                         (click)="toggleTagPicker(product.id)"
                         title="Add tag"
                       >
-                        <span class="inline-flex h-4 w-4 items-center justify-center">
+                        <span class="inline-flex h-5 w-5 items-center justify-center">
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                             <path d="M12 5v14" />
                             <path d="M5 12h14" />
@@ -2523,7 +2523,7 @@ interface ColumnPreferences {
                       >
                         <input
                           type="checkbox"
-                          class="h-4 w-4"
+                          class="h-5 w-5"
                           [checked]="hasTag(product.id, tag.id)"
                           (change)="toggleProductTag(product.id, tag.id)"
                         />
