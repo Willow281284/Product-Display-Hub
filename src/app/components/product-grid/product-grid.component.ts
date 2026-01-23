@@ -1966,16 +1966,6 @@ interface ColumnPreferences {
             </div>
 
             <div class="flex-1 overflow-auto px-4 pb-2 pt-3">
-              <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-                <p>
-                  Showing {{ pageStart(filtered.length) }}-{{ pageEnd(filtered.length) }}
-                  of {{ filtered.length }} products
-                </p>
-                <p>
-                  Total catalog: {{ products.length }} items
-                </p>
-              </div>
-
               <div class="relative mt-2 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
                 <table class="w-full min-w-[1250px] text-sm">
             <thead class="relative z-10 bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
@@ -2629,8 +2619,10 @@ interface ColumnPreferences {
             <div
               class="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card/95 px-4 py-3 text-xs text-muted-foreground backdrop-blur"
             >
-              <div class="flex items-center gap-2">
-                <span>Shortcuts</span>
+              <div class="flex flex-wrap items-center gap-2">
+                <span>Showing {{ pageStart(filtered.length) }}-{{ pageEnd(filtered.length) }} of {{ filtered.length }} products</span>
+                <span class="text-muted-foreground/60">,</span>
+                <span>Total catalog: {{ products.length }} items</span>
               </div>
               <div class="flex items-center gap-3">
                 <span>Rows per page:</span>
