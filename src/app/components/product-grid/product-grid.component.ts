@@ -615,106 +615,77 @@ interface ColumnPreferences {
             <div
               class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
-              <label class="flex items-center gap-2 py-1 text-xs">
-                <input
-                  type="radio"
-                  name="kitFilter"
-                  class="h-5 w-5"
-                  [checked]="filters.kitProduct === null"
-                  (change)="setKitFilter(null)"
-                />
-                <span>All products</span>
-              </label>
-              <label class="flex items-center gap-2 py-1 text-xs">
-                <input
-                  type="radio"
-                  name="kitFilter"
-                  class="h-5 w-5"
-                  [checked]="filters.kitProduct === true"
-                  (change)="setKitFilter(true)"
-                />
-                <span>Kit products</span>
-              </label>
-              <label class="flex items-center gap-2 py-1 text-xs">
-                <input
-                  type="radio"
-                  name="kitFilter"
-                  class="h-5 w-5"
-                  [checked]="filters.kitProduct === false"
-                  (change)="setKitFilter(false)"
-                />
-                <span>Single products</span>
-              </label>
-            </div>
-          </details>
-
-          <details
-            class="relative"
-            data-dropdown="variation"
-            [open]="openDropdownId === 'variation'"
-          >
-            <summary
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-              title="Filter by variations"
-              data-tooltip="Filter by variations"
-              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('variation')"
-            >
-              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <path d="M12 2l9 5-9 5-9-5 9-5z" />
-                  <path d="M3 12l9 5 9-5" />
-                  <path d="M3 17l9 5 9-5" />
-                </svg>
-              </span>
-             
-              <span class="text-muted-foreground hidden">
-             Variation    {{
-                  filters.hasVariation === null
-                    ? 'all'
-                    : filters.hasVariation
-                      ? 'has'
-                      : 'none'
-                }}
-              </span>
-              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </span>
-            </summary>
-            <div
-              class="absolute z-50 mt-2 w-44 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-            >
-              <label class="flex items-center gap-2 py-1 text-xs">
-                <input
-                  type="radio"
-                  name="variationFilter"
-                  class="h-5 w-5"
-                  [checked]="filters.hasVariation === null"
-                  (change)="setVariationFilter(null)"
-                />
-                <span>All</span>
-              </label>
-              <label class="flex items-center gap-2 py-1 text-xs">
-                <input
-                  type="radio"
-                  name="variationFilter"
-                  class="h-5 w-5"
-                  [checked]="filters.hasVariation === true"
-                  (change)="setVariationFilter(true)"
-                />
-                <span>Has variation</span>
-              </label>
-              <label class="flex items-center gap-2 py-1 text-xs">
-                <input
-                  type="radio"
-                  name="variationFilter"
-                  class="h-5 w-5"
-                  [checked]="filters.hasVariation === false"
-                  (change)="setVariationFilter(false)"
-                />
-                <span>No variation</span>
-              </label>
+              <p class="text-[10px] uppercase tracking-wide text-muted-foreground">
+                Product type
+              </p>
+              <div class="mt-2 grid gap-1">
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="kitFilter"
+                    class="h-5 w-5"
+                    [checked]="filters.kitProduct === null"
+                    (change)="setKitFilter(null)"
+                  />
+                  <span>All products</span>
+                </label>
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="kitFilter"
+                    class="h-5 w-5"
+                    [checked]="filters.kitProduct === true"
+                    (change)="setKitFilter(true)"
+                  />
+                  <span>Kit products</span>
+                </label>
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="kitFilter"
+                    class="h-5 w-5"
+                    [checked]="filters.kitProduct === false"
+                    (change)="setKitFilter(false)"
+                  />
+                  <span>Single products</span>
+                </label>
+              </div>
+              <div class="my-2 border-t border-border"></div>
+              <p class="text-[10px] uppercase tracking-wide text-muted-foreground">
+                Variations
+              </p>
+              <div class="mt-2 grid gap-1">
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="variationFilter"
+                    class="h-5 w-5"
+                    [checked]="filters.hasVariation === null"
+                    (change)="setVariationFilter(null)"
+                  />
+                  <span>All products</span>
+                </label>
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="variationFilter"
+                    class="h-5 w-5"
+                    [checked]="filters.hasVariation === true"
+                    (change)="setVariationFilter(true)"
+                  />
+                  <span>With variations</span>
+                </label>
+                <label class="flex items-center gap-2 py-1 text-xs">
+                  <input
+                    type="radio"
+                    name="variationFilter"
+                    class="h-5 w-5"
+                    [checked]="filters.hasVariation === false"
+                    (change)="setVariationFilter(false)"
+                  />
+                  <span>No variations</span>
+                </label>
+              </div>
             </div>
           </details>
 
