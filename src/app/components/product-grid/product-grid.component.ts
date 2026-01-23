@@ -818,7 +818,7 @@ interface ColumnPreferences {
               </div>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Custom filters"
                 data-tooltip="Custom filters"
               >
@@ -876,7 +876,7 @@ interface ColumnPreferences {
           <div class="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs transition hover:bg-muted"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
               (click)="openCsvDialog('update')"
               title="Update via CSV"
               data-tooltip="Update via CSV"
@@ -893,7 +893,7 @@ interface ColumnPreferences {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-destructive px-3 py-1 text-xs text-destructive transition hover:bg-destructive/10"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
               (click)="resetFilters()"
               title="Clear all filters"
               data-tooltip="Clear all filters"
