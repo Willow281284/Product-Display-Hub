@@ -232,35 +232,35 @@ interface ColumnPreferences {
           <div class="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
               title="Marketplace integrations"
             >
               Marketplace Integrations
             </button>
             <button
               type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
               title="Create offer"
             >
               Create Offer
-              <span class="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
+              <span class="rounded-md bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
                 {{ offers.length }}
               </span>
             </button>
             <button
               type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
               title="Offer analytics"
             >
               Offer Analytics
             </button>
             <button
               type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
               title="Batch management"
             >
               Batch Management
-              <span class="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
+              <span class="rounded-md bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
                 9
               </span>
             </button>
@@ -277,7 +277,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'brand'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by brand"
                 data-tooltip="Filter by brand"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('brand')"
@@ -291,7 +291,7 @@ interface ColumnPreferences {
                   </svg>
                 </span>
                 
-                <span class="text-muted-foreground hidden xs:inline">
+                <span class="text-muted-foreground hidden">
                 Brand  ({{ filters.brand.length || 'all' }})
                 </span>
                 <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
@@ -324,7 +324,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'marketplace'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by marketplace"
                 data-tooltip="Filter by marketplace"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('marketplace')"
@@ -337,7 +337,7 @@ interface ColumnPreferences {
                   </svg>
                 </span>
                 
-                <span class="text-muted-foreground hidden xs:inline">
+                <span class="text-muted-foreground hidden">
                Marketplace   ({{ filters.marketplace.length || 'all' }})
                 </span>
                 <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
@@ -369,7 +369,7 @@ interface ColumnPreferences {
               data-dropdown="status"
               [open]="openDropdownId === 'status'">
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by status"
                 data-tooltip="Filter by status"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('status')"
@@ -380,7 +380,7 @@ interface ColumnPreferences {
                   </svg>
                 </span>
                 
-                <span class="text-muted-foreground hidden xs:inline">
+                <span class="text-muted-foreground hidden">
                Status   ({{ filters.status.length || 'all' }})
                 </span>
                 <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
@@ -416,7 +416,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'price'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by price"
                 data-tooltip="Filter by price"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('price')"
@@ -428,7 +428,7 @@ interface ColumnPreferences {
                   </svg>
                 </span>
                
-                <span class="text-muted-foreground hidden xs:inline">
+                <span class="text-muted-foreground hidden">
                  Price  {{
                     filters.priceRange[0] > 0 || filters.priceRange[1] < 10000
                       ? '$' + filters.priceRange[0] + ' - ' + filters.priceRange[1]
@@ -473,7 +473,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'stock'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by stock"
                 data-tooltip="Filter by stock"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('stock')"
@@ -485,7 +485,7 @@ interface ColumnPreferences {
                   </svg>
                 </span>
                
-                <span class="text-muted-foreground hidden xs:inline">
+                <span class="text-muted-foreground hidden">
                 Stock   {{
                     filters.stockRange[0] > 0 || filters.stockRange[1] < 10000
                       ? filters.stockRange[0] + ' - ' + filters.stockRange[1]
@@ -530,7 +530,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'sold'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by sold units"
                 data-tooltip="Filter by sold units"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('sold')"
@@ -541,9 +541,9 @@ interface ColumnPreferences {
                     <path d="M21 7v6h-6" />
                   </svg>
                 </span>
-                Sold
-                <span class="text-muted-foreground">
-                  {{
+                
+                <span class="text-muted-foreground hidden">
+              Sold    {{
                     filters.soldRange[0] > 0 || filters.soldRange[1] < 10000
                       ? filters.soldRange[0] + ' - ' + filters.soldRange[1]
                       : 'all'
@@ -599,7 +599,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'type'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by product type"
                 data-tooltip="Filter by product type"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('type')"
@@ -610,9 +610,9 @@ interface ColumnPreferences {
                     <path d="M3 7v10l9 4 9-4V7" />
                   </svg>
                 </span>
-                Type
-                <span class="text-muted-foreground">
-                  {{
+               
+                <span class="text-muted-foreground hidden">
+               Type    {{
                     filters.kitProduct === null
                       ? 'all'
                       : filters.kitProduct
@@ -668,7 +668,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'variation'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by variations"
                 data-tooltip="Filter by variations"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('variation')"
@@ -680,9 +680,9 @@ interface ColumnPreferences {
                     <path d="M3 17l9 5 9-5" />
                   </svg>
                 </span>
-                Variation
-                <span class="text-muted-foreground">
-                  {{
+               
+                <span class="text-muted-foreground hidden">
+               Variation    {{
                     filters.hasVariation === null
                       ? 'all'
                       : filters.hasVariation
@@ -738,7 +738,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'tags'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 title="Filter by tags"
                 data-tooltip="Filter by tags"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('tags')"
@@ -749,9 +749,9 @@ interface ColumnPreferences {
                     <circle cx="7.5" cy="7.5" r="1.5" />
                   </svg>
                 </span>
-                Tags
-                <span class="text-muted-foreground">
-                  ({{ filters.tags.length || 'all' }})
+               
+                <span class="text-muted-foreground hidden">
+               Tags    ({{ filters.tags.length || 'all' }})
                 </span>
                 <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
@@ -786,7 +786,7 @@ interface ColumnPreferences {
                       (change)="toggleTagFilter(tag.id)"
                     />
                     <span
-                      class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                      class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-white"
                       [style.backgroundColor]="tag.color"
                     >
                       {{ tag.name }}
@@ -802,7 +802,7 @@ interface ColumnPreferences {
 
             <div class="ml-auto flex flex-1 items-center gap-2">
               <div class="relative w-full max-w-[420px]">
-                <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <circle cx="11" cy="11" r="8" />
                     <path d="M21 21l-4.3-4.3" />
@@ -810,7 +810,7 @@ interface ColumnPreferences {
                 </span>
                 <input
                   type="search"
-                  class="w-full rounded-full border border-border bg-background px-9 py-2 text-xs transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  class="w-full rounded-md border border-border bg-background px-9 py-2 text-xs transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                   placeholder="Search products..."
                   [(ngModel)]="filters.search"
                   (ngModelChange)="onFilterChange()"
@@ -822,7 +822,7 @@ interface ColumnPreferences {
                 title="Custom filters"
                 data-tooltip="Custom filters"
               >
-                <span class="mr-2 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
+                <span class="mr-2 inline-flex h-5 w-5 items-center justify-center text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
                   </svg>
@@ -835,19 +835,19 @@ interface ColumnPreferences {
                 [open]="openDropdownId === 'columns'"
               >
                 <summary
-                  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4 py-2 h-[34px]"
                   title="Columns"
                   data-tooltip="Columns"
                   (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('columns')"
                 >
-                  <span class="inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
+                  <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                       <rect x="3" y="4" width="7" height="16" />
                       <rect x="14" y="4" width="7" height="16" />
                     </svg>
                   </span>
                   Columns
-                  <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
+                  <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                       <path d="M6 9l6 6 6-6" />
                     </svg>
@@ -914,7 +914,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'create'"
             >
               <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-4 py-2"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('create')"
               >
                 <span class="inline-flex h-5 w-5 items-center justify-center text-primary-foreground">
@@ -979,7 +979,7 @@ interface ColumnPreferences {
             <label class="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
               Rows
               <select
-                class="rounded-full border border-border bg-background px-2 py-1 text-xs"
+                class="rounded-md border border-border bg-background px-2 py-1 text-xs"
                 [(ngModel)]="pageSize"
                 (ngModelChange)="onPageSizeChange()"
               >
@@ -1031,7 +1031,7 @@ interface ColumnPreferences {
                 <button
                   *ngFor="let color of tagColors"
                   type="button"
-                  class="h-7 w-7 rounded-full border border-border"
+                  class="h-7 w-7 rounded-md border border-border"
                   [style.backgroundColor]="color.value"
                   [class.ring-2]="tagColor === color.value"
                   [class.ring-offset-2]="tagColor === color.value"
@@ -1068,7 +1068,7 @@ interface ColumnPreferences {
             <span class="text-xs text-muted-foreground">
               Preview:
               <span
-                class="ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                class="ml-2 inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
                 [style.backgroundColor]="tagColor || '#64748b'"
               >
                 {{ tagName || 'Tag name' }}
@@ -1091,7 +1091,7 @@ interface ColumnPreferences {
               </div>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 (click)="closeManualDialog()"
               >
                 Close
@@ -1102,7 +1102,7 @@ interface ColumnPreferences {
               <button
                 *ngFor="let tab of manualTabs"
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 [class.bg-muted]="manualTab === tab"
                 (click)="manualTab = tab"
               >
@@ -1271,7 +1271,7 @@ interface ColumnPreferences {
               </div>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 (click)="closeCsvDialog()"
               >
                 Close
@@ -1390,7 +1390,7 @@ interface ColumnPreferences {
               </div>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 (click)="closeProductDialog()"
               >
                 Close
@@ -1400,7 +1400,7 @@ interface ColumnPreferences {
             <div class="mt-4 flex flex-wrap gap-2">
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 [class.bg-muted]="productDialogTab === 'overview'"
                 (click)="productDialogTab = 'overview'"
               >
@@ -1408,7 +1408,7 @@ interface ColumnPreferences {
               </button>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 [class.bg-muted]="productDialogTab === 'inventory'"
                 (click)="productDialogTab = 'inventory'"
               >
@@ -1416,7 +1416,7 @@ interface ColumnPreferences {
               </button>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 [class.bg-muted]="productDialogTab === 'marketplaces'"
                 (click)="productDialogTab = 'marketplaces'"
               >
@@ -1502,7 +1502,7 @@ interface ColumnPreferences {
                   </p>
                   <button
                     type="button"
-                    class="rounded-full border border-border px-3 py-1 text-xs"
+                    class="rounded-md border border-border px-3 py-1 text-xs"
                     (click)="openMarketplaceDialog(selectedProduct)"
                   >
                     Manage marketplaces
@@ -1559,7 +1559,7 @@ interface ColumnPreferences {
               </div>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 (click)="closeMarketplaceDialog()"
               >
                 Close
@@ -1639,7 +1639,7 @@ interface ColumnPreferences {
               </div>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs"
+                class="rounded-md border border-border px-3 py-1 text-xs"
                 (click)="closeOfferDialog()"
               >
                 Close
@@ -1662,7 +1662,7 @@ interface ColumnPreferences {
                     </div>
                     <button
                       type="button"
-                      class="rounded-full border border-destructive px-3 py-1 text-xs text-destructive"
+                      class="rounded-md border border-destructive px-3 py-1 text-xs text-destructive"
                       (click)="deleteOffer(offer.id)"
                     >
                       Delete
@@ -2460,7 +2460,7 @@ interface ColumnPreferences {
                     [style.width.px]="columnWidth('productType')"
                   >
                     <span
-                      class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold"
+                      class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
                       [ngClass]="typeBadgeClass(product)"
                     >
                       {{ typeBadgeLabel(product) }}
@@ -2477,13 +2477,13 @@ interface ColumnPreferences {
                     <div class="relative flex flex-wrap items-center gap-1">
                       <span
                         *ngFor="let tag of getProductTags(product.id)"
-                        class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                        class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-white"
                         [style.backgroundColor]="tag.color"
                       >
                         {{ tag.name }}
                         <button
                           type="button"
-                          class="rounded-full px-1 text-[10px] hover:bg-white/20"
+                          class="rounded-md px-1 text-[10px] hover:bg-white/20"
                           (click)="removeTagFromProduct(product.id, tag.id)"
                         >
                           ✕
@@ -2492,7 +2492,7 @@ interface ColumnPreferences {
                       <button
                         *ngIf="tags.length > 0"
                         type="button"
-                        class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+                        class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
                         (click)="toggleTagPicker(product.id)"
                         title="Add tag"
                       >
@@ -2506,7 +2506,7 @@ interface ColumnPreferences {
                       <button
                         *ngIf="tags.length === 0"
                         type="button"
-                        class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+                        class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
                         (click)="openTagForm()"
                       >
                         Create tag
@@ -2527,7 +2527,7 @@ interface ColumnPreferences {
                           (change)="toggleProductTag(product.id, tag.id)"
                         />
                         <span
-                          class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                          class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
                           [style.backgroundColor]="tag.color"
                         >
                           {{ tag.name }}
@@ -2543,7 +2543,7 @@ interface ColumnPreferences {
                     <div class="flex flex-col gap-2">
                       <ng-container *ngIf="bestOffer(product.id) as offer; else noOffer">
                         <span
-                          class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                          class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
                           [ngClass]="offerStatusClass(offer)"
                         >
                           {{ offerLabel(offer) }}
@@ -2553,7 +2553,7 @@ interface ColumnPreferences {
                         </span>
                         <button
                           type="button"
-                          class="rounded-full border border-border px-2 py-0.5 text-[10px]"
+                          class="rounded-md border border-border px-2 py-0.5 text-[10px]"
                           (click)="openOfferDialog([product.id])"
                         >
                           Manage offers
@@ -2562,7 +2562,7 @@ interface ColumnPreferences {
                       <ng-template #noOffer>
                         <button
                           type="button"
-                          class="rounded-full border border-border px-2 py-0.5 text-[10px]"
+                          class="rounded-md border border-border px-2 py-0.5 text-[10px]"
                           (click)="openOfferDialog([product.id])"
                         >
                           Create offer
@@ -2650,7 +2650,7 @@ interface ColumnPreferences {
                     [style.width.px]="columnWidth('restockStatus')"
                   >
                     <span
-                      class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
+                      class="inline-flex items-center rounded-md px-3 py-1 text-xs font-medium"
                       [ngClass]="restockClasses[product.restockStatus]"
                     >
                       {{ restockLabels[product.restockStatus] }}
