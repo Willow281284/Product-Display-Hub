@@ -232,7 +232,7 @@ interface ColumnPreferences {
           <div class="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              class="rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
               title="Marketplace integrations"
             >
               Marketplace Integrations
@@ -276,7 +276,7 @@ interface ColumnPreferences {
               data-dropdown="brand"
               [open]="openDropdownId === 'brand'"
             >
-              <summary
+              <button
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by brand"
                 data-tooltip="Filter by brand"
@@ -299,7 +299,7 @@ interface ColumnPreferences {
                     <path d="M6 9l6 6 6-6" />
                   </svg>
                 </span>
-              </summary>
+              </button>
               <div
                 class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
               >
@@ -367,8 +367,7 @@ interface ColumnPreferences {
             <details
               class="relative"
               data-dropdown="status"
-              [open]="openDropdownId === 'status'"
-            >
+              [open]="openDropdownId === 'status'">
               <summary
                 class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
                 title="Filter by status"
