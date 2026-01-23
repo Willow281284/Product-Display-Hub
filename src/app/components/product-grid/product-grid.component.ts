@@ -2638,22 +2638,59 @@ interface ColumnPreferences {
                 <div class="flex items-center gap-2">
                   <button
                     type="button"
-                    class="rounded-md border border-border px-2 py-1 text-xs disabled:opacity-50"
+                    class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-50"
                     [disabled]="currentPage === 1"
-                    (click)="previousPage()"
+                    (click)="goToPage(1)"
+                    title="First page"
                   >
-                    &lt;
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M11 19l-7-7 7-7" />
+                      <path d="M20 19l-7-7 7-7" />
+                    </svg>
                   </button>
-                  <span class="text-xs">
-                    Page {{ currentPage }} of {{ totalPages(filtered.length) }}
-                  </span>
                   <button
                     type="button"
-                    class="rounded-md border border-border px-2 py-1 text-xs disabled:opacity-50"
+                    class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-50"
+                    [disabled]="currentPage === 1"
+                    (click)="previousPage()"
+                    title="Previous page"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <span class="text-xs">Page</span>
+                  <input
+                    type="number"
+                    min="1"
+                    [max]="totalPages(filtered.length)"
+                    class="h-7 w-12 rounded-md border border-border bg-background px-2 text-center text-xs"
+                    [ngModel]="currentPage"
+                    (ngModelChange)="onPageInput($event)"
+                  />
+                  <span class="text-xs">of {{ totalPages(filtered.length) }}</span>
+                  <button
+                    type="button"
+                    class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-50"
                     [disabled]="currentPage >= totalPages(filtered.length)"
                     (click)="nextPage(filtered.length)"
+                    title="Next page"
                   >
-                    &gt;
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition hover:bg-muted hover:text-foreground disabled:opacity-50"
+                    [disabled]="currentPage >= totalPages(filtered.length)"
+                    (click)="goToPage(totalPages(filtered.length))"
+                    title="Last page"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M4 19l7-7-7-7" />
+                      <path d="M13 19l7-7-7-7" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -3087,6 +3124,12 @@ export class ProductGridComponent implements OnInit {
     this.sortDirection = null;
     this.saveFilters();
     this.savePageSize();
+  }
+
+  onPageInput(value: string | number): void {
+    const parsed = typeof value === 'number' ? value : Number(value);
+    if (Number.isNaN(parsed)) return;
+    this.goToPage(parsed);
   }
 
   hasActiveFilters(): boolean {
