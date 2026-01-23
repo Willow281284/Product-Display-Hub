@@ -805,6 +805,19 @@ interface ColumnPreferences {
               />
             </div>
             <button
+              *ngIf="hasActiveFilters()"
+              type="button"
+              class="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition hover:text-foreground"
+              (click)="resetFilters()"
+              title="Reset filters"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 3-6.7" />
+                <path d="M3 4v5h5" />
+              </svg>
+              Reset
+            </button>
+            <button
               type="button"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px] gap-2"
               title="Custom filters"
@@ -3115,6 +3128,32 @@ export class ProductGridComponent implements OnInit {
     this.sortDirection = null;
     this.saveFilters();
     this.savePageSize();
+  }
+
+  hasActiveFilters(): boolean {
+    const [minPrice, maxPrice] = this.filters.priceRange;
+    const [minStock, maxStock] = this.filters.stockRange;
+    const [minSold, maxSold] = this.filters.soldRange;
+    const [soldStart, soldEnd] = this.filters.soldDateRange;
+
+    return (
+      this.filters.search.trim().length > 0 ||
+      this.filters.brand.length > 0 ||
+      this.filters.marketplace.length > 0 ||
+      this.filters.status.length > 0 ||
+      this.filters.tags.length > 0 ||
+      this.filters.kitProduct !== null ||
+      this.filters.hasVariation !== null ||
+      minPrice !== 0 ||
+      maxPrice !== 10000 ||
+      minStock !== 0 ||
+      maxStock !== 10000 ||
+      minSold !== 0 ||
+      maxSold !== 10000 ||
+      this.filters.soldPeriod !== 'all' ||
+      soldStart !== null ||
+      soldEnd !== null
+    );
   }
 
   manualTabLabel(tab: ManualTab): string {
