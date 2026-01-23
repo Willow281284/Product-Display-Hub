@@ -308,7 +308,7 @@ interface ColumnPreferences {
               >
                 <input
                   type="checkbox"
-                  class="h-5 w-5"
+                  class="h-4 w-4"
                   [checked]="filters.brand.includes(brand)"
                   (change)="toggleBrand(brand)"
                 />
@@ -351,7 +351,7 @@ interface ColumnPreferences {
               >
                 <input
                   type="checkbox"
-                  class="h-5 w-5"
+                  class="h-4 w-4"
                   [checked]="filters.marketplace.includes(platform)"
                   (change)="toggleMarketplace(platform)"
                 />
@@ -392,7 +392,7 @@ interface ColumnPreferences {
               >
                 <input
                   type="checkbox"
-                  class="h-5 w-5"
+                  class="h-4 w-4"
                   [checked]="filters.status.includes(status)"
                   (change)="toggleStatus(status)"
                 />
@@ -623,7 +623,7 @@ interface ColumnPreferences {
                   <input
                     type="checkbox"
                     name="kitFilter"
-                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
+                    class="h-4 w-4 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.kitProduct === null"
                     (change)="setKitFilter(null)"
                   />
@@ -633,7 +633,7 @@ interface ColumnPreferences {
                   <input
                     type="checkbox"
                     name="kitFilter"
-                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
+                    class="h-4 w-4 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.kitProduct === true"
                     (change)="setKitFilter(true)"
                   />
@@ -643,7 +643,7 @@ interface ColumnPreferences {
                   <input
                     type="checkbox"
                     name="kitFilter"
-                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
+                    class="h-4 w-4 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.kitProduct === false"
                     (change)="setKitFilter(false)"
                   />
@@ -659,7 +659,7 @@ interface ColumnPreferences {
                   <input
                     type="checkbox"
                     name="variationFilter"
-                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
+                    class="h-4 w-4 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.hasVariation === null"
                     (change)="setVariationFilter(null)"
                   />
@@ -669,7 +669,7 @@ interface ColumnPreferences {
                   <input
                     type="checkbox"
                     name="variationFilter"
-                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
+                    class="h-4 w-4 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.hasVariation === true"
                     (change)="setVariationFilter(true)"
                   />
@@ -679,7 +679,7 @@ interface ColumnPreferences {
                   <input
                     type="checkbox"
                     name="variationFilter"
-                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
+                    class="h-4 w-4 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.hasVariation === false"
                     (change)="setVariationFilter(false)"
                   />
@@ -739,7 +739,7 @@ interface ColumnPreferences {
                 >
                   <input
                     type="checkbox"
-                    class="h-5 w-5"
+                    class="h-4 w-4"
                     [checked]="filters.tags.includes(tag.id)"
                     (change)="toggleTagFilter(tag.id)"
                   />
@@ -820,7 +820,7 @@ interface ColumnPreferences {
                 >
                   <input
                     type="checkbox"
-                    class="h-5 w-5"
+                    class="h-4 w-4"
                     [checked]="column.visible"
                     (change)="toggleColumn(column.id)"
                   />
@@ -1084,7 +1084,7 @@ interface ColumnPreferences {
                 <input
                   type="radio"
                   name="manualProductType"
-                  class="h-5 w-5"
+                  class="h-4 w-4"
                   [checked]="manualProductType === 'single'"
                   (change)="manualProductType = 'single'"
                 />
@@ -1094,7 +1094,7 @@ interface ColumnPreferences {
                 <input
                   type="radio"
                   name="manualProductType"
-                  class="h-5 w-5"
+                  class="h-4 w-4"
                   [checked]="manualProductType === 'kit'"
                   (change)="manualProductType = 'kit'"
                 />
@@ -1258,7 +1258,7 @@ interface ColumnPreferences {
                 >
                   <input
                     type="checkbox"
-                    class="h-5 w-5"
+                    class="h-4 w-4"
                     [checked]="csvMatchFields.includes(field.id)"
                     (change)="toggleCsvMatchField(field.id)"
                   />
@@ -1703,7 +1703,7 @@ interface ColumnPreferences {
                   >
                     <input
                       type="checkbox"
-                      class="h-5 w-5"
+                      class="h-4 w-4"
                       [checked]="offerDialogMarketplaces.includes(platform)"
                       (change)="toggleOfferMarketplace(platform)"
                     />
@@ -1975,7 +1975,7 @@ interface ColumnPreferences {
                 >
                   <input
                     type="checkbox"
-                    class="h-5 w-5 accent-emerald-500"
+                    class="h-4 w-4 accent-emerald-500"
                     [checked]="allVisibleSelected(visible)"
                     (change)="toggleSelectVisible(visible)"
                   />
@@ -2372,7 +2372,7 @@ interface ColumnPreferences {
                 <td class="px-4 py-4">
                   <input
                     type="checkbox"
-                    class="h-5 w-5 accent-emerald-500"
+                    class="h-4 w-4 accent-emerald-500"
                     [checked]="isSelected(product.id)"
                     (change)="toggleSelectProduct(product.id)"
                   />
@@ -2476,7 +2476,7 @@ interface ColumnPreferences {
                     >
                       <input
                         type="checkbox"
-                        class="h-5 w-5"
+                        class="h-4 w-4"
                         [checked]="hasTag(product.id, tag.id)"
                         (change)="toggleProductTag(product.id, tag.id)"
                       />
