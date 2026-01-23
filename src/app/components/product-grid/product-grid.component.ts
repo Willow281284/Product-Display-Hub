@@ -621,9 +621,9 @@ interface ColumnPreferences {
               <div class="mt-2 grid gap-1">
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="kitFilter"
-                    class="h-5 w-5"
+                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.kitProduct === null"
                     (change)="setKitFilter(null)"
                   />
@@ -631,9 +631,9 @@ interface ColumnPreferences {
                 </label>
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="kitFilter"
-                    class="h-5 w-5"
+                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.kitProduct === true"
                     (change)="setKitFilter(true)"
                   />
@@ -641,9 +641,9 @@ interface ColumnPreferences {
                 </label>
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="kitFilter"
-                    class="h-5 w-5"
+                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.kitProduct === false"
                     (change)="setKitFilter(false)"
                   />
@@ -657,9 +657,9 @@ interface ColumnPreferences {
               <div class="mt-2 grid gap-1">
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="variationFilter"
-                    class="h-5 w-5"
+                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.hasVariation === null"
                     (change)="setVariationFilter(null)"
                   />
@@ -667,9 +667,9 @@ interface ColumnPreferences {
                 </label>
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="variationFilter"
-                    class="h-5 w-5"
+                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.hasVariation === true"
                     (change)="setVariationFilter(true)"
                   />
@@ -677,9 +677,9 @@ interface ColumnPreferences {
                 </label>
                 <label class="flex items-center gap-2 py-1 text-xs">
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="variationFilter"
-                    class="h-5 w-5"
+                    class="h-5 w-5 rounded-full border border-emerald-500/70 bg-background text-emerald-500 accent-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
                     [checked]="filters.hasVariation === false"
                     (change)="setVariationFilter(false)"
                   />
