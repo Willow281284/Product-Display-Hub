@@ -216,1777 +216,1618 @@ interface ColumnPreferences {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="w-full flex flex-col h-screen bg-background">
-      <div class="flex min-h-[calc(100vh-140px)] flex-col gap-0 rounded-2xl border border-border bg-card shadow-sm">
-        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-card/95 px-4 py-4">
-        
-        <div class="flex items-center gap-3">
-          <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package w-5 h-5 text-primary"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"></path><path d="m7.5 4.27 9 5.15"></path></svg></div>  
-          <div class="flex flex-col">
-            <h2 class="text-lg font-semibold text-foreground">Products</h2>
-            <p class="text-xs text-muted-foreground">
-              {{ filteredProducts().length }} of {{ products.length }} products
-            </p>
-          </div>  
-          </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-              title="Marketplace integrations"
-            >
-              Marketplace Integrations
-            </button>
-            <button
-              type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-              title="Create offer"
-            >
-              Create Offer
-              <span class="rounded-md bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
-                {{ offers.length }}
-              </span>
-            </button>
-            <button
-              type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-              title="Offer analytics"
-            >
-              Offer Analytics
-            </button>
-            <button
-              type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-              title="Batch management"
-            >
-              Batch Management
-              <span class="rounded-md bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
-                9
-              </span>
-            </button>
-          </div>
+  <section class="w-full flex flex-col h-screen bg-background">
+    <div class="flex min-h-[calc(100vh-140px)] flex-col gap-0 rounded-2xl border border-border bg-card shadow-sm">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-card/95 px-4 py-4">
+      
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package w-5 h-5 text-primary"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"></path><path d="m7.5 4.27 9 5.15"></path></svg></div>  
+        <div class="flex flex-col">
+          <h2 class="text-lg font-semibold text-foreground">Products</h2>
+          <p class="text-xs text-muted-foreground">
+            {{ filteredProducts().length }} of {{ products.length }} products
+          </p>
+        </div>  
         </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+            title="Marketplace integrations gap-2"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link2 w-4 h-4"><path d="M9 17H7A5 5 0 0 1 7 7h2"></path><path d="M15 7h2a5 5 0 1 1 0 10h-2"></path><line x1="8" x2="16" y1="12" y2="12"></line></svg>
+            Marketplace Integrations
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-2"
+            title="Create offer"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag w-4 h-4"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle></svg>
+            Create Offer
+            <span class="rounded-md bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
+              {{ offers.length }}
+            </span>
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-2"
+            title="Offer analytics"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column w-4 h-4"><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+            Offer Analytics
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-2"
+            title="Batch management"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history w-4 h-4"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
+            Batch Management
+            <span class="rounded-md bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
+              9
+            </span>
+          </button>
+        </div>
+      </div>
 
-        <div
-          class="relative z-40 flex flex-col gap-3 border-b border-border bg-card/95 px-4 py-3 shadow-sm backdrop-blur"
-        >
-          <div class="flex flex-wrap items-center gap-2">
-            <details
-              class="relative"
-              data-dropdown="brand"
-              [open]="openDropdownId === 'brand'"
+      <div
+        class="relative z-40 flex flex-col border-b border-border bg-card/95 px-3 py-3 shadow-sm backdrop-blur"
+      >
+        <div class="flex flex-wrap items-center gap-2">
+          <details
+            class="relative"
+            data-dropdown="brand"
+            [open]="openDropdownId === 'brand'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by brand"
+              data-tooltip="Filter by brand"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('brand')"
             >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by brand"
-                data-tooltip="Filter by brand"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('brand')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M3 22h18" />
-                    <path d="M6 22V4h12v18" />
-                    <path d="M9 10h6" />
-                    <path d="M9 14h6" />
-                  </svg>
-                </span>
-                
-                <span class="text-muted-foreground hidden">
-                Brand  ({{ filters.brand.length || 'all' }})
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <label
-                  *ngFor="let brand of brands"
-                  class="flex items-center gap-2 py-1 text-xs"
-                >
-                  <input
-                    type="checkbox"
-                    class="h-5 w-5"
-                    [checked]="filters.brand.includes(brand)"
-                    (change)="toggleBrand(brand)"
-                  />
-                  <span>{{ brand }}</span>
-                </label>
-              </div>
-            </details>
-
-            <details
-              class="relative"
-              data-dropdown="marketplace"
-              [open]="openDropdownId === 'marketplace'"
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M3 22h18" />
+                  <path d="M6 22V4h12v18" />
+                  <path d="M9 10h6" />
+                  <path d="M9 14h6" />
+                </svg>
+              </span>
+              
+              <span class="text-muted-foreground hidden">
+              Brand  ({{ filters.brand.length || 'all' }})
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by marketplace"
-                data-tooltip="Filter by marketplace"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('marketplace')"
+              <label
+                *ngFor="let brand of brands"
+                class="flex items-center gap-2 py-1 text-xs"
               >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M3 9l2-5h14l2 5" />
-                    <path d="M5 9v11h14V9" />
-                    <path d="M9 20V9h6v11" />
-                  </svg>
-                </span>
-                
-                <span class="text-muted-foreground hidden">
-               Marketplace   ({{ filters.marketplace.length || 'all' }})
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <label
-                  *ngFor="let platform of marketplaces"
-                  class="flex items-center gap-2 py-1 text-xs capitalize"
-                >
-                  <input
-                    type="checkbox"
-                    class="h-5 w-5"
-                    [checked]="filters.marketplace.includes(platform)"
-                    (change)="toggleMarketplace(platform)"
-                  />
-                  <span>{{ platform }}</span>
-                </label>
-              </div>
-            </details>
-
-            <details
-              class="relative"
-              data-dropdown="status"
-              [open]="openDropdownId === 'status'">
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by status"
-                data-tooltip="Filter by status"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('status')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <polyline points="3 12 7 12 9 6 13 18 16 10 21 10" />
-                  </svg>
-                </span>
-                
-                <span class="text-muted-foreground hidden">
-               Status   ({{ filters.status.length || 'all' }})
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <label
-                  *ngFor="let status of statusOptions"
-                  class="flex items-center gap-2 py-1 text-xs"
-                >
-                  <input
-                    type="checkbox"
-                    class="h-5 w-5"
-                    [checked]="filters.status.includes(status)"
-                    (change)="toggleStatus(status)"
-                  />
-                  <span class="flex-1 capitalize">{{ statusLabel(status) }}</span>
-                  <span class="text-[10px] text-muted-foreground">
-                    {{ statusCount(status) }}
-                  </span>
-                </label>
-              </div>
-            </details>
-
-            <details
-              class="relative"
-              data-dropdown="price"
-              [open]="openDropdownId === 'price'"
-            >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by price"
-                data-tooltip="Filter by price"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('price')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M12 1v22" />
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
-                </span>
-               
-                <span class="text-muted-foreground hidden">
-                 Price  {{
-                    filters.priceRange[0] > 0 || filters.priceRange[1] < 10000
-                      ? '$' + filters.priceRange[0] + ' - ' + filters.priceRange[1]
-                      : 'all'
-                  }}
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <div class="grid grid-cols-2 gap-3">
-                  <label class="text-xs text-muted-foreground">
-                    Min
-                    <input
-                      type="number"
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      [ngModel]="filters.priceRange[0]"
-                      (ngModelChange)="updateRange('priceRange', $event, filters.priceRange[1])"
-                    />
-                  </label>
-                  <label class="text-xs text-muted-foreground">
-                    Max
-                    <input
-                      type="number"
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      [ngModel]="filters.priceRange[1]"
-                      (ngModelChange)="updateRange('priceRange', filters.priceRange[0], $event)"
-                    />
-                  </label>
-                </div>
-              </div>
-            </details>
-
-            <details
-              class="relative"
-              data-dropdown="stock"
-              [open]="openDropdownId === 'stock'"
-            >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by stock"
-                data-tooltip="Filter by stock"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('stock')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M3 7l9-4 9 4-9 4-9-4z" />
-                    <path d="M3 7v10l9 4 9-4V7" />
-                  </svg>
-                </span>
-               
-                <span class="text-muted-foreground hidden">
-                Stock   {{
-                    filters.stockRange[0] > 0 || filters.stockRange[1] < 10000
-                      ? filters.stockRange[0] + ' - ' + filters.stockRange[1]
-                      : 'all'
-                  }}
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <div class="grid grid-cols-2 gap-3">
-                  <label class="text-xs text-muted-foreground">
-                    Min
-                    <input
-                      type="number"
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      [ngModel]="filters.stockRange[0]"
-                      (ngModelChange)="updateRange('stockRange', $event, filters.stockRange[1])"
-                    />
-                  </label>
-                  <label class="text-xs text-muted-foreground">
-                    Max
-                    <input
-                      type="number"
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      [ngModel]="filters.stockRange[1]"
-                      (ngModelChange)="updateRange('stockRange', filters.stockRange[0], $event)"
-                    />
-                  </label>
-                </div>
-              </div>
-            </details>
-
-            <details
-              class="relative"
-              data-dropdown="sold"
-              [open]="openDropdownId === 'sold'"
-            >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by sold units"
-                data-tooltip="Filter by sold units"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('sold')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <polyline points="3 17 9 11 13 15 21 7" />
-                    <path d="M21 7v6h-6" />
-                  </svg>
-                </span>
-                
-                <span class="text-muted-foreground hidden">
-              Sold    {{
-                    filters.soldRange[0] > 0 || filters.soldRange[1] < 10000
-                      ? filters.soldRange[0] + ' - ' + filters.soldRange[1]
-                      : 'all'
-                  }}
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 w-72 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <div class="grid grid-cols-2 gap-3">
-                  <label class="text-xs text-muted-foreground">
-                    Min
-                    <input
-                      type="number"
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      [ngModel]="filters.soldRange[0]"
-                      (ngModelChange)="updateRange('soldRange', $event, filters.soldRange[1])"
-                    />
-                  </label>
-                  <label class="text-xs text-muted-foreground">
-                    Max
-                    <input
-                      type="number"
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      [ngModel]="filters.soldRange[1]"
-                      (ngModelChange)="updateRange('soldRange', filters.soldRange[0], $event)"
-                    />
-                  </label>
-                </div>
-                <label class="mt-3 block text-xs text-muted-foreground">
-                  Period
-                  <select
-                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                    [ngModel]="filters.soldPeriod"
-                    (ngModelChange)="setSoldPeriod($event)"
-                  >
-                    <option *ngFor="let option of soldPeriods" [value]="option.value">
-                      {{ option.label }}
-                    </option>
-                  </select>
-                </label>
-              </div>
-            </details>
-
-            <details
-              class="relative"
-              data-dropdown="type"
-              [open]="openDropdownId === 'type'"
-            >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by product type"
-                data-tooltip="Filter by product type"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('type')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M3 7l9-4 9 4-9 4-9-4z" />
-                    <path d="M3 7v10l9 4 9-4V7" />
-                  </svg>
-                </span>
-               
-                <span class="text-muted-foreground hidden">
-               Type    {{
-                    filters.kitProduct === null
-                      ? 'all'
-                      : filters.kitProduct
-                        ? 'kit'
-                        : 'single'
-                  }}
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <label class="flex items-center gap-2 py-1 text-xs">
-                  <input
-                    type="radio"
-                    name="kitFilter"
-                    class="h-5 w-5"
-                    [checked]="filters.kitProduct === null"
-                    (change)="setKitFilter(null)"
-                  />
-                  <span>All products</span>
-                </label>
-                <label class="flex items-center gap-2 py-1 text-xs">
-                  <input
-                    type="radio"
-                    name="kitFilter"
-                    class="h-5 w-5"
-                    [checked]="filters.kitProduct === true"
-                    (change)="setKitFilter(true)"
-                  />
-                  <span>Kit products</span>
-                </label>
-                <label class="flex items-center gap-2 py-1 text-xs">
-                  <input
-                    type="radio"
-                    name="kitFilter"
-                    class="h-5 w-5"
-                    [checked]="filters.kitProduct === false"
-                    (change)="setKitFilter(false)"
-                  />
-                  <span>Single products</span>
-                </label>
-              </div>
-            </details>
-
-            <details
-              class="relative"
-              data-dropdown="variation"
-              [open]="openDropdownId === 'variation'"
-            >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by variations"
-                data-tooltip="Filter by variations"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('variation')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M12 2l9 5-9 5-9-5 9-5z" />
-                    <path d="M3 12l9 5 9-5" />
-                    <path d="M3 17l9 5 9-5" />
-                  </svg>
-                </span>
-               
-                <span class="text-muted-foreground hidden">
-               Variation    {{
-                    filters.hasVariation === null
-                      ? 'all'
-                      : filters.hasVariation
-                        ? 'has'
-                        : 'none'
-                  }}
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 w-44 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <label class="flex items-center gap-2 py-1 text-xs">
-                  <input
-                    type="radio"
-                    name="variationFilter"
-                    class="h-5 w-5"
-                    [checked]="filters.hasVariation === null"
-                    (change)="setVariationFilter(null)"
-                  />
-                  <span>All</span>
-                </label>
-                <label class="flex items-center gap-2 py-1 text-xs">
-                  <input
-                    type="radio"
-                    name="variationFilter"
-                    class="h-5 w-5"
-                    [checked]="filters.hasVariation === true"
-                    (change)="setVariationFilter(true)"
-                  />
-                  <span>Has variation</span>
-                </label>
-                <label class="flex items-center gap-2 py-1 text-xs">
-                  <input
-                    type="radio"
-                    name="variationFilter"
-                    class="h-5 w-5"
-                    [checked]="filters.hasVariation === false"
-                    (change)="setVariationFilter(false)"
-                  />
-                  <span>No variation</span>
-                </label>
-              </div>
-            </details>
-
-            <details
-              class="relative"
-              data-dropdown="tags"
-              [open]="openDropdownId === 'tags'"
-            >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                title="Filter by tags"
-                data-tooltip="Filter by tags"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('tags')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M20 13l-7 7-10-10V3h7l10 10z" />
-                    <circle cx="7.5" cy="7.5" r="1.5" />
-                  </svg>
-                </span>
-               
-                <span class="text-muted-foreground hidden">
-               Tags    ({{ filters.tags.length || 'all' }})
-                </span>
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
-                <div class="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    class="rounded-md border border-border px-2 py-1 text-xs hover:bg-muted"
-                    (click)="openTagForm()"
-                  >
-                    Create tag
-                  </button>
-                  <p *ngIf="tags.length === 0" class="text-xs text-muted-foreground">
-                    No tags yet.
-                  </p>
-                </div>
-                <div class="mt-2 space-y-2" *ngIf="tags.length > 0">
-                  <label
-                    *ngFor="let tag of tags"
-                    class="flex items-center gap-2 text-xs"
-                  >
-                    <input
-                      type="checkbox"
-                      class="h-5 w-5"
-                      [checked]="filters.tags.includes(tag.id)"
-                      (change)="toggleTagFilter(tag.id)"
-                    />
-                    <span
-                      class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-white"
-                      [style.backgroundColor]="tag.color"
-                    >
-                      {{ tag.name }}
-                    </span>
-                    <div class="ml-auto flex items-center gap-2 text-[10px] text-muted-foreground">
-                      <button type="button" (click)="editTag(tag)">Edit</button>
-                      <button type="button" (click)="deleteTag(tag)">Delete</button>
-                    </div>
-                  </label>
-                </div>
-              </div>
-            </details>
-
-            <div class="ml-auto flex flex-1 items-center gap-2">
-              <div class="relative w-full max-w-[420px]">
-                <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="M21 21l-4.3-4.3" />
-                  </svg>
-                </span>
                 <input
-                  type="search"
-                  class="w-full rounded-md border border-border bg-background px-9 py-2 text-xs transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
-                  placeholder="Search products..."
-                  [(ngModel)]="filters.search"
-                  (ngModelChange)="onFilterChange()"
+                  type="checkbox"
+                  class="h-5 w-5"
+                  [checked]="filters.brand.includes(brand)"
+                  (change)="toggleBrand(brand)"
                 />
+                <span>{{ brand }}</span>
+              </label>
+            </div>
+          </details>
+
+          <details
+            class="relative"
+            data-dropdown="marketplace"
+            [open]="openDropdownId === 'marketplace'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by marketplace"
+              data-tooltip="Filter by marketplace"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('marketplace')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M3 9l2-5h14l2 5" />
+                  <path d="M5 9v11h14V9" />
+                  <path d="M9 20V9h6v11" />
+                </svg>
+              </span>
+              
+              <span class="text-muted-foreground hidden">
+             Marketplace   ({{ filters.marketplace.length || 'all' }})
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+            >
+              <label
+                *ngFor="let platform of marketplaces"
+                class="flex items-center gap-2 py-1 text-xs capitalize"
+              >
+                <input
+                  type="checkbox"
+                  class="h-5 w-5"
+                  [checked]="filters.marketplace.includes(platform)"
+                  (change)="toggleMarketplace(platform)"
+                />
+                <span>{{ platform }}</span>
+              </label>
+            </div>
+          </details>
+
+          <details
+            class="relative"
+            data-dropdown="status"
+            [open]="openDropdownId === 'status'">
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by status"
+              data-tooltip="Filter by status"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('status')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <polyline points="3 12 7 12 9 6 13 18 16 10 21 10" />
+                </svg>
+              </span>
+              
+              <span class="text-muted-foreground hidden">
+             Status   ({{ filters.status.length || 'all' }})
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+            >
+              <label
+                *ngFor="let status of statusOptions"
+                class="flex items-center gap-2 py-1 text-xs"
+              >
+                <input
+                  type="checkbox"
+                  class="h-5 w-5"
+                  [checked]="filters.status.includes(status)"
+                  (change)="toggleStatus(status)"
+                />
+                <span class="flex-1 capitalize">{{ statusLabel(status) }}</span>
+                <span class="text-[10px] text-muted-foreground">
+                  {{ statusCount(status) }}
+                </span>
+              </label>
+            </div>
+          </details>
+
+          <details
+            class="relative"
+            data-dropdown="price"
+            [open]="openDropdownId === 'price'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by price"
+              data-tooltip="Filter by price"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('price')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M12 1v22" />
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </span>
+             
+              <span class="text-muted-foreground hidden">
+               Price  {{
+                  filters.priceRange[0] > 0 || filters.priceRange[1] < 10000
+                    ? '$' + filters.priceRange[0] + ' - ' + filters.priceRange[1]
+                    : 'all'
+                }}
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+            >
+              <div class="grid grid-cols-2 gap-3">
+                <label class="text-xs text-muted-foreground">
+                  Min
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [ngModel]="filters.priceRange[0]"
+                    (ngModelChange)="updateRange('priceRange', $event, filters.priceRange[1])"
+                  />
+                </label>
+                <label class="text-xs text-muted-foreground">
+                  Max
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [ngModel]="filters.priceRange[1]"
+                    (ngModelChange)="updateRange('priceRange', filters.priceRange[0], $event)"
+                  />
+                </label>
               </div>
+            </div>
+          </details>
+
+          <details
+            class="relative"
+            data-dropdown="stock"
+            [open]="openDropdownId === 'stock'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by stock"
+              data-tooltip="Filter by stock"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('stock')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-box w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+              </span>
+             
+              <span class="text-muted-foreground hidden">
+              Stock   {{
+                  filters.stockRange[0] > 0 || filters.stockRange[1] < 10000
+                    ? filters.stockRange[0] + ' - ' + filters.stockRange[1]
+                    : 'all'
+                }}
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+            >
+              <div class="grid grid-cols-2 gap-3">
+                <label class="text-xs text-muted-foreground">
+                  Min
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [ngModel]="filters.stockRange[0]"
+                    (ngModelChange)="updateRange('stockRange', $event, filters.stockRange[1])"
+                  />
+                </label>
+                <label class="text-xs text-muted-foreground">
+                  Max
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [ngModel]="filters.stockRange[1]"
+                    (ngModelChange)="updateRange('stockRange', filters.stockRange[0], $event)"
+                  />
+                </label>
+              </div>
+            </div>
+          </details>
+
+          <details
+            class="relative"
+            data-dropdown="sold"
+            [open]="openDropdownId === 'sold'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by sold units"
+              data-tooltip="Filter by sold units"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('sold')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up w-3.5 h-3.5 sm:w-4 sm:h-4"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+              </span>
+              
+              <span class="text-muted-foreground hidden">
+            Sold    {{
+                  filters.soldRange[0] > 0 || filters.soldRange[1] < 10000
+                    ? filters.soldRange[0] + ' - ' + filters.soldRange[1]
+                    : 'all'
+                }}
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 w-72 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+            >
+              <div class="grid grid-cols-2 gap-3">
+                <label class="text-xs text-muted-foreground">
+                  Min
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [ngModel]="filters.soldRange[0]"
+                    (ngModelChange)="updateRange('soldRange', $event, filters.soldRange[1])"
+                  />
+                </label>
+                <label class="text-xs text-muted-foreground">
+                  Max
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                    [ngModel]="filters.soldRange[1]"
+                    (ngModelChange)="updateRange('soldRange', filters.soldRange[0], $event)"
+                  />
+                </label>
+              </div>
+              <label class="mt-3 block text-xs text-muted-foreground">
+                Period
+                <select
+                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  [ngModel]="filters.soldPeriod"
+                  (ngModelChange)="setSoldPeriod($event)"
+                >
+                  <option *ngFor="let option of soldPeriods" [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                </select>
+              </label>
+            </div>
+          </details>
+
+          <details
+            class="relative"
+            data-dropdown="type"
+            [open]="openDropdownId === 'type'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by product type"
+              data-tooltip="Filter by product type"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('type')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-box w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+              </span>
+             
+              <span class="text-muted-foreground hidden">
+             Type    {{
+                  filters.kitProduct === null
+                    ? 'all'
+                    : filters.kitProduct
+                      ? 'kit'
+                      : 'single'
+                }}
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+            >
+              <label class="flex items-center gap-2 py-1 text-xs">
+                <input
+                  type="radio"
+                  name="kitFilter"
+                  class="h-5 w-5"
+                  [checked]="filters.kitProduct === null"
+                  (change)="setKitFilter(null)"
+                />
+                <span>All products</span>
+              </label>
+              <label class="flex items-center gap-2 py-1 text-xs">
+                <input
+                  type="radio"
+                  name="kitFilter"
+                  class="h-5 w-5"
+                  [checked]="filters.kitProduct === true"
+                  (change)="setKitFilter(true)"
+                />
+                <span>Kit products</span>
+              </label>
+              <label class="flex items-center gap-2 py-1 text-xs">
+                <input
+                  type="radio"
+                  name="kitFilter"
+                  class="h-5 w-5"
+                  [checked]="filters.kitProduct === false"
+                  (change)="setKitFilter(false)"
+                />
+                <span>Single products</span>
+              </label>
+            </div>
+          </details>
+
+          <details
+            class="relative"
+            data-dropdown="variation"
+            [open]="openDropdownId === 'variation'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by variations"
+              data-tooltip="Filter by variations"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('variation')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M12 2l9 5-9 5-9-5 9-5z" />
+                  <path d="M3 12l9 5 9-5" />
+                  <path d="M3 17l9 5 9-5" />
+                </svg>
+              </span>
+             
+              <span class="text-muted-foreground hidden">
+             Variation    {{
+                  filters.hasVariation === null
+                    ? 'all'
+                    : filters.hasVariation
+                      ? 'has'
+                      : 'none'
+                }}
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 w-44 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+            >
+              <label class="flex items-center gap-2 py-1 text-xs">
+                <input
+                  type="radio"
+                  name="variationFilter"
+                  class="h-5 w-5"
+                  [checked]="filters.hasVariation === null"
+                  (change)="setVariationFilter(null)"
+                />
+                <span>All</span>
+              </label>
+              <label class="flex items-center gap-2 py-1 text-xs">
+                <input
+                  type="radio"
+                  name="variationFilter"
+                  class="h-5 w-5"
+                  [checked]="filters.hasVariation === true"
+                  (change)="setVariationFilter(true)"
+                />
+                <span>Has variation</span>
+              </label>
+              <label class="flex items-center gap-2 py-1 text-xs">
+                <input
+                  type="radio"
+                  name="variationFilter"
+                  class="h-5 w-5"
+                  [checked]="filters.hasVariation === false"
+                  (change)="setVariationFilter(false)"
+                />
+                <span>No variation</span>
+              </label>
+            </div>
+          </details>
+
+          <details
+            class="relative"
+            data-dropdown="tags"
+            [open]="openDropdownId === 'tags'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              title="Filter by tags"
+              data-tooltip="Filter by tags"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('tags')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M20 13l-7 7-10-10V3h7l10 10z" />
+                  <circle cx="7.5" cy="7.5" r="1.5" />
+                </svg>
+              </span>
+             
+              <span class="text-muted-foreground hidden">
+             Tags    ({{ filters.tags.length || 'all' }})
+              </span>
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div
+              class="absolute z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+            >
+              <div class="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  class="rounded-md border border-border px-2 py-1 text-xs hover:bg-muted"
+                  (click)="openTagForm()"
+                >
+                  Create tag
+                </button>
+                <p *ngIf="tags.length === 0" class="text-xs text-muted-foreground">
+                  No tags yet.
+                </p>
+              </div>
+              <div class="mt-2 space-y-2" *ngIf="tags.length > 0">
+                <label
+                  *ngFor="let tag of tags"
+                  class="flex items-center gap-2 text-xs"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-5 w-5"
+                    [checked]="filters.tags.includes(tag.id)"
+                    (change)="toggleTagFilter(tag.id)"
+                  />
+                  <span
+                    class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-white"
+                    [style.backgroundColor]="tag.color"
+                  >
+                    {{ tag.name }}
+                  </span>
+                  <div class="ml-auto flex items-center gap-2 text-[10px] text-muted-foreground">
+                    <button type="button" (click)="editTag(tag)">Edit</button>
+                    <button type="button" (click)="deleteTag(tag)">Delete</button>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </details>
+
+          <div class="ml-auto flex flex-1 items-center gap-2">
+            <div class="relative w-full max-w-[420px] min-w-[200px]">
+              <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="M21 21l-4.3-4.3" />
+                </svg>
+              </span>
+              <input
+                type="search"
+                class="w-full rounded-md border border-border bg-background px-9 py-2 text-xs transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                placeholder="Search products..."
+                [(ngModel)]="filters.search"
+                (ngModelChange)="onFilterChange()"
+              />
+            </div>
+            <button
+              type="button"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px] gap-2"
+              title="Custom filters"
+              data-tooltip="Custom filters"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
+                </svg>
+              </span>
+              Custom Filters
+            </button>
+            <details
+              class="relative"
+              data-dropdown="columns"
+              [open]="openDropdownId === 'columns'"
+            >
+              <summary
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px] gap-2"
+                title="Columns"
+                data-tooltip="Columns"
+                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('columns')"
+              >
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <rect x="3" y="4" width="7" height="16" />
+                    <rect x="14" y="4" width="7" height="16" />
+                  </svg>
+                </span>
+                Columns
+                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </summary>
+              <div
+                class="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              >
+                <label
+                  *ngFor="let column of columns"
+                  class="flex items-center gap-2 py-1 text-xs"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-5 w-5"
+                    [checked]="column.visible"
+                    (change)="toggleColumn(column.id)"
+                  />
+                  <span>{{ column.label }}</span>
+                </label>
+              </div>
+            </details>
+            <button
+            type="button"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-2 py-2 gap-2"
+            (click)="openCsvDialog('update')"
+            title="Update via CSV"
+            data-tooltip="Update via CSV"
+          >
+            <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                <path d="M3 12a9 9 0 0 1 15.5-6.4" />
+                <path d="M21 3v6h-6" />
+                <path d="M21 12a9 9 0 0 1-15.5 6.4" />
+                <path d="M3 21v-6h6" />
+              </svg>
+            </span>
+            Update via CSV
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-2 py-2 gap-2"
+            (click)="resetFilters()"
+            title="Clear all filters"
+            data-tooltip="Clear all filters"
+          >
+            <span class="inline-flex h-5 w-5 items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 w-4 h-4"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+            </span>
+            Clear all
+          </button>
+    
+    <details
+            class="relative"
+            data-dropdown="create"
+            [open]="openDropdownId === 'create'"
+          >
+            <summary
+              class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 gap-2"
+              (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('create')"
+            >
+              <span class="inline-flex h-5 w-5 items-center justify-center text-primary-foreground">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                  <path d="M12 5v14" />
+                  <path d="M5 12h14" />
+                </svg>
+              </span>
+              Create Product
+              <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-primary-foreground/80">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </summary>
+            <div class="absolute z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
               <button
                 type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-2 py-2 gap-2 h-[34px]"
-                title="Custom filters"
-                data-tooltip="Custom filters"
+                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                (click)="openManualDialog('single')"
               >
-                <span class="mr-2 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
-                  </svg>
-                </span>
-                Custom Filters
+                Manual entry
+                <span class="text-muted-foreground">+</span>
               </button>
-              <details
-                class="relative"
-                data-dropdown="columns"
-                [open]="openDropdownId === 'columns'"
-              >
-                <summary
-                  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px]"
-                  title="Columns"
-                  data-tooltip="Columns"
-                  (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('columns')"
-                >
-                  <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                      <rect x="3" y="4" width="7" height="16" />
-                      <rect x="14" y="4" width="7" height="16" />
-                    </svg>
-                  </span>
-                  Columns
-                  <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </span>
-                </summary>
-                <div
-                  class="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-                >
-                  <label
-                    *ngFor="let column of columns"
-                    class="flex items-center gap-2 py-1 text-xs"
-                  >
-                    <input
-                      type="checkbox"
-                      class="h-5 w-5"
-                      [checked]="column.visible"
-                      (change)="toggleColumn(column.id)"
-                    />
-                    <span>{{ column.label }}</span>
-                  </label>
-                </div>
-              </details>
               <button
-              type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-2 py-2 gap-2"
-              (click)="openCsvDialog('update')"
-              title="Update via CSV"
-              data-tooltip="Update via CSV"
-            >
-              <span class="inline-flex h-5 w-5 items-center justify-center text-muted-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <path d="M3 12a9 9 0 0 1 15.5-6.4" />
-                  <path d="M21 3v6h-6" />
-                  <path d="M21 12a9 9 0 0 1-15.5 6.4" />
-                  <path d="M3 21v-6h6" />
-                </svg>
-              </span>
-              Update via CSV
-            </button>
-            <button
-              type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-2 py-2 gap-2"
-              (click)="resetFilters()"
-              title="Clear all filters"
-              data-tooltip="Clear all filters"
-            >
-              <span class="inline-flex h-5 w-5 items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <path d="M3 6h18" />
-                  <path d="M8 6v12" />
-                  <path d="M16 6v12" />
-                  <path d="M5 6l1-3h12l1 3" />
-                </svg>
-              </span>
-              Clear all
-            </button>
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                (click)="openManualDialog('kit')"
+              >
+                Create kit product
+                <span class="text-muted-foreground">▢</span>
+              </button>
+              <button
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                (click)="openCsvDialog('create')"
+              >
+                CSV or Excel
+                <span class="text-muted-foreground">CSV</span>
+              </button>
+              <div class="my-2 border-t border-border"></div>
+              <button
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                (click)="importMarketplace('Amazon')"
+              >
+                Import from Amazon
+                <span class="text-orange-500">Amazon</span>
+              </button>
+              <button
+                type="button"
+                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                (click)="importMarketplace('Shopify')"
+              >
+                Import from Shopify
+                <span class="text-green-500">Shopify</span>
+              </button>
             </div>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-2">
-           
-            <details
-              class="relative"
-              data-dropdown="create"
-              [open]="openDropdownId === 'create'"
+          </details>
+          <!-- <label class="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
+            Rows
+            <select
+              class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+              [(ngModel)]="pageSize"
+              (ngModelChange)="onPageSizeChange()"
             >
-              <summary
-                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('create')"
-              >
-                <span class="inline-flex h-5 w-5 items-center justify-center text-primary-foreground">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M12 5v14" />
-                    <path d="M5 12h14" />
-                  </svg>
-                </span>
-                Create Product
-                <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-primary-foreground/80">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </span>
-              </summary>
-              <div
-                class="absolute z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
-              >
-                <button
-                  type="button"
-                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
-                  (click)="openManualDialog('single')"
-                >
-                  Manual entry
-                  <span class="text-muted-foreground">+</span>
-                </button>
-                <button
-                  type="button"
-                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
-                  (click)="openManualDialog('kit')"
-                >
-                  Create kit product
-                  <span class="text-muted-foreground">▢</span>
-                </button>
-                <button
-                  type="button"
-                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
-                  (click)="openCsvDialog('create')"
-                >
-                  CSV or Excel
-                  <span class="text-muted-foreground">CSV</span>
-                </button>
-                <div class="my-2 border-t border-border"></div>
-                <button
-                  type="button"
-                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
-                  (click)="importMarketplace('Amazon')"
-                >
-                  Import from Amazon
-                  <span class="text-orange-500">Amazon</span>
-                </button>
-                <button
-                  type="button"
-                  class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
-                  (click)="importMarketplace('Shopify')"
-                >
-                  Import from Shopify
-                  <span class="text-green-500">Shopify</span>
-                </button>
-              </div>
-            </details>
-            <label class="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
-              Rows
-              <select
-                class="rounded-md border border-border bg-background px-2 py-1 text-xs"
-                [(ngModel)]="pageSize"
-                (ngModelChange)="onPageSizeChange()"
-              >
-                <option [value]="10">10</option>
-                <option [value]="25">25</option>
-                <option [value]="50">50</option>
-              </select>
-            </label>
+              <option [value]="10">10</option>
+              <option [value]="25">25</option>
+              <option [value]="50">50</option>
+            </select>
+          </label> -->
           </div>
         </div>
 
-        <div
-          *ngIf="tagFormOpen"
-          class="mx-4 rounded-lg border border-border bg-background p-4"
-        >
-          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-wrap items-center gap-2">
+         
+          
+        </div>
+      </div>
+
+      <div
+        *ngIf="tagFormOpen"
+        class="mx-4 rounded-lg border border-border bg-background p-4"
+      >
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 class="text-sm font-semibold">
+              {{ editingTag ? 'Edit tag' : 'Create tag' }}
+            </h3>
+            <p class="text-xs text-muted-foreground">
+              Tags help group products for quick filtering.
+            </p>
+          </div>
+          <button
+            type="button"
+            class="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted"
+            (click)="cancelTagForm()"
+          >
+            Close
+          </button>
+        </div>
+
+        <div class="mt-4 grid gap-4 lg:grid-cols-3">
+          <label class="flex flex-col gap-2 text-xs text-muted-foreground">
+            Tag name
+            <input
+              type="text"
+              class="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+              [(ngModel)]="tagName"
+              placeholder="Enter tag name"
+              maxlength="30"
+            />
+          </label>
+
+          <div class="lg:col-span-2">
+            <p class="text-xs text-muted-foreground">Pick a color</p>
+            <div class="mt-2 flex flex-wrap gap-2">
+              <button
+                *ngFor="let color of tagColors"
+                type="button"
+                class="h-7 w-7 rounded-md border border-border"
+                [style.backgroundColor]="color.value"
+                [class.ring-2]="tagColor === color.value"
+                [class.ring-offset-2]="tagColor === color.value"
+                (click)="setTagColor(color.value)"
+                [attr.aria-label]="color.name"
+              ></button>
+              <div class="flex items-center gap-2">
+                <input
+                  type="color"
+                  class="h-7 w-7 cursor-pointer rounded-md border border-border"
+                  [value]="tagColor"
+                  (input)="setTagColor($any($event.target).value)"
+                />
+                <input
+                  type="text"
+                  class="w-24 rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                  [value]="tagColor"
+                  (input)="setTagColor($any($event.target).value)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 flex items-center gap-3">
+          <button
+            type="button"
+            class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+            [disabled]="!tagName.trim() || !tagColor"
+            (click)="saveTag()"
+          >
+            {{ editingTag ? 'Save changes' : 'Create tag' }}
+          </button>
+          <span class="text-xs text-muted-foreground">
+            Preview:
+            <span
+              class="ml-2 inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
+              [style.backgroundColor]="tagColor || '#64748b'"
+            >
+              {{ tagName || 'Tag name' }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div
+        *ngIf="manualDialogOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+      >
+        <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
+          <div class="flex items-center justify-between border-b border-border pb-3">
             <div>
-              <h3 class="text-sm font-semibold">
-                {{ editingTag ? 'Edit tag' : 'Create tag' }}
-              </h3>
+              <h3 class="text-lg font-semibold">Create new product</h3>
               <p class="text-xs text-muted-foreground">
-                Tags help group products for quick filtering.
+                Fill in the product details. Required fields are marked.
               </p>
             </div>
             <button
               type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted"
-              (click)="cancelTagForm()"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeManualDialog()"
             >
               Close
             </button>
           </div>
 
-          <div class="mt-4 grid gap-4 lg:grid-cols-3">
-            <label class="flex flex-col gap-2 text-xs text-muted-foreground">
-              Tag name
-              <input
-                type="text"
-                class="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
-                [(ngModel)]="tagName"
-                placeholder="Enter tag name"
-                maxlength="30"
-              />
-            </label>
-
-            <div class="lg:col-span-2">
-              <p class="text-xs text-muted-foreground">Pick a color</p>
-              <div class="mt-2 flex flex-wrap gap-2">
-                <button
-                  *ngFor="let color of tagColors"
-                  type="button"
-                  class="h-7 w-7 rounded-md border border-border"
-                  [style.backgroundColor]="color.value"
-                  [class.ring-2]="tagColor === color.value"
-                  [class.ring-offset-2]="tagColor === color.value"
-                  (click)="setTagColor(color.value)"
-                  [attr.aria-label]="color.name"
-                ></button>
-                <div class="flex items-center gap-2">
-                  <input
-                    type="color"
-                    class="h-7 w-7 cursor-pointer rounded-md border border-border"
-                    [value]="tagColor"
-                    (input)="setTagColor($any($event.target).value)"
-                  />
-                  <input
-                    type="text"
-                    class="w-24 rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
-                    [value]="tagColor"
-                    (input)="setTagColor($any($event.target).value)"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-4 flex items-center gap-3">
+          <div class="mt-4 flex flex-wrap gap-2">
             <button
+              *ngFor="let tab of manualTabs"
               type="button"
-              class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-              [disabled]="!tagName.trim() || !tagColor"
-              (click)="saveTag()"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              [class.bg-muted]="manualTab === tab"
+              (click)="manualTab = tab"
             >
-              {{ editingTag ? 'Save changes' : 'Create tag' }}
+              {{ manualTabLabel(tab) }}
             </button>
-            <span class="text-xs text-muted-foreground">
-              Preview:
-              <span
-                class="ml-2 inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
-                [style.backgroundColor]="tagColor || '#64748b'"
-              >
-                {{ tagName || 'Tag name' }}
-              </span>
-            </span>
           </div>
-        </div>
 
-        <div
-          *ngIf="manualDialogOpen"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
-        >
-          <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-            <div class="flex items-center justify-between border-b border-border pb-3">
-              <div>
-                <h3 class="text-lg font-semibold">Create new product</h3>
-                <p class="text-xs text-muted-foreground">
-                  Fill in the product details. Required fields are marked.
-                </p>
-              </div>
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="closeManualDialog()"
-              >
-                Close
-              </button>
+          <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+            <div *ngIf="manualTab === 'basic'" class="grid gap-4">
+              <label *ngFor="let field of manualBasicFields" class="grid gap-1 text-xs">
+                <span class="text-muted-foreground">
+                  {{ field.label }} <span *ngIf="field.required" class="text-destructive">*</span>
+                </span>
+                <input
+                  [type]="field.type || 'text'"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [placeholder]="field.placeholder"
+                  [(ngModel)]="manualForm[field.id]"
+                />
+              </label>
             </div>
 
-            <div class="mt-4 flex flex-wrap gap-2">
-              <button
-                *ngFor="let tab of manualTabs"
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                [class.bg-muted]="manualTab === tab"
-                (click)="manualTab = tab"
-              >
-                {{ manualTabLabel(tab) }}
-              </button>
-            </div>
+            <div *ngIf="manualTab === 'type'" class="grid gap-4">
+              <label class="flex items-center gap-2 text-sm">
+                <input
+                  type="radio"
+                  name="manualProductType"
+                  class="h-5 w-5"
+                  [checked]="manualProductType === 'single'"
+                  (change)="manualProductType = 'single'"
+                />
+                <span>Single product</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm">
+                <input
+                  type="radio"
+                  name="manualProductType"
+                  class="h-5 w-5"
+                  [checked]="manualProductType === 'kit'"
+                  (change)="manualProductType = 'kit'"
+                />
+                <span>Kit product</span>
+              </label>
 
-            <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
-              <div *ngIf="manualTab === 'basic'" class="grid gap-4">
-                <label *ngFor="let field of manualBasicFields" class="grid gap-1 text-xs">
-                  <span class="text-muted-foreground">
-                    {{ field.label }} <span *ngIf="field.required" class="text-destructive">*</span>
-                  </span>
-                  <input
-                    [type]="field.type || 'text'"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [placeholder]="field.placeholder"
-                    [(ngModel)]="manualForm[field.id]"
-                  />
-                </label>
-              </div>
-
-              <div *ngIf="manualTab === 'type'" class="grid gap-4">
-                <label class="flex items-center gap-2 text-sm">
-                  <input
-                    type="radio"
-                    name="manualProductType"
-                    class="h-5 w-5"
-                    [checked]="manualProductType === 'single'"
-                    (change)="manualProductType = 'single'"
-                  />
-                  <span>Single product</span>
-                </label>
-                <label class="flex items-center gap-2 text-sm">
-                  <input
-                    type="radio"
-                    name="manualProductType"
-                    class="h-5 w-5"
-                    [checked]="manualProductType === 'kit'"
-                    (change)="manualProductType = 'kit'"
-                  />
-                  <span>Kit product</span>
-                </label>
-
-                <div *ngIf="manualProductType === 'kit'" class="grid gap-3 rounded-lg border border-border bg-muted/30 p-3">
-                  <p class="text-xs font-semibold text-muted-foreground">Kit components</p>
-                  <div class="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
-                    <label class="text-xs text-muted-foreground">
-                      Product
-                      <select
-                        class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                        [(ngModel)]="kitProductId"
-                      >
-                        <option value="">Select product</option>
-                        <option *ngFor="let product of products" [value]="product.id">
-                          {{ product.name }}
-                        </option>
-                      </select>
-                    </label>
-                    <label class="text-xs text-muted-foreground">
-                      Qty
-                      <input
-                        type="number"
-                        class="mt-1 w-20 rounded-md border border-border bg-background px-2 py-1 text-xs"
-                        [(ngModel)]="kitQuantity"
-                        min="1"
-                      />
-                    </label>
+              <div *ngIf="manualProductType === 'kit'" class="grid gap-3 rounded-lg border border-border bg-muted/30 p-3">
+                <p class="text-xs font-semibold text-muted-foreground">Kit components</p>
+                <div class="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+                  <label class="text-xs text-muted-foreground">
+                    Product
+                    <select
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      [(ngModel)]="kitProductId"
+                    >
+                      <option value="">Select product</option>
+                      <option *ngFor="let product of products" [value]="product.id">
+                        {{ product.name }}
+                      </option>
+                    </select>
+                  </label>
+                  <label class="text-xs text-muted-foreground">
+                    Qty
+                    <input
+                      type="number"
+                      class="mt-1 w-20 rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      [(ngModel)]="kitQuantity"
+                      min="1"
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-3 py-1 text-xs"
+                    (click)="addKitComponent()"
+                  >
+                    Add
+                  </button>
+                </div>
+                <div *ngIf="kitComponents.length > 0" class="space-y-2">
+                  <div
+                    *ngFor="let component of kitComponents; let i = index"
+                    class="flex items-center justify-between rounded-md border border-border px-2 py-1 text-xs"
+                  >
+                    <span>
+                      {{ kitProductName(component.productId) }} × {{ component.quantity }}
+                    </span>
                     <button
                       type="button"
-                      class="rounded-md border border-border px-3 py-1 text-xs"
-                      (click)="addKitComponent()"
+                      class="text-destructive"
+                      (click)="removeKitComponent(i)"
                     >
-                      Add
+                      Remove
                     </button>
-                  </div>
-                  <div *ngIf="kitComponents.length > 0" class="space-y-2">
-                    <div
-                      *ngFor="let component of kitComponents; let i = index"
-                      class="flex items-center justify-between rounded-md border border-border px-2 py-1 text-xs"
-                    >
-                      <span>
-                        {{ kitProductName(component.productId) }} × {{ component.quantity }}
-                      </span>
-                      <button
-                        type="button"
-                        class="text-destructive"
-                        (click)="removeKitComponent(i)"
-                      >
-                        Remove
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
-
-              <div *ngIf="manualTab === 'identifiers'" class="grid gap-4">
-                <label *ngFor="let field of manualIdentifierFields" class="grid gap-1 text-xs">
-                  <span class="text-muted-foreground">{{ field.label }}</span>
-                  <input
-                    [type]="field.type || 'text'"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [placeholder]="field.placeholder"
-                    [(ngModel)]="manualForm[field.id]"
-                  />
-                </label>
-              </div>
-
-              <div *ngIf="manualTab === 'pricing'" class="grid gap-4">
-                <label *ngFor="let field of manualPricingFields" class="grid gap-1 text-xs">
-                  <span class="text-muted-foreground">{{ field.label }}</span>
-                  <input
-                    [type]="field.type || 'text'"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [placeholder]="field.placeholder"
-                    [(ngModel)]="manualForm[field.id]"
-                  />
-                </label>
-              </div>
-
-              <div *ngIf="manualTab === 'inventory'" class="grid gap-4">
-                <label *ngFor="let field of manualInventoryFields" class="grid gap-1 text-xs">
-                  <span class="text-muted-foreground">{{ field.label }}</span>
-                  <input
-                    [type]="field.type || 'text'"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [placeholder]="field.placeholder"
-                    [(ngModel)]="manualForm[field.id]"
-                  />
-                </label>
-              </div>
             </div>
 
-            <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="closeManualDialog()"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-                (click)="saveManualProduct()"
-              >
-                Save product
-              </button>
+            <div *ngIf="manualTab === 'identifiers'" class="grid gap-4">
+              <label *ngFor="let field of manualIdentifierFields" class="grid gap-1 text-xs">
+                <span class="text-muted-foreground">{{ field.label }}</span>
+                <input
+                  [type]="field.type || 'text'"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [placeholder]="field.placeholder"
+                  [(ngModel)]="manualForm[field.id]"
+                />
+              </label>
+            </div>
+
+            <div *ngIf="manualTab === 'pricing'" class="grid gap-4">
+              <label *ngFor="let field of manualPricingFields" class="grid gap-1 text-xs">
+                <span class="text-muted-foreground">{{ field.label }}</span>
+                <input
+                  [type]="field.type || 'text'"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [placeholder]="field.placeholder"
+                  [(ngModel)]="manualForm[field.id]"
+                />
+              </label>
+            </div>
+
+            <div *ngIf="manualTab === 'inventory'" class="grid gap-4">
+              <label *ngFor="let field of manualInventoryFields" class="grid gap-1 text-xs">
+                <span class="text-muted-foreground">{{ field.label }}</span>
+                <input
+                  [type]="field.type || 'text'"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [placeholder]="field.placeholder"
+                  [(ngModel)]="manualForm[field.id]"
+                />
+              </label>
             </div>
           </div>
-        </div>
 
-        <div
-          *ngIf="csvDialogOpen"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
-        >
-          <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-            <div class="flex items-center justify-between border-b border-border pb-3">
-              <div>
-                <h3 class="text-lg font-semibold">
-                  {{ csvMode === 'create' ? 'Import Products' : 'Update Products' }}
-                </h3>
-                <p class="text-xs text-muted-foreground">
-                  {{ csvStep === 'upload' ? 'Upload a CSV or Excel file.' : 'Map CSV columns to product fields.' }}
-                </p>
-              </div>
+          <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeManualDialog()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+              (click)="saveManualProduct()"
+            >
+              Save product
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="csvDialogOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+      >
+        <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
+          <div class="flex items-center justify-between border-b border-border pb-3">
+            <div>
+              <h3 class="text-lg font-semibold">
+                {{ csvMode === 'create' ? 'Import Products' : 'Update Products' }}
+              </h3>
+              <p class="text-xs text-muted-foreground">
+                {{ csvStep === 'upload' ? 'Upload a CSV or Excel file.' : 'Map CSV columns to product fields.' }}
+              </p>
+            </div>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeCsvDialog()"
+            >
+              Close
+            </button>
+          </div>
+
+          <div *ngIf="csvStep === 'upload'" class="mt-4 space-y-4">
+            <div class="rounded-lg border border-border bg-muted/30 p-3">
+              <p class="text-xs font-semibold">Need a template?</p>
+              <p class="text-xs text-muted-foreground">
+                Download a CSV template with sample data.
+              </p>
               <button
                 type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="closeCsvDialog()"
+                class="mt-2 rounded-md border border-border px-3 py-1 text-xs"
+                (click)="downloadCsvTemplate()"
               >
-                Close
+                Download template
               </button>
             </div>
 
-            <div *ngIf="csvStep === 'upload'" class="mt-4 space-y-4">
-              <div class="rounded-lg border border-border bg-muted/30 p-3">
-                <p class="text-xs font-semibold">Need a template?</p>
+            <div class="rounded-lg border border-border bg-muted/30 p-3">
+              <p class="text-xs font-semibold">
+                {{ csvMode === 'update' ? 'Match products by' : 'Identifiers in file' }}
+              </p>
+              <div class="mt-2 grid grid-cols-2 gap-2">
+                <label
+                  *ngFor="let field of csvIdentifierOptions"
+                  class="flex items-center gap-2 text-xs"
+                >
+                  <input
+                    type="checkbox"
+                    class="h-5 w-5"
+                    [checked]="csvMatchFields.includes(field.id)"
+                    (change)="toggleCsvMatchField(field.id)"
+                  />
+                  <span>{{ field.label }}</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="rounded-lg border border-dashed border-border p-4 text-center">
+              <p class="text-xs text-muted-foreground">
+                {{ csvFileName ? csvFileName : 'No file selected' }}
+              </p>
+              <input
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                class="mt-3 w-full text-xs"
+                (change)="onCsvFileChange($event)"
+              />
+              <p *ngIf="csvError" class="mt-2 text-xs text-destructive">{{ csvError }}</p>
+            </div>
+          </div>
+
+          <div *ngIf="csvStep === 'mapping'" class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+            <div class="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-xs">
+              <span>{{ csvFileName }}</span>
+              <span class="text-muted-foreground">{{ csvRows.length }} rows</span>
+            </div>
+            <div class="mt-3 space-y-2">
+              <div
+                *ngFor="let field of csvFields"
+                class="flex items-center gap-3"
+              >
+                <div class="w-40 text-xs font-medium">
+                  {{ field.label }}
+                  <span *ngIf="csvFieldRequired(field.id)" class="text-destructive">*</span>
+                </div>
+                <select
+                  class="flex-1 rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  [ngModel]="csvFieldMapping[field.id] || '_skip'"
+                  (ngModelChange)="setCsvFieldMapping(field.id, $event)"
+                >
+                  <option value="_skip">Skip</option>
+                  <option *ngFor="let header of csvHeaders" [value]="header">
+                    {{ header }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="csvStep === 'mapping' ? resetCsvDialog() : closeCsvDialog()"
+            >
+              {{ csvStep === 'mapping' ? 'Back' : 'Cancel' }}
+            </button>
+            <button
+              *ngIf="csvStep === 'mapping'"
+              type="button"
+              class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+              [disabled]="!csvCanImport"
+              (click)="importCsvData()"
+            >
+              {{ csvMode === 'create' ? 'Create products' : 'Update products' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="productDialogOpen && selectedProduct"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+      >
+        <div class="w-full max-w-4xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
+          <div class="flex items-center justify-between border-b border-border pb-3">
+            <div>
+              <h3 class="text-lg font-semibold">{{ selectedProduct.name }}</h3>
+              <p class="text-xs text-muted-foreground">
+                Edit product details and inventory.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeProductDialog()"
+            >
+              Close
+            </button>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              [class.bg-muted]="productDialogTab === 'overview'"
+              (click)="productDialogTab = 'overview'"
+            >
+              Overview
+            </button>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              [class.bg-muted]="productDialogTab === 'inventory'"
+              (click)="productDialogTab = 'inventory'"
+            >
+              Inventory
+            </button>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              [class.bg-muted]="productDialogTab === 'marketplaces'"
+              (click)="productDialogTab = 'marketplaces'"
+            >
+              Marketplaces
+            </button>
+          </div>
+
+          <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+            <div *ngIf="productDialogTab === 'overview'" class="grid gap-4 sm:grid-cols-2">
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Product name
+                <input
+                  type="text"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="productDraft.name"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Brand
+                <input
+                  type="text"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="productDraft.brand"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Vendor
+                <input
+                  type="text"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="productDraft.vendorName"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Sale price
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="productDraft.salePrice"
+                />
+              </label>
+            </div>
+
+            <div *ngIf="productDialogTab === 'inventory'" class="grid gap-4 sm:grid-cols-2">
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Stock qty
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="productDraft.stockQty"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Purchased qty
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="productDraft.purchaseQty"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Sold qty
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="productDraft.soldQty"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Return qty
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="productDraft.returnQty"
+                />
+              </label>
+            </div>
+
+            <div *ngIf="productDialogTab === 'marketplaces'" class="space-y-3">
+              <div class="flex items-center justify-between">
                 <p class="text-xs text-muted-foreground">
-                  Download a CSV template with sample data.
+                  Listing status per marketplace.
                 </p>
                 <button
                   type="button"
-                  class="mt-2 rounded-md border border-border px-3 py-1 text-xs"
-                  (click)="downloadCsvTemplate()"
+                  class="rounded-md border border-border px-3 py-1 text-xs"
+                  (click)="openMarketplaceDialog(selectedProduct)"
                 >
-                  Download template
+                  Manage marketplaces
                 </button>
               </div>
-
-              <div class="rounded-lg border border-border bg-muted/30 p-3">
-                <p class="text-xs font-semibold">
-                  {{ csvMode === 'update' ? 'Match products by' : 'Identifiers in file' }}
+              <div class="grid gap-2">
+                <div
+                  *ngFor="let marketplace of selectedProduct.marketplaces"
+                  class="flex items-center justify-between rounded-md border border-border px-3 py-2 text-xs"
+                >
+                  <span class="capitalize">{{ marketplace.platform }}</span>
+                  <span class="text-muted-foreground">{{ marketplace.status }}</span>
+                </div>
+                <p
+                  *ngIf="selectedProduct.marketplaces.length === 0"
+                  class="text-xs text-muted-foreground"
+                >
+                  No active marketplaces.
                 </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeProductDialog()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+              (click)="saveProductDialog()"
+            >
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="marketplaceDialogOpen && marketplaceDialogProduct"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+      >
+        <div class="w-full max-w-4xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
+          <div class="flex items-center justify-between border-b border-border pb-3">
+            <div>
+              <h3 class="text-lg font-semibold">Marketplace listings</h3>
+              <p class="text-xs text-muted-foreground">
+                {{ marketplaceDialogProduct.name }}
+              </p>
+            </div>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeMarketplaceDialog()"
+            >
+              Close
+            </button>
+          </div>
+
+          <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+            <div class="grid gap-2">
+              <div
+                *ngFor="let row of marketplaceRows"
+                class="grid items-center gap-2 rounded-md border border-border px-3 py-2 text-xs sm:grid-cols-[120px_120px_1fr_1fr_90px_90px]"
+              >
+                <span class="capitalize font-semibold">{{ row.platform }}</span>
+                <select
+                  class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  [(ngModel)]="row.status"
+                >
+                  <option value="live">Live</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="error">Error</option>
+                  <option value="not_listed">Not listed</option>
+                </select>
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  [(ngModel)]="row.price"
+                  placeholder="Sale price"
+                />
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  [(ngModel)]="row.stock"
+                  placeholder="Stock"
+                />
+                <label class="flex items-center gap-1 text-xs">
+                  <input type="checkbox" [(ngModel)]="row.priceSync" />
+                  Price sync
+                </label>
+                <label class="flex items-center gap-1 text-xs">
+                  <input type="checkbox" [(ngModel)]="row.inventorySync" />
+                  Inv sync
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeMarketplaceDialog()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+              (click)="saveMarketplaceDialog()"
+            >
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="offerDialogOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+      >
+        <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
+          <div class="flex items-center justify-between border-b border-border pb-3">
+            <div>
+              <h3 class="text-lg font-semibold">Offers</h3>
+              <p class="text-xs text-muted-foreground">
+                Create and manage offers for selected products.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeOfferDialog()"
+            >
+              Close
+            </button>
+          </div>
+
+          <div class="mt-4 space-y-4">
+            <div class="rounded-md border border-border bg-muted/30 p-3">
+              <p class="text-xs font-semibold">Existing offers</p>
+              <div class="mt-2 space-y-2">
+                <div
+                  *ngFor="let offer of offersForDialog()"
+                  class="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border px-3 py-2 text-xs"
+                >
+                  <div>
+                    <p class="font-semibold">{{ offer.name }}</p>
+                    <p class="text-[10px] text-muted-foreground">
+                      {{ offerLabel(offer) }} · {{ offerStatusLabel(offer) }}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    class="rounded-md border border-destructive px-3 py-1 text-xs text-destructive"
+                    (click)="deleteOffer(offer.id)"
+                  >
+                    Delete
+                  </button>
+                </div>
+                <p *ngIf="offersForDialog().length === 0" class="text-xs text-muted-foreground">
+                  No offers yet.
+                </p>
+              </div>
+            </div>
+
+            <div class="grid gap-3 rounded-md border border-border p-3">
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Offer name
+                <input
+                  type="text"
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="offerDialogName"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Offer type
+                <select
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  [(ngModel)]="offerDialogType"
+                >
+                  <option *ngFor="let type of offerTypes" [value]="type">
+                    {{ offerTypeLabels[type] }}
+                  </option>
+                </select>
+              </label>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Discount %
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="offerDialogDiscountPercent"
+                    [disabled]="offerDialogType === 'fixed_discount' || offerDialogType === 'free_shipping'"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Discount $
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="offerDialogDiscountAmount"
+                    [disabled]="offerDialogType !== 'fixed_discount'"
+                  />
+                </label>
+              </div>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Start date
+                  <input
+                    type="date"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="offerDialogStartDate"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  End date
+                  <input
+                    type="date"
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="offerDialogEndDate"
+                  />
+                </label>
+              </div>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Description
+                <textarea
+                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  rows="2"
+                  [(ngModel)]="offerDialogDescription"
+                ></textarea>
+              </label>
+              <div>
+                <p class="text-xs text-muted-foreground">Marketplaces</p>
                 <div class="mt-2 grid grid-cols-2 gap-2">
                   <label
-                    *ngFor="let field of csvIdentifierOptions"
-                    class="flex items-center gap-2 text-xs"
+                    *ngFor="let platform of marketplaces"
+                    class="flex items-center gap-2 text-xs capitalize"
                   >
                     <input
                       type="checkbox"
                       class="h-5 w-5"
-                      [checked]="csvMatchFields.includes(field.id)"
-                      (change)="toggleCsvMatchField(field.id)"
+                      [checked]="offerDialogMarketplaces.includes(platform)"
+                      (change)="toggleOfferMarketplace(platform)"
                     />
-                    <span>{{ field.label }}</span>
+                    <span>{{ platform }}</span>
                   </label>
                 </div>
               </div>
-
-              <div class="rounded-lg border border-dashed border-border p-4 text-center">
-                <p class="text-xs text-muted-foreground">
-                  {{ csvFileName ? csvFileName : 'No file selected' }}
-                </p>
-                <input
-                  type="file"
-                  accept=".csv,.xlsx,.xls"
-                  class="mt-3 w-full text-xs"
-                  (change)="onCsvFileChange($event)"
-                />
-                <p *ngIf="csvError" class="mt-2 text-xs text-destructive">{{ csvError }}</p>
-              </div>
-            </div>
-
-            <div *ngIf="csvStep === 'mapping'" class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
-              <div class="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-xs">
-                <span>{{ csvFileName }}</span>
-                <span class="text-muted-foreground">{{ csvRows.length }} rows</span>
-              </div>
-              <div class="mt-3 space-y-2">
-                <div
-                  *ngFor="let field of csvFields"
-                  class="flex items-center gap-3"
-                >
-                  <div class="w-40 text-xs font-medium">
-                    {{ field.label }}
-                    <span *ngIf="csvFieldRequired(field.id)" class="text-destructive">*</span>
-                  </div>
-                  <select
-                    class="flex-1 rounded-md border border-border bg-background px-2 py-1 text-xs"
-                    [ngModel]="csvFieldMapping[field.id] || '_skip'"
-                    (ngModelChange)="setCsvFieldMapping(field.id, $event)"
-                  >
-                    <option value="_skip">Skip</option>
-                    <option *ngFor="let header of csvHeaders" [value]="header">
-                      {{ header }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
               <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="csvStep === 'mapping' ? resetCsvDialog() : closeCsvDialog()"
-              >
-                {{ csvStep === 'mapping' ? 'Back' : 'Cancel' }}
-              </button>
-              <button
-                *ngIf="csvStep === 'mapping'"
                 type="button"
                 class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-                [disabled]="!csvCanImport"
-                (click)="importCsvData()"
+                (click)="saveOfferDialog()"
               >
-                {{ csvMode === 'create' ? 'Create products' : 'Update products' }}
+                Save offer
               </button>
             </div>
           </div>
         </div>
+      </div>
 
-        <div
-          *ngIf="productDialogOpen && selectedProduct"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
-        >
-          <div class="w-full max-w-4xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-            <div class="flex items-center justify-between border-b border-border pb-3">
-              <div>
-                <h3 class="text-lg font-semibold">{{ selectedProduct.name }}</h3>
-                <p class="text-xs text-muted-foreground">
-                  Edit product details and inventory.
-                </p>
-              </div>
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="closeProductDialog()"
-              >
-                Close
-              </button>
-            </div>
-
-            <div class="mt-4 flex flex-wrap gap-2">
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                [class.bg-muted]="productDialogTab === 'overview'"
-                (click)="productDialogTab = 'overview'"
-              >
-                Overview
-              </button>
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                [class.bg-muted]="productDialogTab === 'inventory'"
-                (click)="productDialogTab = 'inventory'"
-              >
-                Inventory
-              </button>
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                [class.bg-muted]="productDialogTab === 'marketplaces'"
-                (click)="productDialogTab = 'marketplaces'"
-              >
-                Marketplaces
-              </button>
-            </div>
-
-            <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
-              <div *ngIf="productDialogTab === 'overview'" class="grid gap-4 sm:grid-cols-2">
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Product name
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="productDraft.name"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Brand
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="productDraft.brand"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Vendor
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="productDraft.vendorName"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Sale price
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="productDraft.salePrice"
-                  />
-                </label>
-              </div>
-
-              <div *ngIf="productDialogTab === 'inventory'" class="grid gap-4 sm:grid-cols-2">
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Stock qty
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="productDraft.stockQty"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Purchased qty
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="productDraft.purchaseQty"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Sold qty
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="productDraft.soldQty"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Return qty
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="productDraft.returnQty"
-                  />
-                </label>
-              </div>
-
-              <div *ngIf="productDialogTab === 'marketplaces'" class="space-y-3">
-                <div class="flex items-center justify-between">
-                  <p class="text-xs text-muted-foreground">
-                    Listing status per marketplace.
-                  </p>
-                  <button
-                    type="button"
-                    class="rounded-md border border-border px-3 py-1 text-xs"
-                    (click)="openMarketplaceDialog(selectedProduct)"
-                  >
-                    Manage marketplaces
-                  </button>
-                </div>
-                <div class="grid gap-2">
-                  <div
-                    *ngFor="let marketplace of selectedProduct.marketplaces"
-                    class="flex items-center justify-between rounded-md border border-border px-3 py-2 text-xs"
-                  >
-                    <span class="capitalize">{{ marketplace.platform }}</span>
-                    <span class="text-muted-foreground">{{ marketplace.status }}</span>
-                  </div>
-                  <p
-                    *ngIf="selectedProduct.marketplaces.length === 0"
-                    class="text-xs text-muted-foreground"
-                  >
-                    No active marketplaces.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="closeProductDialog()"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-                (click)="saveProductDialog()"
-              >
-                Save changes
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          *ngIf="marketplaceDialogOpen && marketplaceDialogProduct"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
-        >
-          <div class="w-full max-w-4xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-            <div class="flex items-center justify-between border-b border-border pb-3">
-              <div>
-                <h3 class="text-lg font-semibold">Marketplace listings</h3>
-                <p class="text-xs text-muted-foreground">
-                  {{ marketplaceDialogProduct.name }}
-                </p>
-              </div>
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="closeMarketplaceDialog()"
-              >
-                Close
-              </button>
-            </div>
-
-            <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
-              <div class="grid gap-2">
-                <div
-                  *ngFor="let row of marketplaceRows"
-                  class="grid items-center gap-2 rounded-md border border-border px-3 py-2 text-xs sm:grid-cols-[120px_120px_1fr_1fr_90px_90px]"
-                >
-                  <span class="capitalize font-semibold">{{ row.platform }}</span>
-                  <select
-                    class="rounded-md border border-border bg-background px-2 py-1 text-xs"
-                    [(ngModel)]="row.status"
-                  >
-                    <option value="live">Live</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="error">Error</option>
-                    <option value="not_listed">Not listed</option>
-                  </select>
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-xs"
-                    [(ngModel)]="row.price"
-                    placeholder="Sale price"
-                  />
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-xs"
-                    [(ngModel)]="row.stock"
-                    placeholder="Stock"
-                  />
-                  <label class="flex items-center gap-1 text-xs">
-                    <input type="checkbox" [(ngModel)]="row.priceSync" />
-                    Price sync
-                  </label>
-                  <label class="flex items-center gap-1 text-xs">
-                    <input type="checkbox" [(ngModel)]="row.inventorySync" />
-                    Inv sync
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="closeMarketplaceDialog()"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-                (click)="saveMarketplaceDialog()"
-              >
-                Save changes
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          *ngIf="offerDialogOpen"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
-        >
-          <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-            <div class="flex items-center justify-between border-b border-border pb-3">
-              <div>
-                <h3 class="text-lg font-semibold">Offers</h3>
-                <p class="text-xs text-muted-foreground">
-                  Create and manage offers for selected products.
-                </p>
-              </div>
-              <button
-                type="button"
-                class="rounded-md border border-border px-3 py-1 text-xs"
-                (click)="closeOfferDialog()"
-              >
-                Close
-              </button>
-            </div>
-
-            <div class="mt-4 space-y-4">
-              <div class="rounded-md border border-border bg-muted/30 p-3">
-                <p class="text-xs font-semibold">Existing offers</p>
-                <div class="mt-2 space-y-2">
-                  <div
-                    *ngFor="let offer of offersForDialog()"
-                    class="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border px-3 py-2 text-xs"
-                  >
-                    <div>
-                      <p class="font-semibold">{{ offer.name }}</p>
-                      <p class="text-[10px] text-muted-foreground">
-                        {{ offerLabel(offer) }} · {{ offerStatusLabel(offer) }}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      class="rounded-md border border-destructive px-3 py-1 text-xs text-destructive"
-                      (click)="deleteOffer(offer.id)"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                  <p *ngIf="offersForDialog().length === 0" class="text-xs text-muted-foreground">
-                    No offers yet.
-                  </p>
-                </div>
-              </div>
-
-              <div class="grid gap-3 rounded-md border border-border p-3">
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Offer name
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="offerDialogName"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Offer type
-                  <select
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="offerDialogType"
-                  >
-                    <option *ngFor="let type of offerTypes" [value]="type">
-                      {{ offerTypeLabels[type] }}
-                    </option>
-                  </select>
-                </label>
-                <div class="grid gap-3 sm:grid-cols-2">
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    Discount %
-                    <input
-                      type="number"
-                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                      [(ngModel)]="offerDialogDiscountPercent"
-                      [disabled]="offerDialogType === 'fixed_discount' || offerDialogType === 'free_shipping'"
-                    />
-                  </label>
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    Discount $
-                    <input
-                      type="number"
-                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                      [(ngModel)]="offerDialogDiscountAmount"
-                      [disabled]="offerDialogType !== 'fixed_discount'"
-                    />
-                  </label>
-                </div>
-                <div class="grid gap-3 sm:grid-cols-2">
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    Start date
-                    <input
-                      type="date"
-                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                      [(ngModel)]="offerDialogStartDate"
-                    />
-                  </label>
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    End date
-                    <input
-                      type="date"
-                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                      [(ngModel)]="offerDialogEndDate"
-                    />
-                  </label>
-                </div>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Description
-                  <textarea
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    rows="2"
-                    [(ngModel)]="offerDialogDescription"
-                  ></textarea>
-                </label>
-                <div>
-                  <p class="text-xs text-muted-foreground">Marketplaces</p>
-                  <div class="mt-2 grid grid-cols-2 gap-2">
-                    <label
-                      *ngFor="let platform of marketplaces"
-                      class="flex items-center gap-2 text-xs capitalize"
-                    >
-                      <input
-                        type="checkbox"
-                        class="h-5 w-5"
-                        [checked]="offerDialogMarketplaces.includes(platform)"
-                        (change)="toggleOfferMarketplace(platform)"
-                      />
-                      <span>{{ platform }}</span>
-                    </label>
-                  </div>
-                </div>
+      <div class="flex flex-1 flex-col min-h-0">
+        <ng-container *ngIf="filteredProducts() as filtered">
+          <ng-container *ngIf="paginatedProducts(filtered) as visible">
+            <div
+              *ngIf="selectedCount > 0"
+              class="mx-4 mt-3 rounded-xl border border-emerald-900/60 bg-emerald-950/70 px-2 py-2 text-emerald-50 shadow-lg shadow-emerald-950/20"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+              <div class="flex items-center gap-3">
+                <span class="font-semibold">
+                  {{ selectedCount }} product selected
+                </span>
                 <button
                   type="button"
-                  class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-                  (click)="saveOfferDialog()"
+                  class="text-xs text-emerald-200 hover:text-emerald-50"
+                  (click)="clearSelection()"
                 >
-                  Save offer
+                  Clear
+                </button>
+                <button
+                  type="button"
+                  class="text-xs text-emerald-200 hover:text-emerald-50"
+                  (click)="selectAllFiltered(filtered)"
+                >
+                  Select all ({{ filtered.length }})
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="flex flex-1 flex-col min-h-0">
-          <ng-container *ngIf="filteredProducts() as filtered">
-            <ng-container *ngIf="paginatedProducts(filtered) as visible">
-              <div
-                *ngIf="selectedCount > 0"
-                class="mx-4 mt-3 rounded-xl border border-emerald-900/60 bg-emerald-950/70 px-2 py-2 text-emerald-50 shadow-lg shadow-emerald-950/20"
-              >
-                <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
-                <div class="flex items-center gap-3">
-                  <span class="font-semibold">
-                    {{ selectedCount }} product selected
-                  </span>
-                  <button
-                    type="button"
-                    class="text-xs text-emerald-200 hover:text-emerald-50"
-                    (click)="clearSelection()"
+              <div class="flex flex-wrap items-center gap-2">
+                <details
+                  class="relative"
+                  data-dropdown="bulk-add-tag"
+                  [open]="openDropdownId === 'bulk-add-tag'"
+                >
+                  <summary
+                    class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                    (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-add-tag')"
                   >
-                    Clear
-                  </button>
-                  <button
-                    type="button"
-                    class="text-xs text-emerald-200 hover:text-emerald-50"
-                    (click)="selectAllFiltered(filtered)"
-                  >
-                    Select all ({{ filtered.length }})
-                  </button>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-2">
-                  <details
-                    class="relative"
-                    data-dropdown="bulk-add-tag"
-                    [open]="openDropdownId === 'bulk-add-tag'"
-                  >
-                    <summary
-                      class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
-                      (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-add-tag')"
+                    <span class="inline-flex h-5 w-5 items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M12 5v14" />
+                        <path d="M5 12h14" />
+                      </svg>
+                    </span>
+                    Tags
+                  </summary>
+                  <div class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+                    <p class="px-1 text-[10px] text-muted-foreground">Add tag</p>
+                    <select
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      (change)="bulkAddTag($any($event.target).value)"
                     >
-                      <span class="inline-flex h-5 w-5 items-center justify-center">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                          <path d="M12 5v14" />
-                          <path d="M5 12h14" />
-                        </svg>
-                      </span>
-                      Tags
-                    </summary>
-                    <div class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
-                      <p class="px-1 text-[10px] text-muted-foreground">Add tag</p>
-                      <select
-                        class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                        (change)="bulkAddTag($any($event.target).value)"
-                      >
-                        <option value="">Choose</option>
-                        <option *ngFor="let tag of tags" [value]="tag.id">
-                          {{ tag.name }}
-                        </option>
-                      </select>
-                    </div>
-                  </details>
+                      <option value="">Choose</option>
+                      <option *ngFor="let tag of tags" [value]="tag.id">
+                        {{ tag.name }}
+                      </option>
+                    </select>
+                  </div>
+                </details>
 
-                  <details
-                    class="relative"
-                    data-dropdown="bulk-remove-tag"
-                    [open]="openDropdownId === 'bulk-remove-tag'"
-                  >
-                    <summary
-                      class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
-                      (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-remove-tag')"
-                    >
-                      <span class="inline-flex h-5 w-5 items-center justify-center">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                          <path d="M3 6h18" />
-                          <path d="M8 6v12" />
-                          <path d="M16 6v12" />
-                          <path d="M5 6l1-3h12l1 3" />
-                        </svg>
-                      </span>
-                      Tags
-                    </summary>
-                    <div class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
-                      <p class="px-1 text-[10px] text-muted-foreground">Remove tag</p>
-                      <select
-                        class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                        (change)="bulkRemoveTag($any($event.target).value)"
-                      >
-                        <option value="">Choose</option>
-                        <option *ngFor="let tag of tags" [value]="tag.id">
-                          {{ tag.name }}
-                        </option>
-                      </select>
-                    </div>
-                  </details>
-
-                  <details
-                    class="relative"
-                    data-dropdown="bulk-pricing"
-                    [open]="openDropdownId === 'bulk-pricing'"
-                  >
-                    <summary
-                      class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
-                      (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-pricing')"
-                    >
-                      <span class="inline-flex h-5 w-5 items-center justify-center">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                          <path d="M12 1v22" />
-                          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-                        </svg>
-                      </span>
-                      Values
-                    </summary>
-                    <div class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur">
-                      <div class="grid gap-2">
-                        <label class="text-xs text-muted-foreground">
-                          Sale price
-                          <input
-                            type="number"
-                            class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                            [(ngModel)]="bulkSalePrice"
-                          />
-                        </label>
-                        <label class="text-xs text-muted-foreground">
-                          Stock qty
-                          <input
-                            type="number"
-                            class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                            [(ngModel)]="bulkStockQty"
-                          />
-                        </label>
-                        <label class="text-xs text-muted-foreground">
-                          Landed cost
-                          <input
-                            type="number"
-                            class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                            [(ngModel)]="bulkLandedCost"
-                          />
-                        </label>
-                        <label class="text-xs text-muted-foreground">
-                          Purchased qty
-                          <input
-                            type="number"
-                            class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                            [(ngModel)]="bulkPurchaseQty"
-                          />
-                        </label>
-                        <button
-                          type="button"
-                          class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-                          (click)="applyBulkPricing()"
-                        >
-                          Apply updates
-                        </button>
-                      </div>
-                    </div>
-                  </details>
-
-                  <button
-                    type="button"
-                    class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
-                    (click)="openBulkListing()"
-                  >
-                    <span class="inline-flex h-5 w-5 items-center justify-center">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                        <path d="M3 7l9-4 9 4-9 4-9-4z" />
-                        <path d="M3 7v10l9 4 9-4V7" />
-                      </svg>
-                    </span>
-                    Marketplaces
-                  </button>
-
-                  <button
-                    type="button"
-                    class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
-                    (click)="openBulkOffer()"
-                  >
-                    <span class="inline-flex h-5 w-5 items-center justify-center">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                        <path d="M20 13l-7 7-10-10V3h7l10 10z" />
-                        <circle cx="7.5" cy="7.5" r="1.5" />
-                      </svg>
-                    </span>
-                    Offer
-                  </button>
-
-                  <button
-                    type="button"
-                    class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
-                    (click)="openHistory()"
-                  >
-                    <span class="inline-flex h-5 w-5 items-center justify-center">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                        <path d="M3 12a9 9 0 1 0 9-9" />
-                        <path d="M3 3v6h6" />
-                        <path d="M12 7v5l3 3" />
-                      </svg>
-                    </span>
-                    History
-                  </button>
-
-                  <button
-                    type="button"
-                    class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
-                    (click)="exportSelectedCsv(filtered)"
-                  >
-                    <span class="inline-flex h-5 w-5 items-center justify-center">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                        <path d="M12 3v12" />
-                        <path d="M7 10l5 5 5-5" />
-                        <path d="M5 21h14" />
-                      </svg>
-                    </span>
-                    CSV
-                  </button>
-
-                  <button
-                    type="button"
-                    class="flex items-center gap-2 rounded-md border border-destructive bg-destructive px-3 py-1 text-xs font-semibold text-white transition hover:bg-destructive/90"
-                    (click)="bulkDelete()"
+                <details
+                  class="relative"
+                  data-dropdown="bulk-remove-tag"
+                  [open]="openDropdownId === 'bulk-remove-tag'"
+                >
+                  <summary
+                    class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                    (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-remove-tag')"
                   >
                     <span class="inline-flex h-5 w-5 items-center justify-center">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
@@ -1996,719 +1837,870 @@ interface ColumnPreferences {
                         <path d="M5 6l1-3h12l1 3" />
                       </svg>
                     </span>
-                    Delete
-                  </button>
-                </div>
-                </div>
+                    Tags
+                  </summary>
+                  <div class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+                    <p class="px-1 text-[10px] text-muted-foreground">Remove tag</p>
+                    <select
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                      (change)="bulkRemoveTag($any($event.target).value)"
+                    >
+                      <option value="">Choose</option>
+                      <option *ngFor="let tag of tags" [value]="tag.id">
+                        {{ tag.name }}
+                      </option>
+                    </select>
+                  </div>
+                </details>
+
+                <details
+                  class="relative"
+                  data-dropdown="bulk-pricing"
+                  [open]="openDropdownId === 'bulk-pricing'"
+                >
+                  <summary
+                    class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                    (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-pricing')"
+                  >
+                    <span class="inline-flex h-5 w-5 items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M12 1v22" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                      </svg>
+                    </span>
+                    Values
+                  </summary>
+                  <div class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur">
+                    <div class="grid gap-2">
+                      <label class="text-xs text-muted-foreground">
+                        Sale price
+                        <input
+                          type="number"
+                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                          [(ngModel)]="bulkSalePrice"
+                        />
+                      </label>
+                      <label class="text-xs text-muted-foreground">
+                        Stock qty
+                        <input
+                          type="number"
+                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                          [(ngModel)]="bulkStockQty"
+                        />
+                      </label>
+                      <label class="text-xs text-muted-foreground">
+                        Landed cost
+                        <input
+                          type="number"
+                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                          [(ngModel)]="bulkLandedCost"
+                        />
+                      </label>
+                      <label class="text-xs text-muted-foreground">
+                        Purchased qty
+                        <input
+                          type="number"
+                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                          [(ngModel)]="bulkPurchaseQty"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                        (click)="applyBulkPricing()"
+                      >
+                        Apply updates
+                      </button>
+                    </div>
+                  </div>
+                </details>
+
+                <button
+                  type="button"
+                  class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                  (click)="openBulkListing()"
+                >
+                  <span class="inline-flex h-5 w-5 items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                      <path d="M3 7v10l9 4 9-4V7" />
+                    </svg>
+                  </span>
+                  Marketplaces
+                </button>
+
+                <button
+                  type="button"
+                  class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                  (click)="openBulkOffer()"
+                >
+                  <span class="inline-flex h-5 w-5 items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M20 13l-7 7-10-10V3h7l10 10z" />
+                      <circle cx="7.5" cy="7.5" r="1.5" />
+                    </svg>
+                  </span>
+                  Offer
+                </button>
+
+                <button
+                  type="button"
+                  class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                  (click)="openHistory()"
+                >
+                  <span class="inline-flex h-5 w-5 items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M3 12a9 9 0 1 0 9-9" />
+                      <path d="M3 3v6h6" />
+                      <path d="M12 7v5l3 3" />
+                    </svg>
+                  </span>
+                  History
+                </button>
+
+                <button
+                  type="button"
+                  class="flex items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
+                  (click)="exportSelectedCsv(filtered)"
+                >
+                  <span class="inline-flex h-5 w-5 items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M12 3v12" />
+                      <path d="M7 10l5 5 5-5" />
+                      <path d="M5 21h14" />
+                    </svg>
+                  </span>
+                  CSV
+                </button>
+
+                <button
+                  type="button"
+                  class="flex items-center gap-2 rounded-md border border-destructive bg-destructive px-3 py-1 text-xs font-semibold text-white transition hover:bg-destructive/90"
+                  (click)="bulkDelete()"
+                >
+                  <span class="inline-flex h-5 w-5 items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M3 6h18" />
+                      <path d="M8 6v12" />
+                      <path d="M16 6v12" />
+                      <path d="M5 6l1-3h12l1 3" />
+                    </svg>
+                  </span>
+                  Delete
+                </button>
+              </div>
+              </div>
+            </div>
+
+            <div class="flex-1 overflow-auto px-4 pb-2 pt-3">
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+                <p>
+                  Showing {{ pageStart(filtered.length) }}-{{ pageEnd(filtered.length) }}
+                  of {{ filtered.length }} products
+                </p>
+                <p>
+                  Total catalog: {{ products.length }} items
+                </p>
               </div>
 
-              <div class="flex-1 overflow-auto px-4 pb-2 pt-3">
-                <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-                  <p>
-                    Showing {{ pageStart(filtered.length) }}-{{ pageEnd(filtered.length) }}
-                    of {{ filtered.length }} products
-                  </p>
-                  <p>
-                    Total catalog: {{ products.length }} items
-                  </p>
-                </div>
-
-                <div class="relative mt-2 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
-                  <table class="w-full min-w-[1250px] text-sm">
-              <thead class="relative z-10 bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
-                <tr>
-                  <th
-                    class="sticky top-0 z-0 bg-card/95 px-4 py-3 text-left"
-                  >
-                    <input
-                      type="checkbox"
-                      class="h-5 w-5 accent-emerald-500"
-                      [checked]="allVisibleSelected(visible)"
-                      (change)="toggleSelectVisible(visible)"
-                    />
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('name')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                    [style.width.px]="columnWidth('name')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('name')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('name', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('name')"
-                    >
-                      Product
-                      <span class="text-[10px]">{{ sortIcon('name') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'name')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('productType')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                    [style.width.px]="columnWidth('productType')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('productType')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('productType', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('productType')"
-                    >
-                      Type
-                      <span class="text-[10px]">{{ sortIcon('productType') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'productType')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('tags')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                    [style.width.px]="columnWidth('tags')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('tags')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('tags', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    Tags
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'tags')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('offers')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                    [style.width.px]="columnWidth('offers')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('offers')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('offers', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    Offers
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'offers')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('vendorName')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                    [style.width.px]="columnWidth('vendorName')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('vendorName')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('vendorName', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('vendorName')"
-                    >
-                      Vendor
-                      <span class="text-[10px]">{{ sortIcon('vendorName') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'vendorName')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('brand')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                    [style.width.px]="columnWidth('brand')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('brand')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('brand', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('brand')"
-                    >
-                      Brand
-                      <span class="text-[10px]">{{ sortIcon('brand') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'brand')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('marketplaces')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                    [style.width.px]="columnWidth('marketplaces')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('marketplaces')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('marketplaces', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('marketplaces')"
-                    >
-                      Marketplaces
-                      <span class="text-[10px]">{{ sortIcon('marketplaces') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'marketplaces')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('salePrice')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
-                    [style.width.px]="columnWidth('salePrice')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('salePrice')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('salePrice', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('salePrice')"
-                    >
-                      Price
-                      <span class="text-[10px]">{{ sortIcon('salePrice') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'salePrice')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('soldQty')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
-                    [style.width.px]="columnWidth('soldQty')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('soldQty')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('soldQty', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('soldQty')"
-                    >
-                      Sold
-                      <span class="text-[10px]">{{ sortIcon('soldQty') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'soldQty')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('stockQty')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
-                    [style.width.px]="columnWidth('stockQty')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('stockQty')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('stockQty', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('stockQty')"
-                    >
-                      Stock
-                      <span class="text-[10px]">{{ sortIcon('stockQty') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'stockQty')"
-                    ></span>
-                  </th>
-                  <th
-                    *ngIf="isColumnVisible('restockStatus')"
-                    class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                    [style.width.px]="columnWidth('restockStatus')"
-                    (dragover)="allowColumnDrop($event)"
-                    (drop)="onColumnDrop('restockStatus')"
-                  >
-                    <span
-                      class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
-                      draggable="true"
-                      title="Drag to reorder"
-                      (dragstart)="startColumnDrag('restockStatus', $event)"
-                      (dragend)="endColumnDrag()"
-                    >
-                      <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
-                        <circle cx="3" cy="3" r="1" />
-                        <circle cx="9" cy="3" r="1" />
-                        <circle cx="3" cy="6" r="1" />
-                        <circle cx="9" cy="6" r="1" />
-                        <circle cx="3" cy="9" r="1" />
-                        <circle cx="9" cy="9" r="1" />
-                      </svg>
-                    </span>
-                    <button
-                      type="button"
-                      class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                      (click)="setSort('restockStatus')"
-                    >
-                      Restock
-                      <span class="text-[10px]">{{ sortIcon('restockStatus') }}</span>
-                    </button>
-                    <span
-                      class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                      (mousedown)="startResize($event, 'restockStatus')"
-                    ></span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  *ngFor="let product of visible; trackBy: trackById"
-                  class="border-t border-border transition hover:bg-muted/40"
+              <div class="relative mt-2 overflow-x-auto rounded-lg border border-border bg-background/40 shadow-sm">
+                <table class="w-full min-w-[1250px] text-sm">
+            <thead class="relative z-10 bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
+              <tr>
+                <th
+                  class="sticky top-0 z-0 bg-card/95 px-4 py-3 text-left"
                 >
-                  <td class="px-4 py-4">
-                    <input
-                      type="checkbox"
-                      class="h-5 w-5 accent-emerald-500"
-                      [checked]="isSelected(product.id)"
-                      (change)="toggleSelectProduct(product.id)"
+                  <input
+                    type="checkbox"
+                    class="h-5 w-5 accent-emerald-500"
+                    [checked]="allVisibleSelected(visible)"
+                    (change)="toggleSelectVisible(visible)"
+                  />
+                </th>
+                <th
+                  *ngIf="isColumnVisible('name')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('name')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('name')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('name', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('name')"
+                  >
+                    Product
+                    <span class="text-[10px]">{{ sortIcon('name') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'name')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('productType')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('productType')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('productType')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('productType', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('productType')"
+                  >
+                    Type
+                    <span class="text-[10px]">{{ sortIcon('productType') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'productType')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('tags')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('tags')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('tags')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('tags', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  Tags
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'tags')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('offers')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('offers')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('offers')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('offers', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  Offers
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'offers')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('vendorName')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('vendorName')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('vendorName')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('vendorName', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('vendorName')"
+                  >
+                    Vendor
+                    <span class="text-[10px]">{{ sortIcon('vendorName') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'vendorName')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('brand')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('brand')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('brand')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('brand', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('brand')"
+                  >
+                    Brand
+                    <span class="text-[10px]">{{ sortIcon('brand') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'brand')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('marketplaces')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('marketplaces')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('marketplaces')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('marketplaces', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('marketplaces')"
+                  >
+                    Marketplaces
+                    <span class="text-[10px]">{{ sortIcon('marketplaces') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'marketplaces')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('salePrice')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('salePrice')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('salePrice')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('salePrice', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('salePrice')"
+                  >
+                    Price
+                    <span class="text-[10px]">{{ sortIcon('salePrice') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'salePrice')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('soldQty')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('soldQty')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('soldQty')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('soldQty', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('soldQty')"
+                  >
+                    Sold
+                    <span class="text-[10px]">{{ sortIcon('soldQty') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'soldQty')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('stockQty')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('stockQty')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('stockQty')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('stockQty', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('stockQty')"
+                  >
+                    Stock
+                    <span class="text-[10px]">{{ sortIcon('stockQty') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'stockQty')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('restockStatus')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('restockStatus')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('restockStatus')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('restockStatus', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('restockStatus')"
+                  >
+                    Restock
+                    <span class="text-[10px]">{{ sortIcon('restockStatus') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'restockStatus')"
+                  ></span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let product of visible; trackBy: trackById"
+                class="border-t border-border transition hover:bg-muted/40"
+              >
+                <td class="px-4 py-4">
+                  <input
+                    type="checkbox"
+                    class="h-5 w-5 accent-emerald-500"
+                    [checked]="isSelected(product.id)"
+                    (change)="toggleSelectProduct(product.id)"
+                  />
+                </td>
+                <td
+                  *ngIf="isColumnVisible('name')"
+                  class="px-4 py-4"
+                  [style.width.px]="columnWidth('name')"
+                >
+                  <div class="flex items-center gap-3">
+                    <img
+                      [src]="product.image"
+                      [alt]="product.name"
+                      class="h-12 w-12 rounded-md border border-border object-cover"
                     />
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('name')"
-                    class="px-4 py-4"
-                    [style.width.px]="columnWidth('name')"
-                  >
-                    <div class="flex items-center gap-3">
-                      <img
-                        [src]="product.image"
-                        [alt]="product.name"
-                        class="h-12 w-12 rounded-md border border-border object-cover"
-                      />
-                      <div class="space-y-1">
-                        <button
-                          type="button"
-                          class="text-left font-medium text-foreground hover:underline"
-                          (click)="openProductDialog(product)"
-                        >
-                          {{ product.name }}
-                        </button>
-                        <p class="text-xs text-muted-foreground">
-                          SKU {{ product.vendorSku }} · ID {{ product.productId }}
-                        </p>
-                        <p
-                          *ngIf="product.variationId"
-                          class="text-xs text-muted-foreground"
-                        >
-                          Variation {{ product.variationId }}
-                        </p>
-                      </div>
+                    <div class="space-y-1">
+                      <button
+                        type="button"
+                        class="text-left font-medium text-foreground hover:underline"
+                        (click)="openProductDialog(product)"
+                      >
+                        {{ product.name }}
+                      </button>
+                      <p class="text-xs text-muted-foreground">
+                        SKU {{ product.vendorSku }} · ID {{ product.productId }}
+                      </p>
+                      <p
+                        *ngIf="product.variationId"
+                        class="text-xs text-muted-foreground"
+                      >
+                        Variation {{ product.variationId }}
+                      </p>
                     </div>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('productType')"
-                    class="px-4 py-4"
-                    [style.width.px]="columnWidth('productType')"
+                  </div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('productType')"
+                  class="px-4 py-4"
+                  [style.width.px]="columnWidth('productType')"
+                >
+                  <span
+                    class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
+                    [ngClass]="typeBadgeClass(product)"
                   >
+                    {{ typeBadgeLabel(product) }}
+                  </span>
+                  <div class="text-xs text-muted-foreground" *ngIf="product.variation">
+                    {{ product.variation.type }} · {{ product.variation.value }}
+                  </div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('tags')"
+                  class="px-4 py-4"
+                  [style.width.px]="columnWidth('tags')"
+                >
+                  <div class="relative flex flex-wrap items-center gap-1">
                     <span
-                      class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
-                      [ngClass]="typeBadgeClass(product)"
+                      *ngFor="let tag of getProductTags(product.id)"
+                      class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-white"
+                      [style.backgroundColor]="tag.color"
                     >
-                      {{ typeBadgeLabel(product) }}
+                      {{ tag.name }}
+                      <button
+                        type="button"
+                        class="rounded-md px-1 text-[10px] hover:bg-white/20"
+                        (click)="removeTagFromProduct(product.id, tag.id)"
+                      >
+                        ✕
+                      </button>
                     </span>
-                    <div class="text-xs text-muted-foreground" *ngIf="product.variation">
-                      {{ product.variation.type }} · {{ product.variation.value }}
-                    </div>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('tags')"
-                    class="px-4 py-4"
-                    [style.width.px]="columnWidth('tags')"
+                    <button
+                      *ngIf="tags.length > 0"
+                      type="button"
+                      class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+                      (click)="toggleTagPicker(product.id)"
+                      title="Add tag"
+                    >
+                      <span class="inline-flex h-5 w-5 items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                          <path d="M12 5v14" />
+                          <path d="M5 12h14" />
+                        </svg>
+                      </span>
+                    </button>
+                    <button
+                      *ngIf="tags.length === 0"
+                      type="button"
+                      class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+                      (click)="openTagForm()"
+                    >
+                      Create tag
+                    </button>
+                  </div>
+                  <div
+                    *ngIf="tagPickerProductId === product.id"
+                    class="absolute left-0 top-full z-20 mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur animate-in fade-in slide-in-from-top-1"
                   >
-                    <div class="relative flex flex-wrap items-center gap-1">
+                    <label
+                      *ngFor="let tag of tags"
+                      class="flex items-center gap-2 text-xs"
+                    >
+                      <input
+                        type="checkbox"
+                        class="h-5 w-5"
+                        [checked]="hasTag(product.id, tag.id)"
+                        (change)="toggleProductTag(product.id, tag.id)"
+                      />
                       <span
-                        *ngFor="let tag of getProductTags(product.id)"
-                        class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-white"
+                        class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
                         [style.backgroundColor]="tag.color"
                       >
                         {{ tag.name }}
-                        <button
-                          type="button"
-                          class="rounded-md px-1 text-[10px] hover:bg-white/20"
-                          (click)="removeTagFromProduct(product.id, tag.id)"
-                        >
-                          ✕
-                        </button>
+                      </span>
+                    </label>
+                  </div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('offers')"
+                  class="px-4 py-4"
+                  [style.width.px]="columnWidth('offers')"
+                >
+                  <div class="flex flex-col gap-2">
+                    <ng-container *ngIf="bestOffer(product.id) as offer; else noOffer">
+                      <span
+                        class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                        [ngClass]="offerStatusClass(offer)"
+                      >
+                        {{ offerLabel(offer) }}
+                      </span>
+                      <span class="text-[10px] text-muted-foreground">
+                        {{ offerStatusLabel(offer) }}
                       </span>
                       <button
-                        *ngIf="tags.length > 0"
                         type="button"
-                        class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
-                        (click)="toggleTagPicker(product.id)"
-                        title="Add tag"
+                        class="rounded-md border border-border px-2 py-0.5 text-[10px]"
+                        (click)="openOfferDialog([product.id])"
                       >
-                        <span class="inline-flex h-5 w-5 items-center justify-center">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                            <path d="M12 5v14" />
-                            <path d="M5 12h14" />
-                          </svg>
-                        </span>
+                        Manage offers
                       </button>
+                    </ng-container>
+                    <ng-template #noOffer>
                       <button
-                        *ngIf="tags.length === 0"
                         type="button"
-                        class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
-                        (click)="openTagForm()"
+                        class="rounded-md border border-border px-2 py-0.5 text-[10px]"
+                        (click)="openOfferDialog([product.id])"
                       >
-                        Create tag
+                        Create offer
                       </button>
-                    </div>
-                    <div
-                      *ngIf="tagPickerProductId === product.id"
-                      class="absolute left-0 top-full z-20 mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur animate-in fade-in slide-in-from-top-1"
-                    >
-                      <label
-                        *ngFor="let tag of tags"
-                        class="flex items-center gap-2 text-xs"
-                      >
-                        <input
-                          type="checkbox"
-                          class="h-5 w-5"
-                          [checked]="hasTag(product.id, tag.id)"
-                          (change)="toggleProductTag(product.id, tag.id)"
-                        />
-                        <span
-                          class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
-                          [style.backgroundColor]="tag.color"
-                        >
-                          {{ tag.name }}
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('offers')"
-                    class="px-4 py-4"
-                    [style.width.px]="columnWidth('offers')"
-                  >
-                    <div class="flex flex-col gap-2">
-                      <ng-container *ngIf="bestOffer(product.id) as offer; else noOffer">
-                        <span
-                          class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
-                          [ngClass]="offerStatusClass(offer)"
-                        >
-                          {{ offerLabel(offer) }}
-                        </span>
-                        <span class="text-[10px] text-muted-foreground">
-                          {{ offerStatusLabel(offer) }}
-                        </span>
-                        <button
-                          type="button"
-                          class="rounded-md border border-border px-2 py-0.5 text-[10px]"
-                          (click)="openOfferDialog([product.id])"
-                        >
-                          Manage offers
-                        </button>
-                      </ng-container>
-                      <ng-template #noOffer>
-                        <button
-                          type="button"
-                          class="rounded-md border border-border px-2 py-0.5 text-[10px]"
-                          (click)="openOfferDialog([product.id])"
-                        >
-                          Create offer
-                        </button>
-                      </ng-template>
-                    </div>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('vendorName')"
-                    class="px-4 py-4"
-                    [style.width.px]="columnWidth('vendorName')"
-                  >
-                    <div class="text-sm font-medium">{{ product.vendorName }}</div>
-                    <div class="text-xs text-muted-foreground">
-                      {{ product.manufacturerPart }}
-                    </div>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('brand')"
-                    class="px-4 py-4"
-                    [style.width.px]="columnWidth('brand')"
-                  >
-                    <div class="text-sm font-medium">{{ product.brand }}</div>
-                    <div class="text-xs text-muted-foreground">
-                      ASIN {{ product.asin }}
-                    </div>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('marketplaces')"
-                    class="px-4 py-4"
-                    [style.width.px]="columnWidth('marketplaces')"
-                  >
-                    <button
-                      type="button"
-                      class="text-left"
-                      (click)="openMarketplaceDialog(product)"
-                    >
-                      <div class="text-sm font-medium">
-                        {{
-                          product.marketplaces.length > 0
-                            ? product.marketplaces.length + ' active'
-                            : 'Not listed'
-                        }}
-                      </div>
-                      <div class="text-xs text-muted-foreground">
-                        {{ marketplaceSummary(product) }}
-                      </div>
-                    </button>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('salePrice')"
-                    class="px-4 py-4 text-right"
-                    [style.width.px]="columnWidth('salePrice')"
-                  >
-                    <p class="font-medium">
-                      {{ product.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
-                    </p>
-                    <p class="text-xs text-muted-foreground">
-                      Margin {{ product.grossProfitPercent }}%
-                    </p>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('soldQty')"
-                    class="px-4 py-4 text-right"
-                    [style.width.px]="columnWidth('soldQty')"
-                  >
-                    <p class="font-medium">{{ soldQty(product) }}</p>
-                    <p class="text-xs text-muted-foreground">
-                      {{ soldPeriodLabel(filters.soldPeriod) }}
-                    </p>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('stockQty')"
-                    class="px-4 py-4 text-right"
-                    [style.width.px]="columnWidth('stockQty')"
-                  >
-                    <p class="font-medium">{{ product.stockQty }}</p>
-                    <p class="text-xs text-muted-foreground">
-                      {{ product.stockDays }} days
-                    </p>
-                  </td>
-                  <td
-                    *ngIf="isColumnVisible('restockStatus')"
-                    class="px-4 py-4"
-                    [style.width.px]="columnWidth('restockStatus')"
-                  >
-                    <span
-                      class="inline-flex items-center rounded-md px-3 py-1 text-xs font-medium"
-                      [ngClass]="restockClasses[product.restockStatus]"
-                    >
-                      {{ restockLabels[product.restockStatus] }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div
-                class="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card/95 px-4 py-3 text-xs text-muted-foreground backdrop-blur"
-              >
-                <div class="flex items-center gap-2">
-                  <span>Shortcuts</span>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span>Rows per page:</span>
-                  <select
-                    class="rounded-md border border-border bg-background px-2 py-1 text-xs"
-                    [(ngModel)]="pageSize"
-                    (ngModelChange)="onPageSizeChange()"
-                  >
-                    <option [value]="10">10</option>
-                    <option [value]="25">25</option>
-                    <option [value]="50">50</option>
-                  </select>
-                  <div class="flex items-center gap-2">
-                    <button
-                      type="button"
-                      class="rounded-md border border-border px-2 py-1 text-xs disabled:opacity-50"
-                      [disabled]="currentPage === 1"
-                      (click)="previousPage()"
-                    >
-                      &lt;
-                    </button>
-                    <span class="text-xs">
-                      Page {{ currentPage }} of {{ totalPages(filtered.length) }}
-                    </span>
-                    <button
-                      type="button"
-                      class="rounded-md border border-border px-2 py-1 text-xs disabled:opacity-50"
-                      [disabled]="currentPage >= totalPages(filtered.length)"
-                      (click)="nextPage(filtered.length)"
-                    >
-                      &gt;
-                    </button>
+                    </ng-template>
                   </div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('vendorName')"
+                  class="px-4 py-4"
+                  [style.width.px]="columnWidth('vendorName')"
+                >
+                  <div class="text-sm font-medium">{{ product.vendorName }}</div>
+                  <div class="text-xs text-muted-foreground">
+                    {{ product.manufacturerPart }}
+                  </div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('brand')"
+                  class="px-4 py-4"
+                  [style.width.px]="columnWidth('brand')"
+                >
+                  <div class="text-sm font-medium">{{ product.brand }}</div>
+                  <div class="text-xs text-muted-foreground">
+                    ASIN {{ product.asin }}
+                  </div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('marketplaces')"
+                  class="px-4 py-4"
+                  [style.width.px]="columnWidth('marketplaces')"
+                >
+                  <button
+                    type="button"
+                    class="text-left"
+                    (click)="openMarketplaceDialog(product)"
+                  >
+                    <div class="text-sm font-medium">
+                      {{
+                        product.marketplaces.length > 0
+                          ? product.marketplaces.length + ' active'
+                          : 'Not listed'
+                      }}
+                    </div>
+                    <div class="text-xs text-muted-foreground">
+                      {{ marketplaceSummary(product) }}
+                    </div>
+                  </button>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('salePrice')"
+                  class="px-4 py-4 text-right"
+                  [style.width.px]="columnWidth('salePrice')"
+                >
+                  <p class="font-medium">
+                    {{ product.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </p>
+                  <p class="text-xs text-muted-foreground">
+                    Margin {{ product.grossProfitPercent }}%
+                  </p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('soldQty')"
+                  class="px-4 py-4 text-right"
+                  [style.width.px]="columnWidth('soldQty')"
+                >
+                  <p class="font-medium">{{ soldQty(product) }}</p>
+                  <p class="text-xs text-muted-foreground">
+                    {{ soldPeriodLabel(filters.soldPeriod) }}
+                  </p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('stockQty')"
+                  class="px-4 py-4 text-right"
+                  [style.width.px]="columnWidth('stockQty')"
+                >
+                  <p class="font-medium">{{ product.stockQty }}</p>
+                  <p class="text-xs text-muted-foreground">
+                    {{ product.stockDays }} days
+                  </p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('restockStatus')"
+                  class="px-4 py-4"
+                  [style.width.px]="columnWidth('restockStatus')"
+                >
+                  <span
+                    class="inline-flex items-center rounded-md px-3 py-1 text-xs font-medium"
+                    [ngClass]="restockClasses[product.restockStatus]"
+                  >
+                    {{ restockLabels[product.restockStatus] }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div
+              class="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card/95 px-4 py-3 text-xs text-muted-foreground backdrop-blur"
+            >
+              <div class="flex items-center gap-2">
+                <span>Shortcuts</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span>Rows per page:</span>
+                <select
+                  class="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  [(ngModel)]="pageSize"
+                  (ngModelChange)="onPageSizeChange()"
+                >
+                  <option [value]="10">10</option>
+                  <option [value]="25">25</option>
+                  <option [value]="50">50</option>
+                </select>
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-2 py-1 text-xs disabled:opacity-50"
+                    [disabled]="currentPage === 1"
+                    (click)="previousPage()"
+                  >
+                    &lt;
+                  </button>
+                  <span class="text-xs">
+                    Page {{ currentPage }} of {{ totalPages(filtered.length) }}
+                  </span>
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-2 py-1 text-xs disabled:opacity-50"
+                    [disabled]="currentPage >= totalPages(filtered.length)"
+                    (click)="nextPage(filtered.length)"
+                  >
+                    &gt;
+                  </button>
                 </div>
               </div>
-            </ng-container>
+            </div>
           </ng-container>
-        </div>
+        </ng-container>
       </div>
-    </section>
-  `,
+    </div>
+  </section>
+
+`,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductGridComponent implements OnInit {
