@@ -720,7 +720,7 @@ interface ColumnPreferences {
               class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <div class="flex items-center justify-between border-b border-border/70 pb-2">
-                <span class="text-[10px] uppercase tracking-wide text-muted-foreground">
+                <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   Filter by tags
                 </span>
                 <button
