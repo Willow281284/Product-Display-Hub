@@ -232,8 +232,8 @@ interface ColumnPreferences {
         <div class="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
-            title="Marketplace integrations gap-2"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-2"
+            title="Marketplace integrations"
           >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link2 w-4 h-4"><path d="M9 17H7A5 5 0 0 1 7 7h2"></path><path d="M15 7h2a5 5 0 1 1 0 10h-2"></path><line x1="8" x2="16" y1="12" y2="12"></line></svg>
             Marketplace Integrations
@@ -287,12 +287,7 @@ interface ColumnPreferences {
               (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('brand')"
             >
               <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <path d="M3 22h18" />
-                  <path d="M6 22V4h12v18" />
-                  <path d="M9 10h6" />
-                  <path d="M9 14h6" />
-                </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building2 w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path><path d="M10 18h4"></path></svg>
               </span>
               
               <span class="text-muted-foreground hidden">
@@ -328,21 +323,18 @@ interface ColumnPreferences {
             [open]="openDropdownId === 'marketplace'"
           >
             <summary
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-1"
               title="Filter by marketplace"
               data-tooltip="Filter by marketplace"
               (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('marketplace')"
             >
               <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <path d="M3 9l2-5h14l2 5" />
-                  <path d="M5 9v11h14V9" />
-                  <path d="M9 20V9h6v11" />
-                </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"></path></svg>
               </span>
               
-              <span class="text-muted-foreground hidden">
-             Marketplace   ({{ filters.marketplace.length || 'all' }})
+              <span class="text-foreground hidden xs:inline">
+             Marketplace   
+             <!-- ({{ filters.marketplace.length || 'all' }}) -->
               </span>
               <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
@@ -379,9 +371,7 @@ interface ColumnPreferences {
               (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('status')"
             >
               <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <polyline points="3 12 7 12 9 6 13 18 16 10 21 10" />
-                </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path></svg>
               </span>
               
               <span class="text-muted-foreground hidden">
@@ -597,7 +587,7 @@ interface ColumnPreferences {
             [open]="openDropdownId === 'type'"
           >
             <summary
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-2"
               title="Filter by product type"
               data-tooltip="Filter by product type"
               (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('type')"
@@ -606,14 +596,15 @@ interface ColumnPreferences {
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-box w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
               </span>
              
-              <span class="text-muted-foreground hidden">
-             Type    {{
+              <span class="text-foreground hidden xs:inline">
+             Type    
+             <!-- {{
                   filters.kitProduct === null
                     ? 'all'
                     : filters.kitProduct
                       ? 'kit'
                       : 'single'
-                }}
+                }} -->
               </span>
               <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
@@ -733,7 +724,7 @@ interface ColumnPreferences {
             [open]="openDropdownId === 'tags'"
           >
             <summary
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-1"
               title="Filter by tags"
               data-tooltip="Filter by tags"
               (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('tags')"
@@ -745,8 +736,9 @@ interface ColumnPreferences {
                 </svg>
               </span>
              
-              <span class="text-muted-foreground hidden">
-             Tags    ({{ filters.tags.length || 'all' }})
+              <span class="text-foreground hidden xs:inline">
+             Tags    
+             <!-- ({{ filters.tags.length || 'all' }}) -->
               </span>
               <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
@@ -797,7 +789,7 @@ interface ColumnPreferences {
 
           <div class="ml-auto flex flex-1 items-center gap-2">
             <div class="relative w-full max-w-[420px] min-w-[200px]">
-              <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-foreground">
+              <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                   <circle cx="11" cy="11" r="8" />
                   <path d="M21 21l-4.3-4.3" />
@@ -1829,7 +1821,7 @@ interface ColumnPreferences {
                     class="flex cursor-pointer items-center gap-2 rounded-md border border-emerald-900/60 bg-emerald-950/40 px-3 py-1 text-xs font-semibold text-emerald-50 transition hover:bg-emerald-900/60"
                     (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('bulk-remove-tag')"
                   >
-                    <span class="inline-flex h-5 w-5 items-center justify-center">
+                    <span class="inline-flex h-5 w-5 mr-0 sm:mr-2 items-center justify-center">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                         <path d="M3 6h18" />
                         <path d="M8 6v12" />
