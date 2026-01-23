@@ -802,7 +802,7 @@ interface ColumnPreferences {
 
             <div class="ml-auto flex flex-1 items-center gap-2">
               <div class="relative w-full max-w-[420px]">
-                <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-foreground">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <circle cx="11" cy="11" r="8" />
                     <path d="M21 21l-4.3-4.3" />
@@ -818,7 +818,7 @@ interface ColumnPreferences {
               </div>
               <button
                 type="button"
-                class="rounded-md border border-border px-3 py-2 text-sm transition hover:bg-muted flex"
+                class="rounded-md border border-border px-3 py-2 text-sm transition hover:bg-muted flex h-[34px] text-nowrap"
                 title="Custom filters"
                 data-tooltip="Custom filters"
               >
@@ -835,7 +835,7 @@ interface ColumnPreferences {
                 [open]="openDropdownId === 'columns'"
               >
                 <summary
-                  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4 py-2"
+                  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-4 py-2 h-[34px]"
                   title="Columns"
                   data-tooltip="Columns"
                   (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('columns')"
