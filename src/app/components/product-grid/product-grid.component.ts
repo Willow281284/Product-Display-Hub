@@ -598,13 +598,15 @@ interface ColumnPreferences {
              
               <span class="text-foreground hidden xs:inline">
              Type    
-             <!-- {{
+             <span class="inline-flex items-center rounded-full border py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 ml-1 h-5 px-1.5">
+             {{
                   filters.kitProduct === null
                     ? 'all'
                     : filters.kitProduct
                       ? 'kit'
                       : 'single'
-                }} -->
+                }}
+                </span>
               </span>
               <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
@@ -701,15 +703,12 @@ interface ColumnPreferences {
               (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('tags')"
             >
               <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <path d="M20 13l-7 7-10-10V3h7l10 10z" />
-                  <circle cx="7.5" cy="7.5" r="1.5" />
-                </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags w-4 h-4"><path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19"></path><path d="M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="6.5" cy="9.5" r=".5" fill="currentColor"></circle></svg>
               </span>
              
               <span class="text-foreground hidden xs:inline">
              Tags    
-             <!-- ({{ filters.tags.length || 'all' }}) -->
+             ({{ filters.tags.length || 'all' }})
               </span>
               <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
