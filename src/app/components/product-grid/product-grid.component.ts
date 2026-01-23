@@ -232,14 +232,14 @@ interface ColumnPreferences {
           <div class="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              class="rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
               title="Marketplace integrations"
             >
               Marketplace Integrations
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
               title="Create offer"
             >
               Create Offer
@@ -249,14 +249,14 @@ interface ColumnPreferences {
             </button>
             <button
               type="button"
-              class="rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
               title="Offer analytics"
             >
               Offer Analytics
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-2 text-xs font-semibold text-foreground transition hover:bg-muted"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
               title="Batch management"
             >
               Batch Management
@@ -277,7 +277,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'brand'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by brand"
                 data-tooltip="Filter by brand"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('brand')"
@@ -324,7 +324,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'marketplace'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by marketplace"
                 data-tooltip="Filter by marketplace"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('marketplace')"
@@ -370,7 +370,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'status'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by status"
                 data-tooltip="Filter by status"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('status')"
@@ -417,7 +417,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'price'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by price"
                 data-tooltip="Filter by price"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('price')"
@@ -474,7 +474,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'stock'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by stock"
                 data-tooltip="Filter by stock"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('stock')"
@@ -531,7 +531,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'sold'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by sold units"
                 data-tooltip="Filter by sold units"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('sold')"
@@ -600,7 +600,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'type'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by product type"
                 data-tooltip="Filter by product type"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('type')"
@@ -669,7 +669,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'variation'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by variations"
                 data-tooltip="Filter by variations"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('variation')"
@@ -739,7 +739,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'tags'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs font-medium transition hover:bg-muted/60 hover:border-border/60"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 title="Filter by tags"
                 data-tooltip="Filter by tags"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('tags')"
@@ -836,7 +836,7 @@ interface ColumnPreferences {
                 [open]="openDropdownId === 'columns'"
               >
                 <summary
-                  class="flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-2 text-xs transition hover:bg-muted"
+                  class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                   title="Columns"
                   data-tooltip="Columns"
                   (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('columns')"
@@ -915,7 +915,7 @@ interface ColumnPreferences {
               [open]="openDropdownId === 'create'"
             >
               <summary
-                class="flex cursor-pointer items-center gap-2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition hover:bg-primary/90"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('create')"
               >
                 <span class="inline-flex h-4 w-4 items-center justify-center text-primary-foreground">
