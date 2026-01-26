@@ -3902,6 +3902,15 @@ export class ProductGridComponent implements OnInit {
     }
   }
 
+  @HostListener('document:mouseover', ['$event'])
+  handleTooltipHover(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+    const tooltipHost = target.closest('[data-tooltip]') as HTMLElement | null;
+    if (!tooltipHost) return;
+    this.positionTooltip(tooltipHost);
+  }
+
   @HostListener('window:resize')
   handleResize(): void {
     if (this.openDropdownId) {
@@ -3938,6 +3947,26 @@ export class ProductGridComponent implements OnInit {
     if (panelRect.height > spaceBelow && spaceAbove > spaceBelow) {
       panel.dataset['position'] = 'top';
     }
+  }
+
+  private positionTooltip(element: HTMLElement): void {
+    const rect = element.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const tooltipWidth = 200;
+    const spaceAbove = rect.top;
+    const spaceBelow = viewportHeight - rect.bottom;
+
+    let position: 'top' | 'bottom' | 'left' | 'right' = 'top';
+    if (viewportWidth - rect.right < tooltipWidth) {
+      position = 'left';
+    } else if (rect.left < tooltipWidth) {
+      position = 'right';
+    } else if (spaceBelow > spaceAbove) {
+      position = 'bottom';
+    }
+
+    element.dataset['tooltipPosition'] = position;
   }
 
   startColumnDrag(columnId: string, event: DragEvent): void {
