@@ -300,7 +300,8 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <label
                 *ngFor="let brand of brands"
@@ -343,7 +344,8 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 max-h-64 w-56 overflow-y-auto rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <label
                 *ngFor="let platform of marketplaces"
@@ -384,7 +386,8 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <label
                 *ngFor="let status of statusOptions"
@@ -436,7 +439,8 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <div class="grid grid-cols-2 gap-3">
                 <label class="text-xs text-muted-foreground">
@@ -490,7 +494,8 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <div class="grid grid-cols-2 gap-3">
                 <label class="text-xs text-muted-foreground">
@@ -544,7 +549,8 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 w-72 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 w-72 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <div class="grid grid-cols-2 gap-3">
                 <label class="text-xs text-muted-foreground">
@@ -615,7 +621,8 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 w-48 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <p class="text-[10px] uppercase tracking-wide text-muted-foreground">
                 Product type
@@ -717,7 +724,8 @@ interface ColumnPreferences {
               </span>
             </summary>
             <div
-              class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
             >
               <div class="flex items-center justify-between border-b border-border/70 pb-2">
                 <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -851,9 +859,10 @@ interface ColumnPreferences {
                   </svg>
                 </span>
               </summary>
-              <div
-                class="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
-              >
+                <div
+                  data-dropdown-panel
+                  class="absolute right-0 z-50 dropdown-panel mt-2 w-56 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                >
                 <label
                   *ngFor="let column of columns"
                   class="flex items-center gap-2 py-1 text-xs"
@@ -920,7 +929,10 @@ interface ColumnPreferences {
                 </svg>
               </span>
             </summary>
-            <div class="absolute z-50 mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+            <div
+              data-dropdown-panel
+              class="absolute z-50 dropdown-panel mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
+            >
               <button
                 type="button"
                 class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
@@ -1806,7 +1818,10 @@ interface ColumnPreferences {
                     </span>
                     Tags
                   </summary>
-                  <div class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+                  <div
+                    data-dropdown-panel
+                    class="absolute z-50 dropdown-panel mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
+                  >
                     <p class="px-1 text-[10px] text-muted-foreground">Add tag</p>
                     <select
                       class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
@@ -1834,7 +1849,10 @@ interface ColumnPreferences {
                     </span>
                     Tags
                   </summary>
-                  <div class="absolute z-50 mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur">
+                  <div
+                    data-dropdown-panel
+                    class="absolute z-50 dropdown-panel mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
+                  >
                     <p class="px-1 text-[10px] text-muted-foreground">Remove tag</p>
                     <select
                       class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
@@ -1862,7 +1880,10 @@ interface ColumnPreferences {
                     </span>
                     Values
                   </summary>
-                  <div class="absolute z-50 mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur">
+                  <div
+                    data-dropdown-panel
+                    class="absolute z-50 dropdown-panel mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+                  >
                     <div class="grid gap-2">
                       <label class="text-xs text-muted-foreground">
                         Sale price
@@ -2468,7 +2489,7 @@ interface ColumnPreferences {
                   </div>
                   <div
                     *ngIf="tagPickerProductId === product.id"
-                    class="absolute left-0 top-full z-20 mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur animate-in fade-in slide-in-from-top-1"
+                    class="absolute left-0 top-full z-20 dropdown-panel mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur animate-in fade-in slide-in-from-top-1"
                   >
                     <label
                       *ngFor="let tag of tags"
@@ -3785,6 +3806,9 @@ export class ProductGridComponent implements OnInit {
 
   toggleDropdown(id: string): void {
     this.openDropdownId = this.openDropdownId === id ? null : id;
+    if (this.openDropdownId) {
+      requestAnimationFrame(() => this.positionDropdown(this.openDropdownId as string));
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -3794,6 +3818,44 @@ export class ProductGridComponent implements OnInit {
     const dropdown = target.closest('details[data-dropdown]');
     if (!dropdown) {
       this.openDropdownId = null;
+    }
+  }
+
+  @HostListener('window:resize')
+  handleResize(): void {
+    if (this.openDropdownId) {
+      this.positionDropdown(this.openDropdownId);
+    }
+  }
+
+  private positionDropdown(id: string): void {
+    const details = document.querySelector(
+      `details[data-dropdown="${id}"]`
+    ) as HTMLElement | null;
+    if (!details) return;
+    const panel = details.querySelector<HTMLElement>('[data-dropdown-panel]');
+    const trigger = details.querySelector<HTMLElement>('summary');
+    if (!panel || !trigger) return;
+
+    panel.style.left = '';
+    panel.style.right = '';
+    panel.dataset.position = 'bottom';
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    if (triggerRect.left + panelRect.width > viewportWidth - 12) {
+      panel.style.right = '0';
+    } else {
+      panel.style.left = '0';
+    }
+
+    const spaceBelow = viewportHeight - triggerRect.bottom;
+    const spaceAbove = triggerRect.top;
+    if (panelRect.height > spaceBelow && spaceAbove > spaceBelow) {
+      panel.dataset.position = 'top';
     }
   }
 

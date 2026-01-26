@@ -223,3 +223,20 @@ All colors MUST be HSL.
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+@layer utilities {
+  .dropdown-panel {
+    top: 100%;
+    max-width: min(90vw, 26rem);
+    max-height: min(60vh, 360px);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .dropdown-panel[data-position='top'] {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0 !important;
+    margin-bottom: 0.5rem !important;
+  }
+}
