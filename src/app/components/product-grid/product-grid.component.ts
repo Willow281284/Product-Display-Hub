@@ -2445,6 +2445,7 @@ interface ColumnPreferences {
                 class="border-b transition-colors hover:bg-muted/30"
                 [ngClass]="{ 'bg-primary/5': isSelected(product.id) }"
                 (dblclick)="openProductDialog(product)"
+                title="Double-click to open details"
               >
                 <td class="p-4 align-middle w-10 min-w-10">
                   <input
