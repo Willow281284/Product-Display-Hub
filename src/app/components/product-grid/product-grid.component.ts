@@ -1780,30 +1780,30 @@ interface ColumnPreferences {
           <ng-container *ngIf="paginatedProducts(filtered) as visible">
             <div
               *ngIf="selectedCount > 0"
-              class="mx-4 mt-3 rounded-xl border border-emerald-900/60 bg-emerald-950/70 px-2 py-2 text-emerald-50 shadow-lg shadow-emerald-950/20"
+              class="sticky top-0 z-30 mx-4 mb-3 mt-3 rounded-lg border border-primary/20 bg-primary/10 p-2 shadow-lg backdrop-blur-sm sm:p-3"
             >
-              <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
-              <div class="flex items-center gap-3">
-                <span class="font-semibold">
-                  {{ selectedCount }} product selected
+              <div class="flex flex-wrap items-center justify-between gap-3 sm:gap-4 text-sm">
+              <div class="flex items-center gap-2 sm:gap-3">
+                <span class="text-xs sm:text-sm font-medium text-foreground">
+                  {{ selectedCount }} product{{ selectedCount > 1 ? 's' : '' }} selected
                 </span>
                 <button
                   type="button"
-                  class="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md gap-1 sm:gap-1.5 h-7 sm:h-8 text-xs sm:text-sm px-2 sm:px-3"
+                  class="h-6 sm:h-7 px-2 text-[10px] sm:text-xs text-muted-foreground hover:text-foreground"
                   (click)="clearSelection()"
                 >
                   Clear
                 </button>
                 <button
                   type="button"
-                  class="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md gap-1 sm:gap-1.5 h-7 sm:h-8 text-xs sm:text-sm px-2 sm:px-3"
+                  class="h-6 sm:h-7 px-2 text-[10px] sm:text-xs text-muted-foreground hover:text-foreground"
                   (click)="selectAllFiltered(filtered)"
                 >
                   Select all ({{ filtered.length }})
                 </button>
               </div>
 
-              <div class="flex flex-wrap items-center gap-2">
+              <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <details
                   class="relative"
                   data-dropdown="bulk-add-tag"
@@ -1816,22 +1816,29 @@ interface ColumnPreferences {
                     <span class="inline-flex h-5 w-5 items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
                     </span>
-                    Tags
+                    <span class="hidden xs:inline">Add</span> Tags
                   </summary>
                   <div
                     data-dropdown-panel
                     class="absolute z-50 dropdown-panel mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
                   >
-                    <p class="px-1 text-[10px] text-muted-foreground">Add tag</p>
-                    <select
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      (change)="bulkAddTag($any($event.target).value)"
-                    >
-                      <option value="">Choose</option>
-                      <option *ngFor="let tag of tags" [value]="tag.id">
-                        {{ tag.name }}
-                      </option>
-                    </select>
+                    <p class="mb-2 px-1 text-xs font-medium text-muted-foreground">
+                      Add tag to selected
+                    </p>
+                    <p *ngIf="tags.length === 0" class="px-1 py-2 text-sm text-muted-foreground text-center">
+                      No tags available
+                    </p>
+                    <div *ngIf="tags.length > 0" class="space-y-1 max-h-40 overflow-y-auto">
+                      <button
+                        *ngFor="let tag of tags"
+                        type="button"
+                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-muted text-left text-sm"
+                        (click)="bulkAddTag(tag.id)"
+                      >
+                        <span class="w-3 h-3 rounded-full" [style.backgroundColor]="tag.color"></span>
+                        <span class="text-foreground">{{ tag.name }}</span>
+                      </button>
+                    </div>
                   </div>
                 </details>
 
@@ -1847,22 +1854,29 @@ interface ColumnPreferences {
                     <span class="inline-flex h-5 w-5 mr-0 sm:mr-2 items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
                     </span>
-                    Tags
+                    <span class="hidden xs:inline">Remove</span> Tags
                   </summary>
                   <div
                     data-dropdown-panel
                     class="absolute z-50 dropdown-panel mt-2 w-48 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
                   >
-                    <p class="px-1 text-[10px] text-muted-foreground">Remove tag</p>
-                    <select
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      (change)="bulkRemoveTag($any($event.target).value)"
-                    >
-                      <option value="">Choose</option>
-                      <option *ngFor="let tag of tags" [value]="tag.id">
-                        {{ tag.name }}
-                      </option>
-                    </select>
+                    <p class="mb-2 px-1 text-xs font-medium text-muted-foreground">
+                      Remove tag from selected
+                    </p>
+                    <p *ngIf="tags.length === 0" class="px-1 py-2 text-sm text-muted-foreground text-center">
+                      No tags available
+                    </p>
+                    <div *ngIf="tags.length > 0" class="space-y-1 max-h-40 overflow-y-auto">
+                      <button
+                        *ngFor="let tag of tags"
+                        type="button"
+                        class="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-muted text-left text-sm"
+                        (click)="bulkRemoveTag(tag.id)"
+                      >
+                        <span class="w-3 h-3 rounded-full" [style.backgroundColor]="tag.color"></span>
+                        <span class="text-foreground">{{ tag.name }}</span>
+                      </button>
+                    </div>
                   </div>
                 </details>
 
@@ -1878,51 +1892,91 @@ interface ColumnPreferences {
                     <span class="inline-flex h-5 w-5 items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign w-3.5 h-3.5 sm:w-4 sm:h-4"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                     </span>
-                    Values
+                    <span class="hidden xs:inline">Update</span> Values
                   </summary>
                   <div
                     data-dropdown-panel
                     class="absolute z-50 dropdown-panel mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
                   >
-                    <div class="grid gap-2">
-                      <label class="text-xs text-muted-foreground">
-                        Sale price
-                        <input
-                          type="number"
-                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                          [(ngModel)]="bulkSalePrice"
-                        />
-                      </label>
-                      <label class="text-xs text-muted-foreground">
-                        Stock qty
-                        <input
-                          type="number"
-                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                          [(ngModel)]="bulkStockQty"
-                        />
-                      </label>
-                      <label class="text-xs text-muted-foreground">
-                        Landed cost
-                        <input
-                          type="number"
-                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                          [(ngModel)]="bulkLandedCost"
-                        />
-                      </label>
-                      <label class="text-xs text-muted-foreground">
-                        Purchased qty
-                        <input
-                          type="number"
-                          class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                          [(ngModel)]="bulkPurchaseQty"
-                        />
-                      </label>
+                    <div class="space-y-3">
+                      <p class="text-xs font-medium text-muted-foreground">
+                        Update values for {{ selectedCount }} products
+                      </p>
+                      <div class="space-y-1">
+                        <label class="text-xs text-muted-foreground">Sale Price</label>
+                        <div class="relative">
+                          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            placeholder="Leave empty to skip"
+                            class="h-8 w-full rounded-md border border-border bg-background pl-6 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            [(ngModel)]="bulkSalePrice"
+                            step="0.01"
+                            min="0"
+                          />
+                        </div>
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-xs text-muted-foreground">Stock Qty</label>
+                        <div class="relative">
+                          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                              <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                              <path d="M3 7v10l9 4 9-4V7" />
+                            </svg>
+                          </span>
+                          <input
+                            type="number"
+                            placeholder="Leave empty to skip"
+                            class="h-8 w-full rounded-md border border-border bg-background pl-7 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            [(ngModel)]="bulkStockQty"
+                            min="0"
+                          />
+                        </div>
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-xs text-muted-foreground">Landed Cost (MSRP)</label>
+                        <div class="relative">
+                          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            placeholder="Leave empty to skip"
+                            class="h-8 w-full rounded-md border border-border bg-background pl-6 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            [(ngModel)]="bulkLandedCost"
+                            step="0.01"
+                            min="0"
+                          />
+                        </div>
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-xs text-muted-foreground">Purchased Qty</label>
+                        <div class="relative">
+                          <span class="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                              <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                              <path d="M3 7v10l9 4 9-4V7" />
+                            </svg>
+                          </span>
+                          <input
+                            type="number"
+                            placeholder="Leave empty to skip"
+                            class="h-8 w-full rounded-md border border-border bg-background pl-7 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            [(ngModel)]="bulkPurchaseQty"
+                            min="0"
+                          />
+                        </div>
+                      </div>
                       <button
                         type="button"
-                        class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                        class="h-8 w-full rounded-md bg-primary text-xs font-semibold text-primary-foreground disabled:opacity-50"
+                        [disabled]="!bulkSalePrice && !bulkStockQty && !bulkLandedCost && !bulkPurchaseQty"
                         (click)="applyBulkPricing()"
                       >
-                        Apply updates
+                        Apply to {{ selectedCount }} Products
                       </button>
                     </div>
                   </div>
@@ -1936,7 +1990,7 @@ interface ColumnPreferences {
                   <span class="inline-flex h-5 w-5 items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"></path></svg>
                   </span>
-                  Marketplaces
+                  <span class="hidden xs:inline">List to</span> Marketplaces
                 </button>
 
                 <button
@@ -1947,7 +2001,7 @@ interface ColumnPreferences {
                   <span class="inline-flex h-5 w-5 items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle></svg>
                   </span>
-                  Offer
+                  <span class="hidden xs:inline">Create</span> Offer
                 </button>
 
                 <button
@@ -1958,7 +2012,7 @@ interface ColumnPreferences {
                   <span class="inline-flex h-5 w-5 items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
                   </span>
-                  History
+                  <span class="hidden xs:inline">Batch</span> History
                 </button>
 
                 <button
@@ -1969,7 +2023,7 @@ interface ColumnPreferences {
                   <span class="inline-flex h-5 w-5 items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
                   </span>
-                  CSV
+                  <span class="hidden xs:inline">Export</span> CSV
                 </button>
 
                 <button
@@ -3423,11 +3477,13 @@ export class ProductGridComponent implements OnInit {
   bulkAddTag(tagId: string): void {
     if (!tagId) return;
     this.tagService.bulkAddTag(Array.from(this.selectedProductIds), tagId);
+    this.openDropdownId = null;
   }
 
   bulkRemoveTag(tagId: string): void {
     if (!tagId) return;
     this.tagService.bulkRemoveTag(Array.from(this.selectedProductIds), tagId);
+    this.openDropdownId = null;
   }
 
   bulkDelete(): void {
@@ -3461,6 +3517,7 @@ export class ProductGridComponent implements OnInit {
       const updated = { ...product, ...updates };
       return this.recalculateProduct(updated);
     });
+    this.openDropdownId = null;
 
     this.bulkSalePrice = '';
     this.bulkStockQty = '';
