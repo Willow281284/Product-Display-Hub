@@ -2439,12 +2439,13 @@ interface ColumnPreferences {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="[&_tr:last-child]:border-0">
               <tr
                 *ngFor="let product of visible; trackBy: trackById"
-                class="border-t border-border transition hover:bg-muted/40"
+                class="border-b transition-colors hover:bg-muted/30"
+                [ngClass]="{ 'bg-primary/5': isSelected(product.id) }"
               >
-                <td class="px-4 py-4">
+                <td class="p-4 align-middle w-10 min-w-10">
                   <input
                     type="checkbox"
                     class="h-4 w-4 accent-emerald-500"
@@ -2454,7 +2455,7 @@ interface ColumnPreferences {
                 </td>
                 <td
                   *ngIf="isColumnVisible('name')"
-                  class="px-4 py-4"
+                  class="p-4 align-middle"
                   [style.width.px]="columnWidth('name')"
                 >
                   <div class="flex items-center gap-3">
@@ -2485,11 +2486,11 @@ interface ColumnPreferences {
                 </td>
                 <td
                   *ngIf="isColumnVisible('productType')"
-                  class="px-4 py-4"
+                  class="p-4 align-middle"
                   [style.width.px]="columnWidth('productType')"
                 >
                   <span
-                    class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
+                    class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold"
                     [ngClass]="typeBadgeClass(product)"
                   >
                     {{ typeBadgeLabel(product) }}
@@ -2500,19 +2501,19 @@ interface ColumnPreferences {
                 </td>
                 <td
                   *ngIf="isColumnVisible('tags')"
-                  class="px-4 py-4"
+                  class="p-4 align-middle"
                   [style.width.px]="columnWidth('tags')"
                 >
                   <div class="relative flex flex-wrap items-center gap-1">
                     <span
                       *ngFor="let tag of getProductTags(product.id)"
-                      class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-white"
+                      class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
                       [style.backgroundColor]="tag.color"
                     >
                       {{ tag.name }}
                       <button
                         type="button"
-                        class="rounded-md px-1 text-[10px] hover:bg-white/20"
+                        class="rounded-full p-0.5 text-[10px] hover:bg-white/20"
                         (click)="removeTagFromProduct(product.id, tag.id)"
                       >
                         ✕
@@ -2566,42 +2567,42 @@ interface ColumnPreferences {
                 </td>
                 <td
                   *ngIf="isColumnVisible('offers')"
-                  class="px-4 py-4"
+                  class="p-4 align-middle"
                   [style.width.px]="columnWidth('offers')"
                 >
-                  <div class="flex flex-col gap-2">
-                    <ng-container *ngIf="bestOffer(product.id) as offer; else noOffer">
-                      <span
-                        class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                  <div class="flex items-center gap-1 flex-wrap">
+                    <ng-container *ngIf="visibleOffers(product.id) as visibleOffers">
+                      <button
+                        *ngFor="let offer of visibleOffers"
+                        type="button"
+                        class="inline-flex items-center gap-1 rounded-md border border-transparent px-1.5 py-0.5 text-[10px] cursor-pointer hover:opacity-80"
                         [ngClass]="offerStatusClass(offer)"
+                        (click)="openOfferDialog([product.id])"
                       >
                         {{ offerLabel(offer) }}
-                      </span>
-                      <span class="text-[10px] text-muted-foreground">
-                        {{ offerStatusLabel(offer) }}
-                      </span>
-                      <button
-                        type="button"
-                        class="rounded-md border border-border px-2 py-0.5 text-[10px]"
-                        (click)="openOfferDialog([product.id])"
-                      >
-                        Manage offers
                       </button>
                     </ng-container>
-                    <ng-template #noOffer>
-                      <button
-                        type="button"
-                        class="rounded-md border border-border px-2 py-0.5 text-[10px]"
-                        (click)="openOfferDialog([product.id])"
-                      >
-                        Create offer
-                      </button>
-                    </ng-template>
+                    <button
+                      *ngIf="remainingOfferCount(product.id) > 0"
+                      type="button"
+                      class="rounded-md border border-border px-1.5 py-0.5 text-[10px] hover:bg-muted"
+                      (click)="openOfferDialog([product.id])"
+                    >
+                      +{{ remainingOfferCount(product.id) }} more
+                    </button>
+                    <button
+                      *ngIf="offersForProduct(product.id).length === 0"
+                      type="button"
+                      class="rounded-md border border-border px-1.5 py-0.5 text-[10px] hover:bg-muted"
+                      (click)="openOfferDialog([product.id])"
+                    >
+                      Create offer
+                    </button>
                   </div>
                 </td>
                 <td
                   *ngIf="isColumnVisible('vendorName')"
-                  class="px-4 py-4"
+                  class="p-4 align-middle"
                   [style.width.px]="columnWidth('vendorName')"
                 >
                   <div class="text-sm font-medium">{{ product.vendorName }}</div>
@@ -2611,7 +2612,7 @@ interface ColumnPreferences {
                 </td>
                 <td
                   *ngIf="isColumnVisible('brand')"
-                  class="px-4 py-4"
+                  class="p-4 align-middle"
                   [style.width.px]="columnWidth('brand')"
                 >
                   <div class="text-sm font-medium">{{ product.brand }}</div>
@@ -2621,7 +2622,7 @@ interface ColumnPreferences {
                 </td>
                 <td
                   *ngIf="isColumnVisible('marketplaces')"
-                  class="px-4 py-4"
+                  class="p-4 align-middle"
                   [style.width.px]="columnWidth('marketplaces')"
                 >
                   <button
@@ -2665,7 +2666,7 @@ interface ColumnPreferences {
                 </td>
                 <td
                   *ngIf="isColumnVisible('stockQty')"
-                  class="px-4 py-4 text-right"
+                  class="p-4 align-middle text-right"
                   [style.width.px]="columnWidth('stockQty')"
                 >
                   <p class="font-medium">{{ product.stockQty }}</p>
@@ -2675,11 +2676,11 @@ interface ColumnPreferences {
                 </td>
                 <td
                   *ngIf="isColumnVisible('restockStatus')"
-                  class="px-4 py-4"
+                  class="p-4 align-middle"
                   [style.width.px]="columnWidth('restockStatus')"
                 >
                   <span
-                    class="inline-flex items-center rounded-md px-3 py-1 text-xs font-medium"
+                    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                     [ngClass]="restockClasses[product.restockStatus]"
                   >
                     {{ restockLabels[product.restockStatus] }}
@@ -3815,6 +3816,26 @@ export class ProductGridComponent implements OnInit {
     const status = getOfferStatus(offer);
     const config = offerStatusConfig[status];
     return `${config.bgColor} ${config.color}`;
+  }
+
+  offersForProduct(productId: string): Offer[] {
+    return this.offers.filter((offer) => {
+      const status = getOfferStatus(offer);
+      return (
+        offer.isActive &&
+        offer.productIds.includes(productId) &&
+        status !== 'expired'
+      );
+    });
+  }
+
+  visibleOffers(productId: string): Offer[] {
+    return this.offersForProduct(productId).slice(0, 2);
+  }
+
+  remainingOfferCount(productId: string): number {
+    const count = this.offersForProduct(productId).length;
+    return Math.max(0, count - 2);
   }
 
   typeBadgeLabel(product: Product): string {
