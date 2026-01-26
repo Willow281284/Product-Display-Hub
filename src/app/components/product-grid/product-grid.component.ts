@@ -2444,7 +2444,7 @@ interface ColumnPreferences {
                 *ngFor="let product of visible; trackBy: trackById"
                 class="border-b transition-colors hover:bg-muted/30"
                 [ngClass]="{ 'bg-primary/5': isSelected(product.id) }"
-                (click)="openProductDialog(product)"
+                (dblclick)="openProductDialog(product)"
               >
                 <td class="p-4 align-middle w-10 min-w-10">
                   <input
