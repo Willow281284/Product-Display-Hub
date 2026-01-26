@@ -3839,7 +3839,7 @@ export class ProductGridComponent implements OnInit {
 
     panel.style.left = '';
     panel.style.right = '';
-    panel.dataset.position = 'bottom';
+    panel.dataset['position'] = 'bottom';
 
     const triggerRect = trigger.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
@@ -3855,7 +3855,7 @@ export class ProductGridComponent implements OnInit {
     const spaceBelow = viewportHeight - triggerRect.bottom;
     const spaceAbove = triggerRect.top;
     if (panelRect.height > spaceBelow && spaceAbove > spaceBelow) {
-      panel.dataset.position = 'top';
+      panel.dataset['position'] = 'top';
     }
   }
 
