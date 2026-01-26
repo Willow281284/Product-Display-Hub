@@ -2444,6 +2444,7 @@ interface ColumnPreferences {
                 *ngFor="let product of visible; trackBy: trackById"
                 class="border-b transition-colors hover:bg-muted/30"
                 [ngClass]="{ 'bg-primary/5': isSelected(product.id) }"
+                (click)="openProductDialog(product)"
               >
                 <td class="p-4 align-middle w-10 min-w-10">
                   <input
@@ -2451,6 +2452,7 @@ interface ColumnPreferences {
                     class="h-4 w-4 accent-emerald-500"
                     [checked]="isSelected(product.id)"
                     (change)="toggleSelectProduct(product.id)"
+                    (click)="$event.stopPropagation()"
                   />
                 </td>
                 <td
@@ -2468,7 +2470,7 @@ interface ColumnPreferences {
                       <button
                         type="button"
                         class="text-left font-medium text-foreground hover:underline"
-                        (click)="openProductDialog(product)"
+                        (click)="$event.stopPropagation(); openProductDialog(product)"
                       >
                         {{ product.name }}
                       </button>
@@ -2514,7 +2516,7 @@ interface ColumnPreferences {
                       <button
                         type="button"
                         class="rounded-full p-0.5 text-[10px] hover:bg-white/20"
-                        (click)="removeTagFromProduct(product.id, tag.id)"
+                        (click)="$event.stopPropagation(); removeTagFromProduct(product.id, tag.id)"
                       >
                         ✕
                       </button>
@@ -2523,7 +2525,7 @@ interface ColumnPreferences {
                       *ngIf="tags.length > 0"
                       type="button"
                       class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
-                      (click)="toggleTagPicker(product.id)"
+                      (click)="$event.stopPropagation(); toggleTagPicker(product.id)"
                       title="Add tag"
                     >
                       <span class="inline-flex h-5 w-5 items-center justify-center">
@@ -2537,7 +2539,7 @@ interface ColumnPreferences {
                       *ngIf="tags.length === 0"
                       type="button"
                       class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
-                      (click)="openTagForm()"
+                      (click)="$event.stopPropagation(); openTagForm()"
                     >
                       Create tag
                     </button>
@@ -2577,7 +2579,7 @@ interface ColumnPreferences {
                         type="button"
                         class="inline-flex items-center gap-1 rounded-md border border-transparent px-1.5 py-0.5 text-[10px] cursor-pointer hover:opacity-80"
                         [ngClass]="offerStatusClass(offer)"
-                        (click)="openOfferDialog([product.id])"
+                        (click)="$event.stopPropagation(); openOfferDialog([product.id])"
                       >
                         {{ offerLabel(offer) }}
                       </button>
@@ -2586,7 +2588,7 @@ interface ColumnPreferences {
                       *ngIf="remainingOfferCount(product.id) > 0"
                       type="button"
                       class="rounded-md border border-border px-1.5 py-0.5 text-[10px] hover:bg-muted"
-                      (click)="openOfferDialog([product.id])"
+                      (click)="$event.stopPropagation(); openOfferDialog([product.id])"
                     >
                       +{{ remainingOfferCount(product.id) }} more
                     </button>
@@ -2594,7 +2596,7 @@ interface ColumnPreferences {
                       *ngIf="offersForProduct(product.id).length === 0"
                       type="button"
                       class="rounded-md border border-border px-1.5 py-0.5 text-[10px] hover:bg-muted"
-                      (click)="openOfferDialog([product.id])"
+                      (click)="$event.stopPropagation(); openOfferDialog([product.id])"
                     >
                       Create offer
                     </button>
@@ -2628,7 +2630,7 @@ interface ColumnPreferences {
                   <button
                     type="button"
                     class="text-left"
-                    (click)="openMarketplaceDialog(product)"
+                    (click)="$event.stopPropagation(); openMarketplaceDialog(product)"
                   >
                     <div class="text-sm font-medium">
                       {{
