@@ -1099,130 +1099,193 @@ interface ColumnPreferences {
         *ngIf="manualDialogOpen"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
       >
-        <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-          <div class="flex items-center justify-between border-b border-border pb-3">
-            <div>
-              <h3 class="text-lg font-semibold">Create new product</h3>
-              <p class="text-xs text-muted-foreground">
-                Fill in the product details. Required fields are marked.
-              </p>
+        <div class="flex w-full max-w-2xl max-h-[90vh] flex-col overflow-hidden rounded-xl bg-card shadow-xl animate-in zoom-in-95">
+          <div class="border-b border-border px-6 py-4">
+            <h3 class="text-lg font-semibold">Create New Product</h3>
+            <p class="text-xs text-muted-foreground">
+              Enter product details manually. Required fields are marked with an asterisk.
+            </p>
+          </div>
+
+          <div class="px-6 pt-4">
+            <div class="grid w-full grid-cols-5 gap-2 rounded-lg border border-border bg-muted/30 p-1">
+              <button
+                *ngFor="let tab of manualTabs"
+                type="button"
+                class="rounded-md px-2 py-1 text-[10px] font-medium text-muted-foreground transition hover:bg-background hover:text-foreground"
+                [class.bg-background]="manualTab === tab"
+                [class.text-foreground]="manualTab === tab"
+                (click)="manualTab = tab"
+              >
+                {{ manualTabLabel(tab) }}
+              </button>
             </div>
-            <button
-              type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs"
-              (click)="closeManualDialog()"
-            >
-              Close
-            </button>
           </div>
 
-          <div class="mt-4 flex flex-wrap gap-2">
-            <button
-              *ngFor="let tab of manualTabs"
-              type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs"
-              [class.bg-muted]="manualTab === tab"
-              (click)="manualTab = tab"
-            >
-              {{ manualTabLabel(tab) }}
-            </button>
-          </div>
-
-          <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
+          <div class="flex-1 overflow-y-auto px-6 py-4">
             <div *ngIf="manualTab === 'basic'" class="grid gap-4">
-              <label *ngFor="let field of manualBasicFields" class="grid gap-1 text-xs">
-                <span class="text-muted-foreground">
+              <label *ngFor="let field of manualBasicFields" class="grid gap-2">
+                <span class="flex items-center gap-1 text-sm font-medium">
                   {{ field.label }} <span *ngIf="field.required" class="text-destructive">*</span>
                 </span>
                 <input
                   [type]="field.type || 'text'"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  class="h-9 rounded-md border border-border bg-background px-3 text-sm"
                   [placeholder]="field.placeholder"
                   [(ngModel)]="manualForm[field.id]"
                 />
               </label>
             </div>
 
-            <div *ngIf="manualTab === 'type'" class="grid gap-4">
-              <label class="flex items-center gap-2 text-sm">
-                <input
-                  type="radio"
-                  name="manualProductType"
-                  class="h-4 w-4"
-                  [checked]="manualProductType === 'single'"
-                  (change)="manualProductType = 'single'"
-                />
-                <span>Single product</span>
-              </label>
-              <label class="flex items-center gap-2 text-sm">
-                <input
-                  type="radio"
-                  name="manualProductType"
-                  class="h-4 w-4"
-                  [checked]="manualProductType === 'kit'"
-                  (change)="manualProductType = 'kit'"
-                />
-                <span>Kit product</span>
-              </label>
-
-              <div *ngIf="manualProductType === 'kit'" class="grid gap-3 rounded-lg border border-border bg-muted/30 p-3">
-                <p class="text-xs font-semibold text-muted-foreground">Kit components</p>
-                <div class="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
-                  <label class="text-xs text-muted-foreground">
-                    Product
-                    <select
-                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      [(ngModel)]="kitProductId"
-                    >
-                      <option value="">Select product</option>
-                      <option *ngFor="let product of products" [value]="product.id">
-                        {{ product.name }}
-                      </option>
-                    </select>
-                  </label>
-                  <label class="text-xs text-muted-foreground">
-                    Qty
-                    <input
-                      type="number"
-                      class="mt-1 w-20 rounded-md border border-border bg-background px-2 py-1 text-xs"
-                      [(ngModel)]="kitQuantity"
-                      min="1"
-                    />
-                  </label>
-                  <button
-                    type="button"
-                    class="rounded-md border border-border px-3 py-1 text-xs"
-                    (click)="addKitComponent()"
-                  >
-                    Add
-                  </button>
-                </div>
-                <div *ngIf="kitComponents.length > 0" class="space-y-2">
+            <div *ngIf="manualTab === 'type'" class="space-y-6">
+              <div class="space-y-4">
+                <p class="text-base font-semibold">Product Type</p>
+                <div class="grid gap-3">
                   <div
-                    *ngFor="let component of kitComponents; let i = index"
-                    class="flex items-center justify-between rounded-md border border-border px-2 py-1 text-xs"
+                    class="flex items-center space-x-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                    (click)="manualProductType = 'single'"
                   >
-                    <span>
-                      {{ kitProductName(component.productId) }} × {{ component.quantity }}
-                    </span>
+                    <input
+                      type="radio"
+                      name="manualProductType"
+                      class="h-4 w-4"
+                      [checked]="manualProductType === 'single'"
+                      (change)="manualProductType = 'single'"
+                    />
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-muted-foreground" stroke-width="2">
+                          <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                          <path d="M3 7v10l9 4 9-4V7" />
+                        </svg>
+                        <span class="font-medium">Single Product</span>
+                      </div>
+                      <p class="mt-1 text-sm text-muted-foreground">
+                        A standalone product that is sold individually
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    class="flex items-center space-x-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                    (click)="manualProductType = 'kit'"
+                  >
+                    <input
+                      type="radio"
+                      name="manualProductType"
+                      class="h-4 w-4"
+                      [checked]="manualProductType === 'kit'"
+                      (change)="manualProductType = 'kit'"
+                    />
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
+                          <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                          <path d="m3.3 7 8.7 5 8.7-5" />
+                          <path d="M12 22V12" />
+                        </svg>
+                        <span class="font-medium">Kit Product</span>
+                        <span class="rounded-full bg-secondary px-2 py-0.5 text-[10px]">Bundle</span>
+                      </div>
+                      <p class="mt-1 text-sm text-muted-foreground">
+                        A bundle of multiple products sold together as one unit
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center space-x-3 rounded-lg border p-4 opacity-60">
+                    <input type="radio" name="manualProductType" class="h-4 w-4" disabled />
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-blue-500" stroke-width="2">
+                          <path d="M12 2l9 5-9 5-9-5 9-5z" />
+                          <path d="M3 12l9 5 9-5" />
+                          <path d="M3 17l9 5 9-5" />
+                        </svg>
+                        <span class="font-medium">Variation Product</span>
+                        <span class="rounded-full border px-2 py-0.5 text-[10px]">Auto-created</span>
+                      </div>
+                      <p class="mt-1 text-sm text-muted-foreground">
+                        Variations are created automatically when adding product options
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="manualProductType === 'kit'" class="space-y-4 border-t pt-4">
+                <div>
+                  <p class="text-base font-semibold">Kit Mapping</p>
+                  <p class="text-sm text-muted-foreground">
+                    Add products to include in this kit
+                  </p>
+                </div>
+                <div class="space-y-3 rounded-lg border bg-muted/30 p-4">
+                  <div class="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+                    <label class="text-xs text-muted-foreground">
+                      Product
+                      <select
+                        class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
+                        [(ngModel)]="kitProductId"
+                      >
+                        <option value="">Select product</option>
+                        <option *ngFor="let product of products" [value]="product.id">
+                          {{ product.name }}
+                        </option>
+                      </select>
+                    </label>
+                    <label class="text-xs text-muted-foreground">
+                      Qty
+                      <input
+                        type="number"
+                        class="mt-1 w-20 rounded-md border border-border bg-background px-2 py-1 text-xs"
+                        [(ngModel)]="kitQuantity"
+                        min="1"
+                      />
+                    </label>
                     <button
                       type="button"
-                      class="text-destructive"
-                      (click)="removeKitComponent(i)"
+                      class="rounded-md border border-border px-3 py-1 text-xs"
+                      (click)="addKitComponent()"
                     >
-                      Remove
+                      Add Products
                     </button>
+                  </div>
+                  <div *ngIf="kitComponents.length > 0" class="space-y-2">
+                    <div class="text-sm font-medium">
+                      {{ kitComponents.length }} product{{ kitComponents.length !== 1 ? 's' : '' }} in kit
+                    </div>
+                    <div class="space-y-1">
+                      <div
+                        *ngFor="let component of kitComponents; let i = index"
+                        class="flex items-center justify-between rounded-md border border-border px-2 py-1 text-xs"
+                      >
+                        <span>
+                          • {{ kitProductName(component.productId) }} ×
+                          <span class="rounded-full bg-secondary px-2 py-0.5 text-[10px]">
+                            {{ component.quantity }}
+                          </span>
+                        </span>
+                        <button
+                          type="button"
+                          class="text-destructive"
+                          (click)="removeKitComponent(i)"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             <div *ngIf="manualTab === 'identifiers'" class="grid gap-4">
-              <label *ngFor="let field of manualIdentifierFields" class="grid gap-1 text-xs">
-                <span class="text-muted-foreground">{{ field.label }}</span>
+              <label *ngFor="let field of manualIdentifierFields" class="grid gap-2">
+                <span class="text-sm font-medium text-foreground">{{ field.label }}</span>
                 <input
                   [type]="field.type || 'text'"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  class="h-9 rounded-md border border-border bg-background px-3 text-sm"
                   [placeholder]="field.placeholder"
                   [(ngModel)]="manualForm[field.id]"
                 />
@@ -1230,11 +1293,11 @@ interface ColumnPreferences {
             </div>
 
             <div *ngIf="manualTab === 'pricing'" class="grid gap-4">
-              <label *ngFor="let field of manualPricingFields" class="grid gap-1 text-xs">
-                <span class="text-muted-foreground">{{ field.label }}</span>
+              <label *ngFor="let field of manualPricingFields" class="grid gap-2">
+                <span class="text-sm font-medium text-foreground">{{ field.label }}</span>
                 <input
                   [type]="field.type || 'text'"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  class="h-9 rounded-md border border-border bg-background px-3 text-sm"
                   [placeholder]="field.placeholder"
                   [(ngModel)]="manualForm[field.id]"
                 />
@@ -1242,11 +1305,11 @@ interface ColumnPreferences {
             </div>
 
             <div *ngIf="manualTab === 'inventory'" class="grid gap-4">
-              <label *ngFor="let field of manualInventoryFields" class="grid gap-1 text-xs">
-                <span class="text-muted-foreground">{{ field.label }}</span>
+              <label *ngFor="let field of manualInventoryFields" class="grid gap-2">
+                <span class="text-sm font-medium text-foreground">{{ field.label }}</span>
                 <input
                   [type]="field.type || 'text'"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                  class="h-9 rounded-md border border-border bg-background px-3 text-sm"
                   [placeholder]="field.placeholder"
                   [(ngModel)]="manualForm[field.id]"
                 />
@@ -1254,17 +1317,17 @@ interface ColumnPreferences {
             </div>
           </div>
 
-          <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+          <div class="flex items-center justify-end gap-2 border-t border-border px-6 py-4">
             <button
               type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs"
+              class="h-9 rounded-md border border-border px-4 text-sm"
               (click)="closeManualDialog()"
             >
               Cancel
             </button>
             <button
               type="button"
-              class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+              class="h-9 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground"
               (click)="saveManualProduct()"
             >
               Save product
