@@ -1386,13 +1386,34 @@ interface ColumnPreferences {
         *ngIf="productDialogOpen && selectedProduct"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
       >
-        <div class="w-full max-w-4xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-          <div class="flex items-center justify-between border-b border-border pb-3">
-            <div>
-              <h3 class="text-lg font-semibold">{{ selectedProduct.name }}</h3>
-              <p class="text-xs text-muted-foreground">
-                Edit product details and inventory.
-              </p>
+        <div class="flex w-full max-w-[98vw] flex-col overflow-hidden rounded-xl bg-card shadow-xl animate-in zoom-in-95 md:max-w-5xl lg:max-w-6xl max-h-[95vh]">
+          <div class="flex items-center justify-between gap-4 border-b border-border px-6 py-4">
+            <div class="flex items-center gap-4">
+              <img
+                [src]="selectedProduct.image"
+                [alt]="selectedProduct.name"
+                class="h-16 w-16 rounded-lg border border-border bg-muted object-cover"
+              />
+              <div>
+                <h3 class="text-xl font-semibold">
+                  {{ selectedProduct.name }}
+                </h3>
+                <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <span class="inline-flex items-center gap-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M12 2v20" />
+                      <path d="M5 7h14" />
+                    </svg>
+                    {{ selectedProduct.productId }}
+                  </span>
+                  <span
+                    *ngIf="selectedProduct.variationId"
+                    class="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px]"
+                  >
+                    Variation: {{ selectedProduct.variationId }}
+                  </span>
+                </div>
+              </div>
             </div>
             <button
               type="button"
@@ -1403,102 +1424,191 @@ interface ColumnPreferences {
             </button>
           </div>
 
-          <div class="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs"
-              [class.bg-muted]="productDialogTab === 'overview'"
-              (click)="productDialogTab = 'overview'"
-            >
-              Overview
-            </button>
-            <button
-              type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs"
-              [class.bg-muted]="productDialogTab === 'inventory'"
-              (click)="productDialogTab = 'inventory'"
-            >
-              Inventory
-            </button>
-            <button
-              type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs"
-              [class.bg-muted]="productDialogTab === 'marketplaces'"
-              (click)="productDialogTab = 'marketplaces'"
-            >
-              Marketplaces
-            </button>
+          <div class="border-b border-border px-6 pt-3">
+            <div class="flex flex-wrap gap-2 pb-3 text-xs">
+              <button
+                type="button"
+                class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-xs"
+                [class.bg-muted]="productDialogTab === 'overview'"
+                (click)="productDialogTab = 'overview'"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M3 12h18" />
+                  <path d="M12 3v18" />
+                </svg>
+                Overview
+              </button>
+              <button
+                type="button"
+                class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-xs"
+                [class.bg-muted]="productDialogTab === 'inventory'"
+                (click)="productDialogTab = 'inventory'"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                  <path d="M3 7v10l9 4 9-4V7" />
+                </svg>
+                Inventory
+              </button>
+              <button
+                type="button"
+                class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-xs"
+                [class.bg-muted]="productDialogTab === 'marketplaces'"
+                (click)="productDialogTab = 'marketplaces'"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M3 9l2-5h14l2 5" />
+                  <path d="M5 9v11h14V9" />
+                  <path d="M9 20V9h6v11" />
+                </svg>
+                Marketplaces
+              </button>
+            </div>
           </div>
 
-          <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
-            <div *ngIf="productDialogTab === 'overview'" class="grid gap-4 sm:grid-cols-2">
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Product name
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="productDraft.name"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Brand
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="productDraft.brand"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Vendor
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="productDraft.vendorName"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Sale price
-                <input
-                  type="number"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="productDraft.salePrice"
-                />
-              </label>
+          <div class="flex-1 overflow-y-auto px-6 py-4">
+            <div *ngIf="productDialogTab === 'overview'" class="grid gap-6 lg:grid-cols-2">
+              <div class="space-y-4">
+                <h4 class="text-sm font-semibold text-foreground">Basic Information</h4>
+                <div class="grid gap-4 rounded-lg bg-muted/30 p-4">
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Product name
+                    <input
+                      type="text"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="productDraft.name"
+                    />
+                  </label>
+                  <div class="grid gap-4 sm:grid-cols-2">
+                    <label class="grid gap-1 text-xs text-muted-foreground">
+                      Brand
+                      <input
+                        type="text"
+                        class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                        [(ngModel)]="productDraft.brand"
+                      />
+                    </label>
+                    <label class="grid gap-1 text-xs text-muted-foreground">
+                      Vendor
+                      <input
+                        type="text"
+                        class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                        [(ngModel)]="productDraft.vendorName"
+                      />
+                    </label>
+                  </div>
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Sale price
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="productDraft.salePrice"
+                    />
+                  </label>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <h4 class="text-sm font-semibold text-foreground">Quick Stats</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="rounded-lg bg-muted/30 p-4">
+                    <p class="text-xs text-muted-foreground">Sale Price</p>
+                    <p class="text-lg font-semibold">{{ formatCurrency(selectedProduct.salePrice) }}</p>
+                  </div>
+                  <div class="rounded-lg bg-muted/30 p-4">
+                    <p class="text-xs text-muted-foreground">Profit Margin</p>
+                    <p class="text-lg font-semibold">{{ selectedProduct.grossProfitPercent }}%</p>
+                  </div>
+                  <div class="rounded-lg bg-muted/30 p-4">
+                    <p class="text-xs text-muted-foreground">In Stock</p>
+                    <p class="text-lg font-semibold">{{ selectedProduct.stockQty }}</p>
+                  </div>
+                  <div class="rounded-lg bg-muted/30 p-4">
+                    <p class="text-xs text-muted-foreground">Total Sold</p>
+                    <p class="text-lg font-semibold">{{ selectedProduct.soldQty }}</p>
+                  </div>
+                </div>
+                <div class="rounded-lg bg-muted/30 p-4">
+                  <p class="text-xs font-medium text-muted-foreground">Marketplace Status</p>
+                  <div class="mt-2 flex flex-wrap items-center gap-3 text-xs">
+                    <span class="inline-flex items-center gap-1">
+                      <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                      {{ marketplaceCount(selectedProduct, 'live') }} Live
+                    </span>
+                    <span class="inline-flex items-center gap-1">
+                      <span class="h-2 w-2 rounded-full bg-muted-foreground"></span>
+                      {{ marketplaceCount(selectedProduct, 'inactive') }} Inactive
+                    </span>
+                    <span class="inline-flex items-center gap-1 text-destructive">
+                      <span class="h-2 w-2 rounded-full bg-destructive"></span>
+                      {{ marketplaceCount(selectedProduct, 'error') }} Error
+                    </span>
+                    <span class="inline-flex items-center gap-1 text-muted-foreground">
+                      {{ marketplaceCount(selectedProduct, 'not_listed') }} Not Listed
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div *ngIf="productDialogTab === 'inventory'" class="grid gap-4 sm:grid-cols-2">
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Stock qty
-                <input
-                  type="number"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="productDraft.stockQty"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Purchased qty
-                <input
-                  type="number"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="productDraft.purchaseQty"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Sold qty
-                <input
-                  type="number"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="productDraft.soldQty"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Return qty
-                <input
-                  type="number"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="productDraft.returnQty"
-                />
-              </label>
+            <div *ngIf="productDialogTab === 'inventory'" class="grid gap-6 lg:grid-cols-2">
+              <div class="space-y-4">
+                <h4 class="text-sm font-semibold text-foreground">Inventory</h4>
+                <div class="grid gap-4 rounded-lg bg-muted/30 p-4 sm:grid-cols-2">
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Stock qty
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="productDraft.stockQty"
+                    />
+                  </label>
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Purchased qty
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="productDraft.purchaseQty"
+                    />
+                  </label>
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Sold qty
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="productDraft.soldQty"
+                    />
+                  </label>
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Return qty
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="productDraft.returnQty"
+                    />
+                  </label>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <h4 class="text-sm font-semibold text-foreground">Pricing</h4>
+                <div class="grid gap-4 rounded-lg bg-muted/30 p-4 sm:grid-cols-2">
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Sale price
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="productDraft.salePrice"
+                    />
+                  </label>
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Landed cost
+                    <input
+                      type="number"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="productDraft.landedCost"
+                    />
+                  </label>
+                </div>
+              </div>
             </div>
 
             <div *ngIf="productDialogTab === 'marketplaces'" class="space-y-3">
@@ -1514,25 +1624,27 @@ interface ColumnPreferences {
                   Manage marketplaces
                 </button>
               </div>
-              <div class="grid gap-2">
-                <div
-                  *ngFor="let marketplace of selectedProduct.marketplaces"
-                  class="flex items-center justify-between rounded-md border border-border px-3 py-2 text-xs"
-                >
-                  <span class="capitalize">{{ marketplace.platform }}</span>
-                  <span class="text-muted-foreground">{{ marketplace.status }}</span>
+              <div class="rounded-lg bg-muted/30 p-4">
+                <div class="grid gap-2">
+                  <div
+                    *ngFor="let marketplace of selectedProduct.marketplaces"
+                    class="flex items-center justify-between rounded-md border border-border px-3 py-2 text-xs"
+                  >
+                    <span class="capitalize">{{ marketplace.platform }}</span>
+                    <span class="text-muted-foreground">{{ marketplace.status }}</span>
+                  </div>
+                  <p
+                    *ngIf="selectedProduct.marketplaces.length === 0"
+                    class="text-xs text-muted-foreground"
+                  >
+                    No active marketplaces.
+                  </p>
                 </div>
-                <p
-                  *ngIf="selectedProduct.marketplaces.length === 0"
-                  class="text-xs text-muted-foreground"
-                >
-                  No active marketplaces.
-                </p>
               </div>
             </div>
           </div>
 
-          <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+          <div class="flex items-center justify-end gap-2 border-t border-border px-6 py-4">
             <button
               type="button"
               class="rounded-md border border-border px-3 py-1 text-xs"
@@ -1555,74 +1667,139 @@ interface ColumnPreferences {
         *ngIf="marketplaceDialogOpen && marketplaceDialogProduct"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
       >
-        <div class="w-full max-w-4xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-          <div class="flex items-center justify-between border-b border-border pb-3">
-            <div>
-              <h3 class="text-lg font-semibold">Marketplace listings</h3>
-              <p class="text-xs text-muted-foreground">
-                {{ marketplaceDialogProduct.name }}
-              </p>
+        <div class="flex w-full max-w-[98vw] flex-col overflow-hidden rounded-xl bg-slate-900 text-slate-100 shadow-xl animate-in zoom-in-95 md:max-w-5xl lg:max-w-6xl max-h-[95vh]">
+          <div class="flex flex-wrap items-center gap-6 border-b border-slate-700 bg-slate-800 px-6 py-4">
+            <div class="flex items-center gap-2">
+              <div class="rounded-lg bg-slate-700 p-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4 text-slate-300" stroke-width="2">
+                  <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                  <path d="M3 7v10l9 4 9-4V7" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase text-slate-400">SKU</p>
+                <p class="text-sm font-medium">{{ marketplaceDialogProduct.vendorSku }}</p>
+              </div>
             </div>
-            <button
-              type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs"
-              (click)="closeMarketplaceDialog()"
-            >
-              Close
-            </button>
+            <div class="flex items-center gap-2">
+              <div class="rounded-lg bg-slate-700 p-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4 text-slate-300" stroke-width="2">
+                  <path d="M12 2v20" />
+                  <path d="M5 7h14" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase text-slate-400">Product ID</p>
+                <p class="text-sm font-medium">{{ marketplaceDialogProduct.productId }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="rounded-lg bg-slate-700 p-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4 text-emerald-400" stroke-width="2">
+                  <path d="M12 1v22" />
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase text-slate-400">Sale Price</p>
+                <p class="text-sm font-medium text-emerald-400">
+                  {{ formatCurrency(marketplaceDialogProduct.salePrice) }}
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="rounded-lg bg-slate-700 p-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4 text-slate-300" stroke-width="2">
+                  <path d="M3 3h18v4H3z" />
+                  <path d="M3 7h18v14H3z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase text-slate-400">Stock</p>
+                <p class="text-sm font-medium">{{ marketplaceDialogProduct.stockQty }} units</p>
+              </div>
+            </div>
+            <div class="ml-auto flex items-center gap-2">
+              <span class="rounded-full bg-emerald-500/20 px-2.5 py-1 text-xs text-emerald-400">
+                {{ marketplaceRowCount('live') }} Live
+              </span>
+              <span class="rounded-full bg-slate-600/60 px-2.5 py-1 text-xs text-slate-200">
+                {{ marketplaceRowCount('inactive') }} Inactive
+              </span>
+              <span class="rounded-full border border-slate-500 px-2.5 py-1 text-xs text-slate-300">
+                {{ marketplaceRowCount('not_listed') }} Not Listed
+              </span>
+              <button
+                type="button"
+                class="rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-200 hover:bg-slate-700"
+                (click)="closeMarketplaceDialog()"
+              >
+                Close
+              </button>
+            </div>
           </div>
 
-          <div class="mt-4 max-h-[55vh] overflow-y-auto pr-2">
-            <div class="grid gap-2">
-              <div
-                *ngFor="let row of marketplaceRows"
-                class="grid items-center gap-2 rounded-md border border-border px-3 py-2 text-xs sm:grid-cols-[120px_120px_1fr_1fr_90px_90px]"
-              >
-                <span class="capitalize font-semibold">{{ row.platform }}</span>
-                <select
-                  class="rounded-md border border-border bg-background px-2 py-1 text-xs"
-                  [(ngModel)]="row.status"
+          <div class="flex-1 overflow-y-auto">
+            <div class="px-6 py-4">
+              <div class="grid gap-2">
+                <div class="grid grid-cols-[140px_110px_1fr_1fr_90px_90px] gap-2 px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                  <span>Marketplace</span>
+                  <span>Status</span>
+                  <span>Sale Price</span>
+                  <span>Stock</span>
+                  <span>Price Sync</span>
+                  <span>Inv Sync</span>
+                </div>
+                <div
+                  *ngFor="let row of marketplaceRows"
+                  class="grid items-center gap-2 rounded-md border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:grid-cols-[140px_110px_1fr_1fr_90px_90px]"
                 >
-                  <option value="live">Live</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="error">Error</option>
-                  <option value="not_listed">Not listed</option>
-                </select>
-                <input
-                  type="number"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-xs"
-                  [(ngModel)]="row.price"
-                  placeholder="Sale price"
-                />
-                <input
-                  type="number"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-xs"
-                  [(ngModel)]="row.stock"
-                  placeholder="Stock"
-                />
-                <label class="flex items-center gap-1 text-xs">
-                  <input type="checkbox" [(ngModel)]="row.priceSync" />
-                  Price sync
-                </label>
-                <label class="flex items-center gap-1 text-xs">
-                  <input type="checkbox" [(ngModel)]="row.inventorySync" />
-                  Inv sync
-                </label>
+                  <span class="capitalize font-semibold text-slate-100">{{ row.platform }}</span>
+                  <select
+                    class="rounded-md border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-100"
+                    [(ngModel)]="row.status"
+                  >
+                    <option value="live">Live</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="error">Error</option>
+                    <option value="not_listed">Not listed</option>
+                  </select>
+                  <input
+                    type="number"
+                    class="rounded-md border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-100"
+                    [(ngModel)]="row.price"
+                    placeholder="Sale price"
+                  />
+                  <input
+                    type="number"
+                    class="rounded-md border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-100"
+                    [(ngModel)]="row.stock"
+                    placeholder="Stock"
+                  />
+                  <label class="flex items-center gap-1 text-xs text-slate-200">
+                    <input type="checkbox" [(ngModel)]="row.priceSync" />
+                    Sync
+                  </label>
+                  <label class="flex items-center gap-1 text-xs text-slate-200">
+                    <input type="checkbox" [(ngModel)]="row.inventorySync" />
+                    Sync
+                  </label>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="mt-4 flex items-center justify-end gap-2 border-t border-border pt-3">
+          <div class="flex items-center justify-end gap-2 border-t border-slate-700 bg-slate-900 px-6 py-4">
             <button
               type="button"
-              class="rounded-md border border-border px-3 py-1 text-xs"
+              class="rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-200 hover:bg-slate-700"
               (click)="closeMarketplaceDialog()"
             >
               Cancel
             </button>
             <button
               type="button"
-              class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+              class="rounded-md bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
               (click)="saveMarketplaceDialog()"
             >
               Save changes
@@ -1635,8 +1812,8 @@ interface ColumnPreferences {
         *ngIf="offerDialogOpen"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
       >
-        <div class="w-full max-w-3xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
-          <div class="flex items-center justify-between border-b border-border pb-3">
+        <div class="flex w-full max-w-[98vw] flex-col overflow-hidden rounded-xl bg-card shadow-xl animate-in zoom-in-95 md:max-w-4xl max-h-[90vh]">
+          <div class="flex items-center justify-between border-b border-border px-6 py-4">
             <div>
               <h3 class="text-lg font-semibold">Offers</h3>
               <p class="text-xs text-muted-foreground">
@@ -1652,13 +1829,13 @@ interface ColumnPreferences {
             </button>
           </div>
 
-          <div class="mt-4 space-y-4">
-            <div class="rounded-md border border-border bg-muted/30 p-3">
+          <div class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+            <div class="rounded-lg border border-border bg-muted/30 p-4">
               <p class="text-xs font-semibold">Existing offers</p>
-              <div class="mt-2 space-y-2">
+              <div class="mt-3 space-y-2">
                 <div
                   *ngFor="let offer of offersForDialog()"
-                  class="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border px-3 py-2 text-xs"
+                  class="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-border bg-background/60 px-3 py-3 text-xs"
                 >
                   <div>
                     <p class="font-semibold">{{ offer.name }}</p>
@@ -1680,96 +1857,99 @@ interface ColumnPreferences {
               </div>
             </div>
 
-            <div class="grid gap-3 rounded-md border border-border p-3">
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Offer name
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="offerDialogName"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Offer type
-                <select
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  [(ngModel)]="offerDialogType"
-                >
-                  <option *ngFor="let type of offerTypes" [value]="type">
-                    {{ offerTypeLabels[type] }}
-                  </option>
-                </select>
-              </label>
-              <div class="grid gap-3 sm:grid-cols-2">
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Discount %
+            <div class="rounded-lg border border-border bg-muted/30 p-4">
+              <p class="text-xs font-semibold">Create offer</p>
+              <div class="mt-3 grid gap-3">
+                <label class="text-xs text-muted-foreground">
+                  Offer name
                   <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="offerDialogDiscountPercent"
-                    [disabled]="offerDialogType === 'fixed_discount' || offerDialogType === 'free_shipping'"
+                    type="text"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="offerDialogName"
                   />
                 </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Discount $
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="offerDialogDiscountAmount"
-                    [disabled]="offerDialogType !== 'fixed_discount'"
-                  />
-                </label>
-              </div>
-              <div class="grid gap-3 sm:grid-cols-2">
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Start date
-                  <input
-                    type="date"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="offerDialogStartDate"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  End date
-                  <input
-                    type="date"
-                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                    [(ngModel)]="offerDialogEndDate"
-                  />
-                </label>
-              </div>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Description
-                <textarea
-                  class="rounded-md border border-border bg-background px-2 py-1 text-sm"
-                  rows="2"
-                  [(ngModel)]="offerDialogDescription"
-                ></textarea>
-              </label>
-              <div>
-                <p class="text-xs text-muted-foreground">Marketplaces</p>
-                <div class="mt-2 grid grid-cols-2 gap-2">
-                  <label
-                    *ngFor="let platform of marketplaces"
-                    class="flex items-center gap-2 text-xs capitalize"
+                <label class="text-xs text-muted-foreground">
+                  Offer type
+                  <select
+                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    [(ngModel)]="offerDialogType"
                   >
+                    <option *ngFor="let type of offerTypes" [value]="type">
+                      {{ offerTypeLabels[type] }}
+                    </option>
+                  </select>
+                </label>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <label class="text-xs text-muted-foreground">
+                    Discount %
                     <input
-                      type="checkbox"
-                      class="h-4 w-4"
-                      [checked]="offerDialogMarketplaces.includes(platform)"
-                      (change)="toggleOfferMarketplace(platform)"
+                      type="number"
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="offerDialogDiscountPercent"
+                      [disabled]="offerDialogType === 'fixed_discount' || offerDialogType === 'free_shipping'"
                     />
-                    <span>{{ platform }}</span>
+                  </label>
+                  <label class="text-xs text-muted-foreground">
+                    Discount amount
+                    <input
+                      type="number"
+                      class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="offerDialogDiscountAmount"
+                      [disabled]="offerDialogType !== 'fixed_discount'"
+                    />
                   </label>
                 </div>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    Start date
+                    <input
+                      type="date"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="offerDialogStartDate"
+                    />
+                  </label>
+                  <label class="grid gap-1 text-xs text-muted-foreground">
+                    End date
+                    <input
+                      type="date"
+                      class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                      [(ngModel)]="offerDialogEndDate"
+                    />
+                  </label>
+                </div>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Description
+                  <textarea
+                    class="rounded-md border border-border bg-background px-2 py-1 text-sm"
+                    rows="2"
+                    [(ngModel)]="offerDialogDescription"
+                  ></textarea>
+                </label>
+                <div>
+                  <p class="text-xs text-muted-foreground">Marketplaces</p>
+                  <div class="mt-2 grid grid-cols-2 gap-2">
+                    <label
+                      *ngFor="let platform of marketplaces"
+                      class="flex items-center gap-2 text-xs capitalize"
+                    >
+                      <input
+                        type="checkbox"
+                        class="h-4 w-4"
+                        [checked]="offerDialogMarketplaces.includes(platform)"
+                        (change)="toggleOfferMarketplace(platform)"
+                      />
+                      <span>{{ platform }}</span>
+                    </label>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="h-8 rounded-md bg-primary text-xs font-semibold text-primary-foreground"
+                  (click)="saveOfferDialog()"
+                >
+                  Save offer
+                </button>
               </div>
-              <button
-                type="button"
-                class="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
-                (click)="saveOfferDialog()"
-              >
-                Save offer
-              </button>
             </div>
           </div>
         </div>
@@ -3819,6 +3999,21 @@ export class ProductGridComponent implements OnInit {
     const status = getOfferStatus(offer);
     const config = offerStatusConfig[status];
     return `${config.bgColor} ${config.color}`;
+  }
+
+  marketplaceCount(product: Product, status: MarketplaceStatus['status']): number {
+    return product.marketplaces.filter((market) => market.status === status).length;
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+  }
+
+  marketplaceRowCount(status: MarketplaceStatus['status']): number {
+    return this.marketplaceRows.filter((row) => row.status === status).length;
   }
 
   offersForProduct(productId: string): Offer[] {
