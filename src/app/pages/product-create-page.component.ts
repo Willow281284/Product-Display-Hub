@@ -687,8 +687,10 @@ interface ExtraAttributeRow {
                     />
                     <button
                       type="button"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       title="Copy SKU"
+                      [disabled]="!productData.vendorSku.trim()"
+                      (click)="copyToClipboard(productData.vendorSku)"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1187,8 +1189,9 @@ interface ExtraAttributeRow {
                 </div>
                 <button
                   type="button"
-                  class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                   (click)="copyToClipboard(identifierLists.internalSkus[i])"
+                  [disabled]="!identifierLists.internalSkus[i]?.trim()"
                   title="Copy"
                 >
                   <svg
@@ -1262,8 +1265,9 @@ interface ExtraAttributeRow {
                     />
                     <button
                       type="button"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.upcCodes[i])"
+                      [disabled]="!identifierLists.upcCodes[i]?.trim()"
                       title="Copy"
                     >
                       <svg
@@ -1307,8 +1311,9 @@ interface ExtraAttributeRow {
                     />
                     <button
                       type="button"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.gtinCodes[i])"
+                      [disabled]="!identifierLists.gtinCodes[i]?.trim()"
                       title="Copy"
                     >
                       <svg
@@ -1352,8 +1357,9 @@ interface ExtraAttributeRow {
                     />
                     <button
                       type="button"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.eanCodes[i])"
+                      [disabled]="!identifierLists.eanCodes[i]?.trim()"
                       title="Copy"
                     >
                       <svg
@@ -1397,8 +1403,9 @@ interface ExtraAttributeRow {
                     />
                     <button
                       type="button"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.isbnCodes[i])"
+                      [disabled]="!identifierLists.isbnCodes[i]?.trim()"
                       title="Copy"
                     >
                       <svg
@@ -1451,8 +1458,9 @@ interface ExtraAttributeRow {
                     />
                     <button
                       type="button"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.asinCodes[i])"
+                      [disabled]="!identifierLists.asinCodes[i]?.trim()"
                       title="Copy"
                     >
                       <svg
@@ -1496,8 +1504,9 @@ interface ExtraAttributeRow {
                     />
                     <button
                       type="button"
-                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.fnskuCodes[i])"
+                      [disabled]="!identifierLists.fnskuCodes[i]?.trim()"
                       title="Copy"
                     >
                       <svg
@@ -1912,6 +1921,17 @@ interface ExtraAttributeRow {
           </div>
         </div>
       </div>
+
+      <div
+        class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 flex-col gap-2"
+      >
+        <div
+          *ngFor="let toast of toastMessages"
+          class="rounded-lg border border-border bg-card px-4 py-2 text-sm text-foreground shadow-lg"
+        >
+          {{ toast.text }}
+        </div>
+      </div>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2045,6 +2065,9 @@ export class ProductCreatePageComponent implements OnInit {
   newBrandName = '';
   newBrandDetails = '';
 
+  toastMessages: Array<{ id: number; text: string }> = [];
+  private toastId = 0;
+
   kitComponents: KitComponentRow[] = mockProducts.slice(0, 2).map((product) => ({
     productId: product.id,
     name: product.name,
@@ -2113,8 +2136,20 @@ export class ProductCreatePageComponent implements OnInit {
     const text = value?.trim();
     if (!text) return;
     if (navigator?.clipboard?.writeText) {
-      void navigator.clipboard.writeText(text);
+      void navigator.clipboard.writeText(text).then(() => {
+        this.showToast('Copied to clipboard');
+      });
+    } else {
+      this.showToast('Copy not supported');
     }
+  }
+
+  showToast(text: string): void {
+    const id = (this.toastId += 1);
+    this.toastMessages = [...this.toastMessages, { id, text }];
+    setTimeout(() => {
+      this.toastMessages = this.toastMessages.filter((toast) => toast.id !== id);
+    }, 2200);
   }
 
   get filteredVendors(): string[] {
