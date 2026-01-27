@@ -933,46 +933,51 @@ interface ColumnPreferences {
               data-dropdown-panel
               class="absolute z-50 dropdown-panel mt-2 w-56 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
             >
+            <div class="px-2 py-1.5 text-sm font-semibold">Add New Products</div>
+            <div role="separator" aria-orientation="horizontal" class="-mx-1 my-1 h-px bg-muted"></div>
               <button
                 type="button"
-                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                class="relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground gap-2 cursor-pointer"
                 (click)="openManualDialog('single')"
               >
-                Manual entry
-                <span class="text-muted-foreground">+</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-4 h-4"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg> 
+              Manual entry
               </button>
               <button
                 type="button"
-                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                class="relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground gap-2 cursor-pointer"
                 (click)="openManualDialog('kit')"
               >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package w-4 h-4"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"></path><path d="m7.5 4.27 9 5.15"></path></svg>
                 Create kit product
-                <span class="text-muted-foreground">▢</span>
+                
               </button>
               <button
                 type="button"
-                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                class="relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground gap-2 cursor-pointer"
                 (click)="openCsvDialog('create')"
               >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet w-4 h-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M8 13h2"></path><path d="M14 13h2"></path><path d="M8 17h2"></path><path d="M14 17h2"></path></svg>
                 CSV or Excel
-                <span class="text-muted-foreground">CSV</span>
+                
               </button>
               <div class="my-2 border-t border-border"></div>
+              <div class="px-2 py-1.5 font-semibold text-xs text-muted-foreground">Import from Marketplace</div>
               <button
                 type="button"
-                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                class="relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground gap-2 cursor-pointer"
                 (click)="importMarketplace('Amazon')"
               >
-                Import from Amazon
-                <span class="text-orange-500">Amazon</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-4 h-4 text-orange-500"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg> 
+              Import from Amazon
               </button>
               <button
                 type="button"
-                class="flex w-full items-center justify-between rounded-md px-2 py-2 text-xs hover:bg-muted"
+                class="relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground gap-2 cursor-pointer"
                 (click)="importMarketplace('Shopify')"
               >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store w-4 h-4 text-green-500"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"></path></svg>
                 Import from Shopify
-                <span class="text-green-500">Shopify</span>
               </button>
             </div>
           </details>
