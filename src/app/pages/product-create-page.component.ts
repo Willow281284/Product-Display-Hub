@@ -51,12 +51,12 @@ interface ExtraAttributeRow {
   imports: [CommonModule, FormsModule],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
-      <header class="border-b border-border bg-background px-6 py-4">
+      <header class="px-6 py-4 border-b border-border bg-background">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-center gap-4">
             <button
               type="button"
-              class="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted"
+              class="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
               aria-label="Go back"
               (click)="goBack()"
             >
@@ -74,7 +74,7 @@ interface ExtraAttributeRow {
                 <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
             </button>
-            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <div class="w-20 h-20 rounded-lg bg-muted border border-border flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -83,7 +83,7 @@ interface ExtraAttributeRow {
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="h-5 w-5"
+                class="h-8 w-8 text-muted-foreground"
               >
                 <path
                   d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
@@ -94,41 +94,123 @@ interface ExtraAttributeRow {
               </svg>
             </div>
             <div>
-              <h1 class="text-2xl font-semibold">Create product</h1>
-              <p class="text-sm text-muted-foreground">
-                Build a new listing with pricing, inventory, and marketplace details.
+              <h1 class="text-2xl font-semibold flex items-center gap-2">
+                <input
+                  type="text"
+                  class="text-2xl font-semibold h-auto py-1.5 w-[500px] bg-transparent border-0 border-b border-transparent focus:border-primary focus:outline-none"
+                  placeholder="Enter product name *"
+                  [(ngModel)]="productData.name"
+                />
+              </h1>
+              <p class="mt-1.5 flex flex-wrap items-center gap-3 text-base text-muted-foreground">
+                <span class="flex items-center gap-1.5">
+                  <span class="text-base font-semibold text-muted-foreground">#</span>
+                  New Product
+                </span>
+                <span class="inline-flex items-center rounded-full border border-border px-2 py-0.5 text-xs">
+                  Draft
+                </span>
+                <span
+                  *ngIf="productType === 'kit'"
+                  class="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-foreground"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-3 w-3"
+                  >
+                    <path
+                      d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+                    ></path>
+                    <path d="M12 22V12"></path>
+                    <path d="m3.3 7 8.7 5 8.7-5"></path>
+                    <path d="m7.5 4.27 9 5.15"></path>
+                  </svg>
+                  Kit Product
+                </span>
               </p>
             </div>
           </div>
-          <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-center gap-2">
             <button
               type="button"
               class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
             >
-              Cancel
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Cancel
+              </span>
             </button>
             <button
               type="button"
               class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
             >
-              Save draft
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Save Draft
+              </span>
             </button>
             <button
               type="button"
               class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
             >
-              Create &amp; publish
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Save &amp; List
+              </span>
             </button>
           </div>
         </div>
       </header>
 
       <div class="px-6">
-        <div class="mt-4 rounded-xl border border-border bg-muted/40 p-1">
-          <div class="flex flex-wrap gap-1">
+        <div class="mt-3 inline-flex h-10 items-center justify-start rounded-md bg-muted p-1 text-muted-foreground">
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'overview'"
             [class.text-foreground]="activeTab === 'overview'"
             [class.shadow-sm]="activeTab === 'overview'"
@@ -155,7 +237,7 @@ interface ExtraAttributeRow {
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'pricing'"
             [class.text-foreground]="activeTab === 'pricing'"
             [class.shadow-sm]="activeTab === 'pricing'"
@@ -172,15 +254,13 @@ interface ExtraAttributeRow {
               class="h-4 w-4"
             >
               <line x1="12" y1="1" x2="12" y2="23"></line>
-              <path
-                d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-              ></path>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
             Pricing &amp; Inventory
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'identifiers'"
             [class.text-foreground]="activeTab === 'identifiers'"
             [class.shadow-sm]="activeTab === 'identifiers'"
@@ -206,7 +286,7 @@ interface ExtraAttributeRow {
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'images'"
             [class.text-foreground]="activeTab === 'images'"
             [class.shadow-sm]="activeTab === 'images'"
@@ -230,7 +310,7 @@ interface ExtraAttributeRow {
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'marketplaces'"
             [class.text-foreground]="activeTab === 'marketplaces'"
             [class.shadow-sm]="activeTab === 'marketplaces'"
@@ -254,7 +334,7 @@ interface ExtraAttributeRow {
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'content'"
             [class.text-foreground]="activeTab === 'content'"
             [class.shadow-sm]="activeTab === 'content'"
@@ -280,7 +360,7 @@ interface ExtraAttributeRow {
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'options'"
             [class.text-foreground]="activeTab === 'options'"
             [class.shadow-sm]="activeTab === 'options'"
@@ -304,11 +384,11 @@ interface ExtraAttributeRow {
                 d="M12 22a10 10 0 1 0-10-10 3 3 0 0 0 3 3h2a2 2 0 0 1 2 2 3 3 0 0 0 3 3z"
               ></path>
             </svg>
-            Product options
+            Product Options
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'extra'"
             [class.text-foreground]="activeTab === 'extra'"
             [class.shadow-sm]="activeTab === 'extra'"
@@ -329,11 +409,11 @@ interface ExtraAttributeRow {
               <circle cx="17" cy="17" r="3"></circle>
               <circle cx="7" cy="7" r="3"></circle>
             </svg>
-            Extra attributes
+            Extra Attributes
           </button>
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
             [class.bg-background]="activeTab === 'tags'"
             [class.text-foreground]="activeTab === 'tags'"
             [class.shadow-sm]="activeTab === 'tags'"
@@ -356,195 +436,357 @@ interface ExtraAttributeRow {
             </svg>
             Tags
           </button>
-          </div>
         </div>
       </div>
 
       <div class="flex-1 overflow-y-auto px-6 pb-10">
-        <div *ngIf="activeTab === 'overview'" class="py-6 space-y-6">
-          <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
-            <div class="space-y-6">
-              <div class="rounded-xl border border-border bg-card p-5">
-                <div class="flex items-center justify-between">
-                  <h2 class="text-lg font-semibold">Basic information</h2>
-                  <span class="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                    Draft
-                  </span>
-                </div>
-                <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    Product name
-                    <input
-                      type="text"
-                      class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                      placeholder="Enter product name"
-                    />
-                  </label>
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    Brand
-                    <select class="rounded-md border border-border bg-background px-3 py-2 text-sm">
-                      <option value="">Select brand</option>
+        <div *ngIf="activeTab === 'overview'" class="py-6">
+          <div class="grid grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-5 w-5 text-primary"
+                >
+                  <path
+                    d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+                  ></path>
+                  <path d="M12 22V12"></path>
+                  <path d="m3.3 7 8.7 5 8.7-5"></path>
+                  <path d="m7.5 4.27 9 5.15"></path>
+                </svg>
+                Basic Information
+              </h3>
+              <div class="bg-muted/30 rounded-lg p-4 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="text-sm text-muted-foreground">Brand</label>
+                    <select
+                      class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      [(ngModel)]="productData.brand"
+                    >
+                      <option value="">Select brand...</option>
                       <option *ngFor="let brand of brandOptions" [value]="brand">
                         {{ brand }}
                       </option>
                     </select>
-                  </label>
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    Vendor
-                    <select class="rounded-md border border-border bg-background px-3 py-2 text-sm">
-                      <option value="">Select vendor</option>
+                  </div>
+                  <div>
+                    <label class="text-sm text-muted-foreground">Vendor</label>
+                    <select
+                      class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      [(ngModel)]="productData.vendorName"
+                    >
+                      <option value="">Select vendor...</option>
                       <option *ngFor="let vendor of vendorOptions" [value]="vendor">
                         {{ vendor }}
                       </option>
                     </select>
-                  </label>
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    SKU
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm text-muted-foreground">SKU *</label>
+                  <div class="flex items-center gap-2 mt-1">
                     <input
                       type="text"
-                      class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                      placeholder="SKU"
+                      class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Enter SKU"
+                      [(ngModel)]="productData.vendorSku"
                     />
-                  </label>
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    Manufacturer Part #
-                    <input
-                      type="text"
-                      class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                      placeholder="MPN"
-                    />
-                  </label>
-                  <label class="grid gap-1 text-xs text-muted-foreground">
-                    Product type
-                    <div class="flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-                        [class.bg-muted]="productType === 'single'"
-                        (click)="setProductType('single')"
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      title="Copy SKU"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
                       >
-                        Single
-                      </button>
-                      <button
-                        type="button"
-                        class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-                        [class.bg-muted]="productType === 'kit'"
-                        (click)="setProductType('kit')"
-                      >
-                        Kit / Bundle
-                      </button>
-                    </div>
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm text-muted-foreground">
+                    MPN (Manufacturer Part Number)
                   </label>
+                  <input
+                    type="text"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="Enter MPN"
+                    [(ngModel)]="productData.manufacturerPart"
+                  />
                 </div>
               </div>
 
-              <div
-                *ngIf="productType === 'kit'"
-                class="rounded-xl border border-border bg-card p-5"
-              >
-                <div class="flex items-center justify-between">
-                  <h2 class="text-lg font-semibold">Kit components</h2>
+              <div class="mt-6">
+                <h4 class="text-md font-medium flex items-center gap-2 mb-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4 text-primary"
+                  >
+                    <path d="M12 3v18"></path>
+                    <path d="M3 7l9 5 9-5"></path>
+                    <path d="M3 17l9 5 9-5"></path>
+                  </svg>
+                  Product Type
+                </h4>
+                <div class="flex gap-3">
                   <button
                     type="button"
-                    class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                    (click)="addKitComponent()"
+                    class="flex-1 rounded-lg border border-border px-4 py-3 text-sm font-semibold flex flex-col items-center gap-1"
+                    [class.bg-primary]="productType === 'single'"
+                    [class.text-primary-foreground]="productType === 'single'"
+                    (click)="setProductType('single')"
                   >
-                    Add component
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-5 w-5"
+                    >
+                      <path
+                        d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+                      ></path>
+                      <path d="M12 22V12"></path>
+                      <path d="m3.3 7 8.7 5 8.7-5"></path>
+                      <path d="m7.5 4.27 9 5.15"></path>
+                    </svg>
+                    Single Product
+                  </button>
+                  <button
+                    type="button"
+                    class="flex-1 rounded-lg border border-border px-4 py-3 text-sm font-semibold flex flex-col items-center gap-1"
+                    [class.bg-primary]="productType === 'kit'"
+                    [class.text-primary-foreground]="productType === 'kit'"
+                    (click)="setProductType('kit')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-5 w-5"
+                    >
+                      <path
+                        d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+                      ></path>
+                      <path d="M12 22V12"></path>
+                      <path d="m3.3 7 8.7 5 8.7-5"></path>
+                      <path d="m7.5 4.27 9 5.15"></path>
+                    </svg>
+                    Kit Product
                   </button>
                 </div>
-                <div class="mt-4 grid gap-3 text-sm">
-                  <div
-                    *ngFor="let component of kitComponents; let index = index"
-                    class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-background px-3 py-2"
-                  >
-                    <div>
-                      <p class="font-medium">{{ component.name }}</p>
-                      <p class="text-xs text-muted-foreground">SKU: {{ component.vendorSku }}</p>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs">
-                      <span class="rounded-full bg-muted px-2 py-0.5">
-                        Qty {{ component.quantity }}
-                      </span>
-                      <button
-                        type="button"
-                        class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground"
-                        (click)="removeKitComponent(index)"
-                      >
-                        Remove
-                      </button>
-                    </div>
+                <p *ngIf="productType === 'kit'" class="text-sm text-muted-foreground mt-2">
+                  Kit products bundle multiple products together. Configure components in the
+                  Kit Mapping tab.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-5 w-5 text-primary"
+                >
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+                Quick Stats
+              </h3>
+              <div class="grid grid-cols-4 gap-3">
+                <div class="bg-muted/30 rounded-lg p-4">
+                  <div class="flex items-center gap-2 text-muted-foreground mb-1">
+                    <span class="text-sm">$</span>
+                    <span class="text-sm">Sale Price</span>
                   </div>
-                  <p *ngIf="kitComponents.length === 0" class="text-xs text-muted-foreground">
-                    Add at least one component to build a kit.
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="text-xl font-bold h-auto w-full py-1 bg-transparent border-0 border-b border-dashed border-muted-foreground/30 focus:outline-none focus:border-primary"
+                    placeholder="0.00"
+                    [(ngModel)]="productData.salePrice"
+                  />
+                </div>
+                <div class="bg-muted/30 rounded-lg p-4">
+                  <div class="flex items-center gap-2 text-muted-foreground mb-1">
+                    <span class="text-sm">↗</span>
+                    <span class="text-sm">Profit Margin</span>
+                  </div>
+                  <p
+                    class="text-2xl font-bold"
+                    [class.text-green-600]="grossProfitPercent > 0"
+                    [class.text-red-600]="grossProfitPercent < 0"
+                    [class.text-muted-foreground]="grossProfitPercent === 0"
+                  >
+                    {{ grossProfitPercent | number: '1.1-1' }}%
+                  </p>
+                </div>
+                <div class="bg-muted/30 rounded-lg p-4">
+                  <div class="flex items-center gap-2 text-muted-foreground mb-1">
+                    <span class="text-sm">▦</span>
+                    <span class="text-sm">In Stock</span>
+                  </div>
+                  <input
+                    type="number"
+                    class="text-2xl font-bold h-auto w-full py-1 bg-transparent border-0 border-b border-dashed border-muted-foreground/30 focus:outline-none focus:border-primary"
+                    placeholder="0"
+                    [(ngModel)]="productData.stockQty"
+                  />
+                </div>
+                <div class="bg-muted/30 rounded-lg p-4">
+                  <div class="flex items-center gap-2 text-muted-foreground mb-1">
+                    <span class="text-sm">◎</span>
+                    <span class="text-sm">Marketplaces</span>
+                  </div>
+                  <p class="text-2xl font-bold">
+                    {{ selectedMarketplaces.length }}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div class="space-y-6">
-              <div class="rounded-xl border border-border bg-card p-5">
-                <h3 class="text-sm font-semibold text-muted-foreground">Snapshot</h3>
-                <div class="mt-4 space-y-3 text-sm">
-                  <div class="flex items-center justify-between">
-                    <span>Estimated sale price</span>
-                    <span class="font-semibold">
-                      {{ productData.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
-                    </span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span>Projected margin</span>
-                    <span
-                      class="font-semibold"
-                      [class.text-emerald-600]="grossProfitPercent > 0"
-                      [class.text-red-500]="grossProfitPercent < 0"
-                      [class.text-muted-foreground]="grossProfitPercent === 0"
-                    >
-                      {{ grossProfitPercent | number: '1.1-1' }}%
-                    </span>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span>Target stock</span>
-                    <span class="font-semibold">
-                      {{ productData.purchaseQty || 0 }} units
-                    </span>
-                  </div>
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-5 w-5 text-primary"
+                >
+                  <path d="M10 17h4V5H2v12h8"></path>
+                  <path d="M14 7h4l4 4v6h-8"></path>
+                  <circle cx="7" cy="17" r="2"></circle>
+                  <circle cx="17" cy="17" r="2"></circle>
+                </svg>
+                Cost Breakdown
+              </h3>
+              <div class="bg-muted/30 rounded-lg p-4 space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-muted-foreground">Landed Cost</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="w-24 rounded-md border border-border bg-background px-2 py-1 text-right text-sm"
+                    placeholder="0.00"
+                    [(ngModel)]="productData.landedCost"
+                  />
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-muted-foreground">Shipping Cost</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="w-24 rounded-md border border-border bg-background px-2 py-1 text-right text-sm"
+                    placeholder="0.00"
+                    [(ngModel)]="productData.shippingCost"
+                  />
+                </div>
+                <div class="border-t border-border/60"></div>
+                <div class="flex justify-between items-center font-medium">
+                  <span>Gross Profit</span>
+                  <span [class.text-green-600]="grossProfit >= 0" [class.text-red-600]="grossProfit < 0">
+                    {{ grossProfit | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </span>
                 </div>
               </div>
+            </div>
 
-              <div class="rounded-xl border border-border bg-card p-5">
-                <h3 class="text-sm font-semibold text-muted-foreground">
-                  Required steps
-                </h3>
-                <div class="mt-4 space-y-2 text-xs text-muted-foreground">
-                  <div class="flex items-center justify-between rounded-md border border-border bg-background px-3 py-2">
-                    <span>Define identifiers</span>
-                    <span class="text-amber-600">Pending</span>
-                  </div>
-                  <div class="flex items-center justify-between rounded-md border border-border bg-background px-3 py-2">
-                    <span>Add content assets</span>
-                    <span class="text-amber-600">Pending</span>
-                  </div>
-                  <div class="flex items-center justify-between rounded-md border border-border bg-background px-3 py-2">
-                    <span>Select marketplaces</span>
-                    <span class="text-emerald-600">Ready</span>
-                  </div>
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-5 w-5 text-primary"
+                >
+                  <path d="M20 7h-9"></path>
+                  <path d="M14 17H5"></path>
+                  <circle cx="17" cy="17" r="3"></circle>
+                  <circle cx="7" cy="7" r="3"></circle>
+                </svg>
+                Inventory
+              </h3>
+              <div class="bg-muted/30 rounded-lg p-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label class="text-sm text-muted-foreground">Purchase Qty</label>
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="0"
+                    [(ngModel)]="productData.purchaseQty"
+                  />
                 </div>
-              </div>
-
-              <div class="rounded-xl border border-border bg-card p-5">
-                <h3 class="text-sm font-semibold text-muted-foreground">
-                  Recommended tags
-                </h3>
-                <div class="mt-4 flex flex-wrap gap-2 text-xs">
-                  <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-emerald-700">
-                    New launch
-                  </span>
-                  <span class="rounded-full bg-blue-500/10 px-3 py-1 text-blue-700">
-                    High margin
-                  </span>
-                  <span class="rounded-full bg-amber-500/10 px-3 py-1 text-amber-700">
-                    Seasonal
-                  </span>
+                <div>
+                  <label class="text-sm text-muted-foreground">Sold Qty</label>
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="0"
+                    [(ngModel)]="productData.soldQty"
+                  />
+                </div>
+                <div>
+                  <label class="text-sm text-muted-foreground">Return Qty</label>
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="0"
+                    [(ngModel)]="productData.returnQty"
+                  />
+                </div>
+                <div>
+                  <label class="text-sm text-muted-foreground">Stock Qty</label>
+                  <input
+                    type="number"
+                    class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="0"
+                    [(ngModel)]="productData.stockQty"
+                  />
                 </div>
               </div>
             </div>
@@ -988,6 +1230,11 @@ export class ProductCreatePageComponent implements OnInit {
   productType: ProductType = 'single';
 
   productData = {
+    name: '',
+    brand: '',
+    vendorName: '',
+    vendorSku: '',
+    manufacturerPart: '',
     salePrice: 0,
     landedCost: 0,
     shippingCost: 0,
