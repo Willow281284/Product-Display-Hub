@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import { marketplacePlatforms, mockProducts } from '@/data/mockProducts';
 
@@ -47,7 +48,7 @@ interface ExtraAttributeRow {
 @Component({
   selector: 'app-product-create-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
       <header class="border-b border-border bg-background px-6 py-4">
@@ -486,15 +487,26 @@ interface ExtraAttributeRow {
                 <div class="mt-4 space-y-3 text-sm">
                   <div class="flex items-center justify-between">
                     <span>Estimated sale price</span>
-                    <span class="font-semibold">$129.99</span>
+                    <span class="font-semibold">
+                      {{ productData.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
+                    </span>
                   </div>
                   <div class="flex items-center justify-between">
                     <span>Projected margin</span>
-                    <span class="font-semibold text-emerald-600">38%</span>
+                    <span
+                      class="font-semibold"
+                      [class.text-emerald-600]="grossProfitPercent > 0"
+                      [class.text-red-500]="grossProfitPercent < 0"
+                      [class.text-muted-foreground]="grossProfitPercent === 0"
+                    >
+                      {{ grossProfitPercent | number: '1.1-1' }}%
+                    </span>
                   </div>
                   <div class="flex items-center justify-between">
                     <span>Target stock</span>
-                    <span class="font-semibold">450 units</span>
+                    <span class="font-semibold">
+                      {{ productData.purchaseQty || 0 }} units
+                    </span>
                   </div>
                 </div>
               </div>
@@ -548,7 +560,7 @@ interface ExtraAttributeRow {
                 <input
                   type="number"
                   class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  value="129.99"
+                  [(ngModel)]="productData.salePrice"
                 />
               </label>
               <div class="grid gap-4 sm:grid-cols-2">
@@ -557,7 +569,7 @@ interface ExtraAttributeRow {
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="149.99"
+                    [(ngModel)]="productData.msrp"
                   />
                 </label>
                 <label class="grid gap-1 text-xs text-muted-foreground">
@@ -565,7 +577,7 @@ interface ExtraAttributeRow {
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="12"
+                    [(ngModel)]="productData.discountPercent"
                   />
                 </label>
               </div>
@@ -575,7 +587,7 @@ interface ExtraAttributeRow {
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="64.5"
+                    [(ngModel)]="productData.landedCost"
                   />
                 </label>
                 <label class="grid gap-1 text-xs text-muted-foreground">
@@ -583,17 +595,25 @@ interface ExtraAttributeRow {
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="4.25"
+                    [(ngModel)]="productData.shippingCost"
                   />
                 </label>
               </div>
               <div class="rounded-lg border border-border bg-background p-3 text-sm">
                 <div class="flex items-center justify-between">
                   <span class="text-xs text-muted-foreground">Projected margin</span>
-                  <span class="font-semibold text-emerald-600">38%</span>
+                  <span
+                    class="font-semibold"
+                    [class.text-emerald-600]="grossProfitPercent > 0"
+                    [class.text-red-500]="grossProfitPercent < 0"
+                    [class.text-muted-foreground]="grossProfitPercent === 0"
+                  >
+                    {{ grossProfitPercent | number: '1.1-1' }}%
+                  </span>
                 </div>
                 <p class="mt-2 text-xs text-muted-foreground">
-                  Estimated gross profit: $60.90
+                  Estimated gross profit:
+                  {{ grossProfit | currency: 'USD' : 'symbol' : '1.2-2' }}
                 </p>
               </div>
             </div>
@@ -606,7 +626,7 @@ interface ExtraAttributeRow {
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="320"
+                    [(ngModel)]="productData.stockQty"
                   />
                 </label>
                 <label class="grid gap-1 text-xs text-muted-foreground">
@@ -614,7 +634,7 @@ interface ExtraAttributeRow {
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="520"
+                    [(ngModel)]="productData.purchaseQty"
                   />
                 </label>
                 <label class="grid gap-1 text-xs text-muted-foreground">
@@ -622,7 +642,7 @@ interface ExtraAttributeRow {
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="120"
+                    value="0"
                   />
                 </label>
                 <label class="grid gap-1 text-xs text-muted-foreground">
@@ -630,7 +650,7 @@ interface ExtraAttributeRow {
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="75"
+                    value="0"
                   />
                 </label>
               </div>
@@ -967,6 +987,18 @@ export class ProductCreatePageComponent implements OnInit {
   activeTab: CreateTab = 'overview';
   productType: ProductType = 'single';
 
+  productData = {
+    salePrice: 0,
+    landedCost: 0,
+    shippingCost: 0,
+    stockQty: 0,
+    purchaseQty: 0,
+    soldQty: 0,
+    returnQty: 0,
+    msrp: 0,
+    discountPercent: 0,
+  };
+
   readonly brandOptions = [
     'HyperX',
     'Logitech',
@@ -1046,6 +1078,19 @@ export class ProductCreatePageComponent implements OnInit {
     vendorSku: product.vendorSku,
     quantity: 1,
   }));
+
+  get grossProfit(): number {
+    return (
+      (this.productData.salePrice || 0) -
+      (this.productData.landedCost || 0) -
+      (this.productData.shippingCost || 0)
+    );
+  }
+
+  get grossProfitPercent(): number {
+    if (!this.productData.salePrice) return 0;
+    return (this.grossProfit / this.productData.salePrice) * 100;
+  }
 
   ngOnInit(): void {
     const mode = this.route.snapshot.queryParamMap.get('type');
