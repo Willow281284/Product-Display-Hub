@@ -1170,8 +1170,8 @@ interface ExtraAttributeRow {
             </div>
             <div class="text-xs text-muted-foreground">SKU (Stock Keeping Unit)</div>
             <div class="space-y-3">
-              <div
-                *ngFor="let sku of identifierLists.internalSkus; let i = index"
+                <div
+                  *ngFor="let sku of identifierLists.internalSkus; let i = index; trackBy: trackByIndex"
                 class="flex items-center gap-3"
               >
                 <div class="relative flex-1">
@@ -1185,6 +1185,7 @@ interface ExtraAttributeRow {
                     class="w-full rounded-md border border-border bg-background px-3 py-2 pl-12 text-sm"
                     placeholder="Enter SKU"
                     [(ngModel)]="identifierLists.internalSkus[i]"
+                    [ngModelOptions]="{ standalone: true }"
                   />
                 </div>
                 <button
@@ -1254,7 +1255,7 @@ interface ExtraAttributeRow {
                 </div>
                 <div class="space-y-2">
                   <div
-                    *ngFor="let upc of identifierLists.upcCodes; let i = index"
+                    *ngFor="let upc of identifierLists.upcCodes; let i = index; trackBy: trackByIndex"
                     class="flex items-center gap-2"
                   >
                     <input
@@ -1262,6 +1263,7 @@ interface ExtraAttributeRow {
                       class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
                       placeholder="Enter UPC"
                       [(ngModel)]="identifierLists.upcCodes[i]"
+                      [ngModelOptions]="{ standalone: true }"
                     />
                     <button
                       type="button"
@@ -1300,7 +1302,7 @@ interface ExtraAttributeRow {
                 </div>
                 <div class="space-y-2">
                   <div
-                    *ngFor="let gtin of identifierLists.gtinCodes; let i = index"
+                    *ngFor="let gtin of identifierLists.gtinCodes; let i = index; trackBy: trackByIndex"
                     class="flex items-center gap-2"
                   >
                     <input
@@ -1308,6 +1310,7 @@ interface ExtraAttributeRow {
                       class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
                       placeholder="Enter GTIN"
                       [(ngModel)]="identifierLists.gtinCodes[i]"
+                      [ngModelOptions]="{ standalone: true }"
                     />
                     <button
                       type="button"
@@ -1346,7 +1349,7 @@ interface ExtraAttributeRow {
                 </div>
                 <div class="space-y-2">
                   <div
-                    *ngFor="let ean of identifierLists.eanCodes; let i = index"
+                    *ngFor="let ean of identifierLists.eanCodes; let i = index; trackBy: trackByIndex"
                     class="flex items-center gap-2"
                   >
                     <input
@@ -1354,6 +1357,7 @@ interface ExtraAttributeRow {
                       class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
                       placeholder="Enter EAN"
                       [(ngModel)]="identifierLists.eanCodes[i]"
+                      [ngModelOptions]="{ standalone: true }"
                     />
                     <button
                       type="button"
@@ -1392,7 +1396,7 @@ interface ExtraAttributeRow {
                 </div>
                 <div class="space-y-2">
                   <div
-                    *ngFor="let isbn of identifierLists.isbnCodes; let i = index"
+                    *ngFor="let isbn of identifierLists.isbnCodes; let i = index; trackBy: trackByIndex"
                     class="flex items-center gap-2"
                   >
                     <input
@@ -1400,6 +1404,7 @@ interface ExtraAttributeRow {
                       class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
                       placeholder="Enter ISBN"
                       [(ngModel)]="identifierLists.isbnCodes[i]"
+                      [ngModelOptions]="{ standalone: true }"
                     />
                     <button
                       type="button"
@@ -1447,7 +1452,7 @@ interface ExtraAttributeRow {
                 </div>
                 <div class="space-y-2">
                   <div
-                    *ngFor="let asin of identifierLists.asinCodes; let i = index"
+                    *ngFor="let asin of identifierLists.asinCodes; let i = index; trackBy: trackByIndex"
                     class="flex items-center gap-2"
                   >
                     <input
@@ -1455,6 +1460,7 @@ interface ExtraAttributeRow {
                       class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
                       placeholder="Enter ASIN"
                       [(ngModel)]="identifierLists.asinCodes[i]"
+                      [ngModelOptions]="{ standalone: true }"
                     />
                     <button
                       type="button"
@@ -1493,7 +1499,7 @@ interface ExtraAttributeRow {
                 </div>
                 <div class="space-y-2">
                   <div
-                    *ngFor="let fnsku of identifierLists.fnskuCodes; let i = index"
+                    *ngFor="let fnsku of identifierLists.fnskuCodes; let i = index; trackBy: trackByIndex"
                     class="flex items-center gap-2"
                   >
                     <input
@@ -1501,6 +1507,7 @@ interface ExtraAttributeRow {
                       class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
                       placeholder="Enter FNSKU"
                       [(ngModel)]="identifierLists.fnskuCodes[i]"
+                      [ngModelOptions]="{ standalone: true }"
                     />
                     <button
                       type="button"
@@ -1534,6 +1541,7 @@ interface ExtraAttributeRow {
                 class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
                 placeholder="Enter MPN"
                 [(ngModel)]="productData.manufacturerPart"
+                [ngModelOptions]="{ standalone: true }"
               />
             </div>
           </div>
@@ -2097,6 +2105,10 @@ export class ProductCreatePageComponent implements OnInit {
 
   selectTab(tab: CreateTab): void {
     this.activeTab = tab;
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 
   addIdentifier(
