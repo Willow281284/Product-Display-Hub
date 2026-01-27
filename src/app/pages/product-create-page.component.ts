@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -479,15 +479,108 @@ interface ExtraAttributeRow {
                   </div>
                   <div>
                     <label class="text-sm text-muted-foreground">Vendor</label>
-                    <select
-                      class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-                      [(ngModel)]="productData.vendorName"
-                    >
-                      <option value="">Select vendor...</option>
-                      <option *ngFor="let vendor of vendorOptions" [value]="vendor">
-                        {{ vendor }}
-                      </option>
-                    </select>
+                    <div class="relative mt-1" (click)="$event.stopPropagation()">
+                      <button
+                        type="button"
+                        class="flex w-full items-center justify-between rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        (click)="toggleVendorDropdown($event)"
+                      >
+                        <span class="truncate text-left">
+                          {{ productData.vendorName || 'Select vendor...' }}
+                        </span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="h-4 w-4 text-muted-foreground"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </button>
+                      <div
+                        *ngIf="vendorDropdownOpen"
+                        class="absolute z-50 mt-2 w-full rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
+                      >
+                        <div class="mb-2 flex items-center gap-2 rounded-md border border-border bg-background px-2 py-1.5 text-xs">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-3.5 w-3.5 text-muted-foreground"
+                          >
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                          <input
+                            type="text"
+                            class="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                            placeholder="Search vendor..."
+                            [(ngModel)]="vendorSearch"
+                            (click)="$event.stopPropagation()"
+                          />
+                        </div>
+                        <div class="max-h-48 overflow-auto">
+                          <button
+                            *ngFor="let vendor of filteredVendors"
+                            type="button"
+                            class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
+                            [class.bg-primary]="vendor === productData.vendorName"
+                            [class.text-primary-foreground]="vendor === productData.vendorName"
+                            (click)="selectVendor(vendor)"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="h-4 w-4"
+                            >
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span class="truncate">{{ vendor }}</span>
+                          </button>
+                          <div
+                            *ngIf="filteredVendors.length === 0"
+                            class="px-2 py-2 text-xs text-muted-foreground"
+                          >
+                            No vendors found.
+                          </div>
+                        </div>
+                        <div class="mt-2 border-t border-border pt-2">
+                          <button
+                            type="button"
+                            class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-primary hover:bg-muted"
+                            (click)="openAddVendorModal($event)"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="h-4 w-4"
+                            >
+                              <path d="M5 12h14"></path>
+                              <path d="M12 5v14"></path>
+                            </svg>
+                            Add New Vendor
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div>
@@ -1219,6 +1312,78 @@ interface ExtraAttributeRow {
           </div>
         </div>
       </div>
+
+      <div
+        *ngIf="showAddVendorModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+        (click)="closeAddVendorModal()"
+      >
+        <div
+          class="w-full max-w-lg rounded-xl bg-card p-5 shadow-xl animate-in zoom-in-95"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="flex items-center justify-between border-b border-border pb-4">
+            <h3 class="text-lg font-semibold">Add New Vendor</h3>
+            <button
+              type="button"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+              (click)="closeAddVendorModal()"
+              aria-label="Close"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="mt-5 grid gap-5">
+            <label class="grid gap-2 text-sm font-medium text-foreground">
+              Vendor
+              <input
+                type="text"
+                class="h-11 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground"
+                placeholder="Enter vendor..."
+                [(ngModel)]="newVendorName"
+              />
+            </label>
+            <label class="grid gap-2 text-sm font-medium text-foreground">
+              Vendor Details
+              <textarea
+                rows="4"
+                class="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
+                placeholder="Enter vendor details..."
+                [(ngModel)]="newVendorDetails"
+              ></textarea>
+            </label>
+          </div>
+          <div class="mt-6 flex items-center justify-end gap-3">
+            <button
+              type="button"
+              class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+              (click)="closeAddVendorModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+              [disabled]="!newVendorName.trim()"
+              (click)="addVendor()"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1259,7 +1424,7 @@ export class ProductCreatePageComponent implements OnInit {
     'Dell',
   ];
 
-  readonly vendorOptions = [
+  vendorOptions = [
     'GameStop Distribution',
     'Tech Direct',
     'Global Supplies',
@@ -1319,6 +1484,12 @@ export class ProductCreatePageComponent implements OnInit {
 
   selectedMarketplaces = ['amazon', 'walmart', 'ebay', 'target'];
 
+  vendorDropdownOpen = false;
+  vendorSearch = '';
+  showAddVendorModal = false;
+  newVendorName = '';
+  newVendorDetails = '';
+
   kitComponents: KitComponentRow[] = mockProducts.slice(0, 2).map((product) => ({
     productId: product.id,
     name: product.name,
@@ -1348,6 +1519,57 @@ export class ProductCreatePageComponent implements OnInit {
 
   selectTab(tab: CreateTab): void {
     this.activeTab = tab;
+  }
+
+  get filteredVendors(): string[] {
+    const query = this.vendorSearch.trim().toLowerCase();
+    if (!query) return this.vendorOptions;
+    return this.vendorOptions.filter((vendor) =>
+      vendor.toLowerCase().includes(query)
+    );
+  }
+
+  toggleVendorDropdown(event: MouseEvent): void {
+    event.stopPropagation();
+    this.vendorDropdownOpen = !this.vendorDropdownOpen;
+    if (this.vendorDropdownOpen) {
+      this.vendorSearch = '';
+    }
+  }
+
+  selectVendor(vendor: string): void {
+    this.productData.vendorName = vendor;
+    this.vendorDropdownOpen = false;
+    this.vendorSearch = '';
+  }
+
+  openAddVendorModal(event?: MouseEvent): void {
+    event?.stopPropagation();
+    this.vendorDropdownOpen = false;
+    this.showAddVendorModal = true;
+    this.newVendorName = this.vendorSearch.trim();
+    this.newVendorDetails = '';
+  }
+
+  closeAddVendorModal(): void {
+    this.showAddVendorModal = false;
+    this.newVendorName = '';
+    this.newVendorDetails = '';
+  }
+
+  addVendor(): void {
+    const name = this.newVendorName.trim();
+    if (!name) return;
+    if (!this.vendorOptions.includes(name)) {
+      this.vendorOptions = [...this.vendorOptions, name];
+    }
+    this.productData.vendorName = name;
+    this.closeAddVendorModal();
+  }
+
+  @HostListener('document:click')
+  closeVendorDropdown(): void {
+    this.vendorDropdownOpen = false;
   }
 
   goBack(): void {
