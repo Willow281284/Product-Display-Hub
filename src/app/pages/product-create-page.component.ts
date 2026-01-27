@@ -980,18 +980,21 @@ interface ExtraAttributeRow {
         </div>
 
         <div *ngIf="activeTab === 'pricing'" class="py-6 space-y-6">
-          <div class="grid gap-6 lg:grid-cols-2">
+          <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
             <div class="rounded-xl border border-border bg-card p-5 space-y-4">
-              <h2 class="text-lg font-semibold">Pricing</h2>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Sale price
-                <input
-                  type="number"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  [(ngModel)]="productData.salePrice"
-                />
-              </label>
+              <h2 class="text-lg font-semibold flex items-center gap-2">
+                <span class="text-primary">$</span>
+                Pricing
+              </h2>
               <div class="grid gap-4 sm:grid-cols-2">
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Sale Price
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    [(ngModel)]="productData.salePrice"
+                  />
+                </label>
                 <label class="grid gap-1 text-xs text-muted-foreground">
                   MSRP
                   <input
@@ -1008,10 +1011,8 @@ interface ExtraAttributeRow {
                     [(ngModel)]="productData.discountPercent"
                   />
                 </label>
-              </div>
-              <div class="grid gap-4 sm:grid-cols-2">
                 <label class="grid gap-1 text-xs text-muted-foreground">
-                  Landed cost
+                  Landed Cost
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
@@ -1019,76 +1020,122 @@ interface ExtraAttributeRow {
                   />
                 </label>
                 <label class="grid gap-1 text-xs text-muted-foreground">
-                  Shipping cost
+                  BuyBox Min Price
                   <input
                     type="number"
                     class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    [(ngModel)]="productData.shippingCost"
+                    [(ngModel)]="productData.buyBoxMinPrice"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  BuyBox Max Price
+                  <input
+                    type="number"
+                    class="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    [(ngModel)]="productData.buyBoxMaxPrice"
                   />
                 </label>
               </div>
-              <div class="rounded-lg border border-border bg-background p-3 text-sm">
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Shipping Cost
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [(ngModel)]="productData.shippingCost"
+                />
+              </label>
+            </div>
+
+            <div class="rounded-xl border border-border bg-card p-5 space-y-4">
+              <h2 class="text-lg font-semibold flex items-center gap-2">
+                <span class="text-primary">↗</span>
+                Profit Summary
+              </h2>
+              <div class="space-y-3 text-sm">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs text-muted-foreground">Projected margin</span>
+                  <span class="text-muted-foreground">Sale Price</span>
+                  <span class="font-semibold">
+                    {{ productData.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between text-muted-foreground">
+                  <span>- Landed Cost</span>
                   <span
-                    class="font-semibold"
-                    [class.text-emerald-600]="grossProfitPercent > 0"
+                    [class.text-red-500]="productData.landedCost > 0"
+                  >
+                    {{ productData.landedCost | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between text-muted-foreground">
+                  <span>- Shipping Cost</span>
+                  <span
+                    [class.text-red-500]="productData.shippingCost > 0"
+                  >
+                    {{ productData.shippingCost | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </span>
+                </div>
+                <div class="border-t border-border/60 pt-3 flex items-center justify-between font-semibold">
+                  <span>Gross Profit</span>
+                  <span
+                    [class.text-green-600]="grossProfit > 0"
+                    [class.text-red-500]="grossProfit < 0"
+                    [class.text-muted-foreground]="grossProfit === 0"
+                  >
+                    {{ grossProfit | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between font-semibold">
+                  <span>Profit Margin</span>
+                  <span
+                    [class.text-green-600]="grossProfitPercent > 0"
                     [class.text-red-500]="grossProfitPercent < 0"
                     [class.text-muted-foreground]="grossProfitPercent === 0"
                   >
                     {{ grossProfitPercent | number: '1.1-1' }}%
                   </span>
                 </div>
-                <p class="mt-2 text-xs text-muted-foreground">
-                  Estimated gross profit:
-                  {{ grossProfit | currency: 'USD' : 'symbol' : '1.2-2' }}
-                </p>
               </div>
             </div>
+          </div>
 
-            <div class="rounded-xl border border-border bg-card p-5 space-y-4">
-              <h2 class="text-lg font-semibold">Inventory</h2>
-              <div class="grid gap-4 sm:grid-cols-2">
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Starting stock
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    [(ngModel)]="productData.stockQty"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Purchase quantity
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    [(ngModel)]="productData.purchaseQty"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Safety stock
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="0"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  Restock trigger
-                  <input
-                    type="number"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                    value="0"
-                  />
-                </label>
-              </div>
-              <div class="rounded-lg border border-border bg-background p-3 text-sm">
-                <p class="text-xs text-muted-foreground">Forecast</p>
-                <p class="mt-1 font-semibold">45 days of stock projected</p>
-                <p class="text-xs text-muted-foreground">
-                  Recommended reorder: 240 units
-                </p>
-              </div>
+          <div class="rounded-xl border border-border bg-card p-5 space-y-4">
+            <h2 class="text-lg font-semibold flex items-center gap-2">
+              <span class="text-primary">▦</span>
+              Inventory
+            </h2>
+            <div class="grid gap-4 md:grid-cols-4 sm:grid-cols-2">
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Purchase Qty
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [(ngModel)]="productData.purchaseQty"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Stock Qty
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [(ngModel)]="productData.stockQty"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Sold Qty
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [(ngModel)]="productData.soldQty"
+                />
+              </label>
+              <label class="grid gap-1 text-xs text-muted-foreground">
+                Return Qty
+                <input
+                  type="number"
+                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [(ngModel)]="productData.returnQty"
+                />
+              </label>
             </div>
           </div>
         </div>
@@ -1566,6 +1613,8 @@ export class ProductCreatePageComponent implements OnInit {
     vendorSku: '',
     manufacturerPart: '',
     salePrice: 0,
+    buyBoxMinPrice: 0,
+    buyBoxMaxPrice: 0,
     landedCost: 0,
     shippingCost: 0,
     stockQty: 0,
