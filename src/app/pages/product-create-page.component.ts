@@ -1934,7 +1934,7 @@ interface ExtraAttributeRow {
       </div>
     </section>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ProductCreatePageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
