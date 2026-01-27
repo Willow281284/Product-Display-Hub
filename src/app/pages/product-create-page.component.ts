@@ -1147,75 +1147,385 @@ interface ExtraAttributeRow {
         </div>
 
         <div *ngIf="activeTab === 'identifiers'" class="py-6 space-y-6">
+          <div class="flex items-center gap-2 text-lg font-semibold">
+            <span class="text-primary">▥</span>
+            Product Identifiers
+          </div>
+
           <div class="rounded-xl border border-border bg-card p-5 space-y-4">
             <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Product identifiers</h2>
-              <span class="text-xs text-muted-foreground">
-                Add the marketplace IDs to create listings
-              </span>
+              <div class="flex items-center gap-2 font-semibold">
+                <span class="text-muted-foreground">#</span>
+                Internal Identifiers
+              </div>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                (click)="addIdentifier('internalSkus')"
+              >
+                + Add
+              </button>
             </div>
-            <div class="grid gap-4 md:grid-cols-2">
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                SKU
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  placeholder="SKU"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                UPC
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  placeholder="UPC"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                ASIN
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  placeholder="ASIN"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                FNSKU
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  placeholder="FNSKU"
-                />
-              </label>
+            <div class="text-xs text-muted-foreground">SKU (Stock Keeping Unit)</div>
+            <div class="space-y-3">
+              <div
+                *ngFor="let sku of identifierLists.internalSkus; let i = index"
+                class="flex items-center gap-3"
+              >
+                <div class="relative flex-1">
+                  <span
+                    class="absolute left-3 top-1/2 -translate-y-1/2 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground"
+                  >
+                    #{{ i + 1 }}
+                  </span>
+                  <input
+                    type="text"
+                    class="w-full rounded-md border border-border bg-background px-3 py-2 pl-12 text-sm"
+                    placeholder="Enter SKU"
+                    [(ngModel)]="identifierLists.internalSkus[i]"
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                  (click)="copyToClipboard(identifierLists.internalSkus[i])"
+                  title="Copy"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                  (click)="removeIdentifier('internalSkus', i)"
+                  title="Remove"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-          <div class="rounded-xl border border-border bg-card p-5 space-y-4">
-            <h3 class="text-sm font-semibold text-muted-foreground">Global IDs</h3>
-            <div class="grid gap-4 md:grid-cols-3">
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                GTIN
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  placeholder="GTIN"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                EAN
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  placeholder="EAN"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                ISBN
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  placeholder="ISBN"
-                />
-              </label>
+
+          <div class="rounded-xl border border-border bg-card p-5">
+            <div class="flex items-center gap-2 font-semibold mb-4">
+              <span class="text-muted-foreground">◎</span>
+              Universal Product Codes
+            </div>
+            <div class="grid gap-6 md:grid-cols-2">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-muted-foreground">UPC (Universal Product Code)</div>
+                  <button
+                    type="button"
+                    class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('upcCodes')"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <div class="space-y-2">
+                  <div
+                    *ngFor="let upc of identifierLists.upcCodes; let i = index"
+                    class="flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Enter UPC"
+                      [(ngModel)]="identifierLists.upcCodes[i]"
+                    />
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      (click)="copyToClipboard(identifierLists.upcCodes[i])"
+                      title="Copy"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
+                      >
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-muted-foreground">GTIN (Global Trade Item Number)</div>
+                  <button
+                    type="button"
+                    class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('gtinCodes')"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <div class="space-y-2">
+                  <div
+                    *ngFor="let gtin of identifierLists.gtinCodes; let i = index"
+                    class="flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Enter GTIN"
+                      [(ngModel)]="identifierLists.gtinCodes[i]"
+                    />
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      (click)="copyToClipboard(identifierLists.gtinCodes[i])"
+                      title="Copy"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
+                      >
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-muted-foreground">EAN (European Article Number)</div>
+                  <button
+                    type="button"
+                    class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('eanCodes')"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <div class="space-y-2">
+                  <div
+                    *ngFor="let ean of identifierLists.eanCodes; let i = index"
+                    class="flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Enter EAN"
+                      [(ngModel)]="identifierLists.eanCodes[i]"
+                    />
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      (click)="copyToClipboard(identifierLists.eanCodes[i])"
+                      title="Copy"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
+                      >
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-muted-foreground">ISBN (Book Number)</div>
+                  <button
+                    type="button"
+                    class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('isbnCodes')"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <div class="space-y-2">
+                  <div
+                    *ngFor="let isbn of identifierLists.isbnCodes; let i = index"
+                    class="flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Enter ISBN"
+                      [(ngModel)]="identifierLists.isbnCodes[i]"
+                    />
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      (click)="copyToClipboard(identifierLists.isbnCodes[i])"
+                      title="Copy"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
+                      >
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-border bg-card p-5">
+            <div class="flex items-center gap-2 font-semibold mb-4">
+              <span class="text-muted-foreground">🛒</span>
+              Marketplace Identifiers
+            </div>
+            <div class="grid gap-6 md:grid-cols-2">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-muted-foreground">ASIN (Amazon)</div>
+                  <button
+                    type="button"
+                    class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('asinCodes')"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <div class="space-y-2">
+                  <div
+                    *ngFor="let asin of identifierLists.asinCodes; let i = index"
+                    class="flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Enter ASIN"
+                      [(ngModel)]="identifierLists.asinCodes[i]"
+                    />
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      (click)="copyToClipboard(identifierLists.asinCodes[i])"
+                      title="Copy"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
+                      >
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="text-xs text-muted-foreground">FNSKU (Amazon FBA)</div>
+                  <button
+                    type="button"
+                    class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('fnskuCodes')"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <div class="space-y-2">
+                  <div
+                    *ngFor="let fnsku of identifierLists.fnskuCodes; let i = index"
+                    class="flex items-center gap-2"
+                  >
+                    <input
+                      type="text"
+                      class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Enter FNSKU"
+                      [(ngModel)]="identifierLists.fnskuCodes[i]"
+                    />
+                    <button
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                      (click)="copyToClipboard(identifierLists.fnskuCodes[i])"
+                      title="Copy"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4"
+                      >
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="text-xs text-muted-foreground">MPN (Manufacturer Part Number)</div>
+              <input
+                type="text"
+                class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                placeholder="Enter MPN"
+                [(ngModel)]="productData.manufacturerPart"
+              />
             </div>
           </div>
         </div>
@@ -1710,6 +2020,25 @@ export class ProductCreatePageComponent implements OnInit {
   newVendorName = '';
   newVendorDetails = '';
 
+  identifierLists: Record<
+    | 'internalSkus'
+    | 'upcCodes'
+    | 'gtinCodes'
+    | 'eanCodes'
+    | 'isbnCodes'
+    | 'asinCodes'
+    | 'fnskuCodes',
+    string[]
+  > = {
+    internalSkus: [''],
+    upcCodes: [''],
+    gtinCodes: [''],
+    eanCodes: [''],
+    isbnCodes: [''],
+    asinCodes: [''],
+    fnskuCodes: [''],
+  };
+
   brandDropdownOpen = false;
   brandSearch = '';
   showAddBrandModal = false;
@@ -1745,6 +2074,47 @@ export class ProductCreatePageComponent implements OnInit {
 
   selectTab(tab: CreateTab): void {
     this.activeTab = tab;
+  }
+
+  addIdentifier(
+    listKey:
+      | 'internalSkus'
+      | 'upcCodes'
+      | 'gtinCodes'
+      | 'eanCodes'
+      | 'isbnCodes'
+      | 'asinCodes'
+      | 'fnskuCodes'
+  ): void {
+    this.identifierLists[listKey] = [...this.identifierLists[listKey], ''];
+  }
+
+  removeIdentifier(
+    listKey:
+      | 'internalSkus'
+      | 'upcCodes'
+      | 'gtinCodes'
+      | 'eanCodes'
+      | 'isbnCodes'
+      | 'asinCodes'
+      | 'fnskuCodes',
+    index: number
+  ): void {
+    const next = [...this.identifierLists[listKey]];
+    if (next.length <= 1) {
+      next[0] = '';
+    } else {
+      next.splice(index, 1);
+    }
+    this.identifierLists[listKey] = next;
+  }
+
+  copyToClipboard(value: string): void {
+    const text = value?.trim();
+    if (!text) return;
+    if (navigator?.clipboard?.writeText) {
+      void navigator.clipboard.writeText(text);
+    }
   }
 
   get filteredVendors(): string[] {
