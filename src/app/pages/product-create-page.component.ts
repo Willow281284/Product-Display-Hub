@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { marketplacePlatforms, mockProducts } from '@/data/mockProducts';
 
@@ -780,7 +781,9 @@ interface ExtraAttributeRow {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductCreatePageComponent {
+export class ProductCreatePageComponent implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+
   activeTab: CreateTab = 'overview';
   productType: ProductType = 'single';
 
@@ -863,6 +866,13 @@ export class ProductCreatePageComponent {
     vendorSku: product.vendorSku,
     quantity: 1,
   }));
+
+  ngOnInit(): void {
+    const mode = this.route.snapshot.queryParamMap.get('type');
+    if (mode === 'kit') {
+      this.productType = 'kit';
+    }
+  }
 
   selectTab(tab: CreateTab): void {
     this.activeTab = tab;

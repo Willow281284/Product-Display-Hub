@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 import { brands, marketplacePlatforms, mockProducts } from '@/data/mockProducts';
 import { FilterState, Product, SoldPeriod, ProductType, KitComponent, MarketplaceStatus } from '@/types/product';
@@ -3049,6 +3050,7 @@ export class ProductGridComponent implements OnInit {
   private readonly offerService = inject(OfferService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
   private readonly filtersStorageKey = 'product-filters';
   private readonly columnsStorageKey = 'product-columns';
   private readonly columnWidthsStorageKey = 'product-column-widths';
@@ -3515,13 +3517,10 @@ export class ProductGridComponent implements OnInit {
   }
 
   openManualDialog(type: ProductType): void {
-    this.manualDialogOpen = true;
-    this.manualProductType = type;
-    this.manualTab = 'basic';
-    this.manualForm = {};
-    this.kitComponents = [];
-    this.kitProductId = '';
-    this.kitQuantity = 1;
+    this.openDropdownId = null;
+    this.manualDialogOpen = false;
+    const queryParams = type === 'kit' ? { type: 'kit' } : undefined;
+    void this.router.navigate(['/product/new'], { queryParams });
   }
 
   closeManualDialog(): void {
