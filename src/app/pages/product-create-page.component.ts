@@ -1667,25 +1667,51 @@ interface ExtraAttributeRow {
         </div>
 
         <div *ngIf="activeTab === 'marketplaces'" class="py-6 space-y-6">
-          <div class="rounded-xl border border-border bg-card p-5">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Marketplaces</h2>
-              <span class="text-xs text-muted-foreground">
-                {{ selectedMarketplaces.length }} selected
-              </span>
-            </div>
-            <div class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              <button
-                *ngFor="let platform of marketplaces"
-                type="button"
-                class="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 text-sm"
-                [class.border-primary]="isMarketplaceSelected(platform)"
-                (click)="toggleMarketplace(platform)"
-              >
-                <span class="font-medium capitalize">{{ marketplaceLabel(platform) }}</span>
-                <input type="checkbox" [checked]="isMarketplaceSelected(platform)" />
-              </button>
-            </div>
+          <div class="flex items-center gap-2 text-lg font-semibold">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-5 w-5 text-primary"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            Target Marketplaces
+          </div>
+          <p class="text-sm text-muted-foreground">
+            Select which marketplaces you want to list this product on.
+          </p>
+
+          <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <button
+              *ngFor="let platform of marketplaces"
+              type="button"
+              class="flex items-center justify-between rounded-lg border border-border bg-card/80 px-4 py-3 text-sm transition hover:border-primary/60"
+              [class.border-primary]="isMarketplaceSelected(platform)"
+              [class.bg-primary/10]="isMarketplaceSelected(platform)"
+              (click)="toggleMarketplace(platform)"
+            >
+              <div class="flex items-center gap-3">
+                <span
+                  class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border"
+                  [class.border-primary]="isMarketplaceSelected(platform)"
+                  [class.bg-primary]="isMarketplaceSelected(platform)"
+                ></span>
+                <span
+                  class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
+                  [ngClass]="marketplaceBadge(platform).className"
+                >
+                  {{ marketplaceBadge(platform).badge }}
+                </span>
+                <span class="font-semibold">{{ marketplaceBadge(platform).label }}</span>
+              </div>
+            </button>
           </div>
         </div>
 
@@ -2421,6 +2447,32 @@ export class ProductCreatePageComponent implements OnInit {
 
   marketplaceLabel(platform: string): string {
     return platform.charAt(0).toUpperCase() + platform.slice(1);
+  }
+
+  marketplaceBadge(platform: string): { label: string; badge: string; className: string } {
+    const map: Record<string, { label: string; badge: string; className: string }> = {
+      amazon: { label: 'Amazon', badge: 'amazon', className: 'bg-orange-500/20 text-orange-500' },
+      walmart: { label: 'Walmart', badge: 'WMT', className: 'bg-blue-500/20 text-blue-400' },
+      ebay: { label: 'Ebay', badge: 'ebay', className: 'bg-yellow-500/20 text-yellow-400' },
+      newegg: { label: 'Newegg', badge: 'NE', className: 'bg-orange-600/20 text-orange-400' },
+      bestbuy: { label: 'Bestbuy', badge: 'BBY', className: 'bg-blue-600/20 text-blue-400' },
+      target: { label: 'Target', badge: 'TGT', className: 'bg-red-500/20 text-red-400' },
+      etsy: { label: 'Etsy', badge: 'Etsy', className: 'bg-orange-500/20 text-orange-400' },
+      shopify: { label: 'Shopify', badge: 'Shop', className: 'bg-green-500/20 text-green-400' },
+      temu: { label: 'Temu', badge: 'Temu', className: 'bg-orange-500/20 text-orange-400' },
+      macys: { label: 'Macys', badge: 'Mcy', className: 'bg-red-500/20 text-red-400' },
+      costco: { label: 'Costco', badge: 'COST', className: 'bg-red-500/20 text-red-400' },
+      homedepot: { label: 'Homedepot', badge: 'HD', className: 'bg-orange-600/20 text-orange-400' },
+      lowes: { label: 'Lowes', badge: 'LOW', className: 'bg-blue-600/20 text-blue-400' },
+      wayfair: { label: 'Wayfair', badge: 'WF', className: 'bg-purple-500/20 text-purple-400' },
+      overstock: { label: 'Overstock', badge: 'OS', className: 'bg-red-500/20 text-red-400' },
+    };
+
+    return map[platform] ?? {
+      label: this.marketplaceLabel(platform),
+      badge: this.marketplaceLabel(platform).slice(0, 3).toUpperCase(),
+      className: 'bg-muted text-muted-foreground',
+    };
   }
 
   toggleTag(tag: string): void {
