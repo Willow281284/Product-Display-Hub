@@ -1548,28 +1548,121 @@ interface ExtraAttributeRow {
         </div>
 
         <div *ngIf="activeTab === 'images'" class="py-6 space-y-6">
-          <div class="rounded-xl border border-border bg-card p-5">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Product media</h2>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-lg font-semibold">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <path d="m21 15-5-5L5 21"></path>
+              </svg>
+              Product Media
+            </div>
+            <div class="flex items-center gap-4 text-xs text-muted-foreground">
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <path d="m21 15-5-5L5 21"></path>
+                </svg>
+                {{ mediaImageCount }} images
+              </span>
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                {{ mediaVideoCount }} videos
+              </span>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-border bg-card p-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <input
+                type="text"
+                class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                placeholder="Paste image or video URL"
+                [(ngModel)]="mediaUrlInput"
+              />
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                [disabled]="!mediaUrlInput.trim()"
+                (click)="addMedia()"
               >
-                Upload assets
+                <span class="inline-flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5v14"></path>
+                  </svg>
+                  Add
+                </span>
               </button>
             </div>
-            <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              <div class="rounded-lg border border-border bg-background p-4">
-                <p class="text-xs text-muted-foreground">Primary image</p>
-                <div class="mt-3 h-44 rounded-md border border-dashed border-border bg-muted/30"></div>
-              </div>
-              <div
-                *ngFor="let slot of mediaSlots"
-                class="rounded-lg border border-dashed border-border bg-muted/30 p-4 text-center text-xs text-muted-foreground"
+            <p class="mt-2 text-xs text-muted-foreground">
+              Drag and drop to reorder. First image will be the main product image.
+            </p>
+          </div>
+
+          <div
+            class="rounded-xl border border-dashed border-border bg-muted/20 p-8 text-center text-sm text-muted-foreground"
+          >
+            <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg border border-border/60">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-6 w-6"
               >
-                Drop image {{ slot }}
-              </div>
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <path d="m21 15-5-5L5 21"></path>
+              </svg>
             </div>
+            <p class="font-medium text-foreground">No media added yet</p>
+            <p class="mt-1 text-xs text-muted-foreground">
+              Add images or videos using the field above
+            </p>
           </div>
         </div>
 
@@ -2073,6 +2166,9 @@ export class ProductCreatePageComponent implements OnInit {
   newBrandName = '';
   newBrandDetails = '';
 
+  mediaUrlInput = '';
+  mediaItems: Array<{ url: string; type: 'image' | 'video' }> = [];
+
   toastMessages: Array<{ id: number; text: string }> = [];
   private toastId = 0;
 
@@ -2109,6 +2205,23 @@ export class ProductCreatePageComponent implements OnInit {
 
   trackByIndex(index: number): number {
     return index;
+  }
+
+  get mediaImageCount(): number {
+    return this.mediaItems.filter((item) => item.type === 'image').length;
+  }
+
+  get mediaVideoCount(): number {
+    return this.mediaItems.filter((item) => item.type === 'video').length;
+  }
+
+  addMedia(): void {
+    const url = this.mediaUrlInput.trim();
+    if (!url) return;
+    const isVideo = /\.(mp4|mov|webm|mkv)$/i.test(url);
+    const type: 'image' | 'video' = isVideo ? 'video' : 'image';
+    this.mediaItems = [...this.mediaItems, { url, type }];
+    this.mediaUrlInput = '';
   }
 
   addIdentifier(
