@@ -53,6 +53,26 @@ interface ExtraAttributeRow {
       <header class="border-b border-border bg-background px-6 py-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex items-center gap-4">
+            <button
+              type="button"
+              class="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted"
+              aria-label="Go back"
+              (click)="goBack()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -103,79 +123,239 @@ interface ExtraAttributeRow {
       </header>
 
       <div class="px-6">
-        <div class="mt-4 flex flex-wrap gap-2 border-b border-border pb-4">
+        <div class="mt-4 rounded-xl border border-border bg-muted/40 p-1">
+          <div class="flex flex-wrap gap-1">
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'overview'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'overview'"
+            [class.text-foreground]="activeTab === 'overview'"
+            [class.shadow-sm]="activeTab === 'overview'"
             (click)="selectTab('overview')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <path
+                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+              ></path>
+              <path d="M12 22V12"></path>
+              <path d="m3.3 7 8.7 5 8.7-5"></path>
+              <path d="m7.5 4.27 9 5.15"></path>
+            </svg>
             Overview
           </button>
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'pricing'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'pricing'"
+            [class.text-foreground]="activeTab === 'pricing'"
+            [class.shadow-sm]="activeTab === 'pricing'"
             (click)="selectTab('pricing')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path
+                d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+              ></path>
+            </svg>
             Pricing &amp; Inventory
           </button>
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'identifiers'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'identifiers'"
+            [class.text-foreground]="activeTab === 'identifiers'"
+            [class.shadow-sm]="activeTab === 'identifiers'"
             (click)="selectTab('identifiers')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <path d="M3 5v14"></path>
+              <path d="M8 5v14"></path>
+              <path d="M12 5v14"></path>
+              <path d="M17 5v14"></path>
+              <path d="M21 5v14"></path>
+            </svg>
             Identifiers
           </button>
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'images'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'images'"
+            [class.text-foreground]="activeTab === 'images'"
+            [class.shadow-sm]="activeTab === 'images'"
             (click)="selectTab('images')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <path d="m21 15-5-5L5 21"></path>
+            </svg>
             Images
           </button>
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'marketplaces'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'marketplaces'"
+            [class.text-foreground]="activeTab === 'marketplaces'"
+            [class.shadow-sm]="activeTab === 'marketplaces'"
             (click)="selectTab('marketplaces')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
             Marketplaces
           </button>
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'content'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'content'"
+            [class.text-foreground]="activeTab === 'content'"
+            [class.shadow-sm]="activeTab === 'content'"
             (click)="selectTab('content')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <line x1="10" y1="9" x2="8" y2="9"></line>
+            </svg>
             Content
           </button>
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'options'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'options'"
+            [class.text-foreground]="activeTab === 'options'"
+            [class.shadow-sm]="activeTab === 'options'"
             (click)="selectTab('options')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <circle cx="13.5" cy="6.5" r=".5"></circle>
+              <circle cx="17.5" cy="10.5" r=".5"></circle>
+              <circle cx="8.5" cy="7.5" r=".5"></circle>
+              <circle cx="6.5" cy="12.5" r=".5"></circle>
+              <path
+                d="M12 22a10 10 0 1 0-10-10 3 3 0 0 0 3 3h2a2 2 0 0 1 2 2 3 3 0 0 0 3 3z"
+              ></path>
+            </svg>
             Product options
           </button>
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'extra'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'extra'"
+            [class.text-foreground]="activeTab === 'extra'"
+            [class.shadow-sm]="activeTab === 'extra'"
             (click)="selectTab('extra')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <path d="M20 7h-9"></path>
+              <path d="M14 17H5"></path>
+              <circle cx="17" cy="17" r="3"></circle>
+              <circle cx="7" cy="7" r="3"></circle>
+            </svg>
             Extra attributes
           </button>
           <button
             type="button"
-            class="rounded-full border border-border px-3 py-1 text-xs font-medium"
-            [class.bg-muted]="activeTab === 'tags'"
+            class="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
+            [class.bg-background]="activeTab === 'tags'"
+            [class.text-foreground]="activeTab === 'tags'"
+            [class.shadow-sm]="activeTab === 'tags'"
             (click)="selectTab('tags')"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
+              <path
+                d="M20.59 13.41 12 22 3 13.41a2 2 0 0 1 0-2.82L12 2l8.59 8.59a2 2 0 0 1 0 2.82z"
+              ></path>
+              <circle cx="7" cy="7" r="1.5"></circle>
+            </svg>
             Tags
           </button>
+          </div>
         </div>
       </div>
 
@@ -876,6 +1056,10 @@ export class ProductCreatePageComponent implements OnInit {
 
   selectTab(tab: CreateTab): void {
     this.activeTab = tab;
+  }
+
+  goBack(): void {
+    window.history.back();
   }
 
   setProductType(type: ProductType): void {
