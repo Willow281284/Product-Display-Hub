@@ -1192,7 +1192,7 @@ interface ExtraAttributeRow {
                   type="button"
                   class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                   (click)="copyToClipboard(identifierLists.internalSkus[i])"
-                  [disabled]="!identifierLists.internalSkus[i]?.trim()"
+                  [disabled]="!identifierLists.internalSkus[i].trim()"
                   title="Copy"
                 >
                   <svg
@@ -1269,7 +1269,7 @@ interface ExtraAttributeRow {
                       type="button"
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.upcCodes[i])"
-                      [disabled]="!identifierLists.upcCodes[i]?.trim()"
+                      [disabled]="!identifierLists.upcCodes[i].trim()"
                       title="Copy"
                     >
                       <svg
@@ -1316,7 +1316,7 @@ interface ExtraAttributeRow {
                       type="button"
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.gtinCodes[i])"
-                      [disabled]="!identifierLists.gtinCodes[i]?.trim()"
+                      [disabled]="!identifierLists.gtinCodes[i].trim()"
                       title="Copy"
                     >
                       <svg
@@ -1363,7 +1363,7 @@ interface ExtraAttributeRow {
                       type="button"
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.eanCodes[i])"
-                      [disabled]="!identifierLists.eanCodes[i]?.trim()"
+                      [disabled]="!identifierLists.eanCodes[i].trim()"
                       title="Copy"
                     >
                       <svg
@@ -1410,7 +1410,7 @@ interface ExtraAttributeRow {
                       type="button"
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.isbnCodes[i])"
-                      [disabled]="!identifierLists.isbnCodes[i]?.trim()"
+                      [disabled]="!identifierLists.isbnCodes[i].trim()"
                       title="Copy"
                     >
                       <svg
@@ -1466,7 +1466,7 @@ interface ExtraAttributeRow {
                       type="button"
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.asinCodes[i])"
-                      [disabled]="!identifierLists.asinCodes[i]?.trim()"
+                      [disabled]="!identifierLists.asinCodes[i].trim()"
                       title="Copy"
                     >
                       <svg
@@ -1513,7 +1513,7 @@ interface ExtraAttributeRow {
                       type="button"
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.fnskuCodes[i])"
-                      [disabled]="!identifierLists.fnskuCodes[i]?.trim()"
+                      [disabled]="!identifierLists.fnskuCodes[i].trim()"
                       title="Copy"
                     >
                       <svg
