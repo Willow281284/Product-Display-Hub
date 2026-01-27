@@ -999,87 +999,89 @@ interface ColumnPreferences {
 
       <div
         *ngIf="tagFormOpen"
-        class="mx-4 rounded-lg border border-border bg-background p-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
       >
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 class="text-sm font-semibold">
-              {{ editingTag ? 'Edit tag' : 'Create tag' }}
-            </h3>
-            <p class="text-xs text-muted-foreground">
-              Tags help group products for quick filtering.
-            </p>
+        <div class="w-full max-w-xl rounded-xl bg-card p-4 shadow-xl animate-in zoom-in-95">
+          <div class="flex items-center justify-between border-b border-border pb-3">
+            <div>
+              <h3 class="text-sm font-semibold">
+                {{ editingTag ? 'Edit tag' : 'Create tag' }}
+              </h3>
+              <p class="text-xs text-muted-foreground">
+                Tags help group products for quick filtering.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted"
+              (click)="cancelTagForm()"
+            >
+              Close
+            </button>
           </div>
-          <button
-            type="button"
-            class="rounded-md border border-border px-3 py-1 text-xs hover:bg-muted"
-            (click)="cancelTagForm()"
-          >
-            Close
-          </button>
-        </div>
 
-        <div class="mt-4 grid gap-4 lg:grid-cols-3">
-          <label class="flex flex-col gap-2 text-xs text-muted-foreground">
-            Tag name
-            <input
-              type="text"
-              class="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
-              [(ngModel)]="tagName"
-              placeholder="Enter tag name"
-              maxlength="30"
-            />
-          </label>
+          <div class="mt-4 grid gap-4 lg:grid-cols-3">
+            <label class="flex flex-col gap-2 text-xs text-muted-foreground">
+              Tag name
+              <input
+                type="text"
+                class="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+                [(ngModel)]="tagName"
+                placeholder="Enter tag name"
+                maxlength="30"
+              />
+            </label>
 
-          <div class="lg:col-span-2">
-            <p class="text-xs text-muted-foreground">Pick a color</p>
-            <div class="mt-2 flex flex-wrap gap-2">
-              <button
-                *ngFor="let color of tagColors"
-                type="button"
-                class="h-7 w-7 rounded-md border border-border"
-                [style.backgroundColor]="color.value"
-                [class.ring-2]="tagColor === color.value"
-                [class.ring-offset-2]="tagColor === color.value"
-                (click)="setTagColor(color.value)"
-                [attr.aria-label]="color.name"
-              ></button>
-              <div class="flex items-center gap-2">
-                <input
-                  type="color"
-                  class="h-7 w-7 cursor-pointer rounded-md border border-border"
-                  [value]="tagColor"
-                  (input)="setTagColor($any($event.target).value)"
-                />
-                <input
-                  type="text"
-                  class="w-24 rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
-                  [value]="tagColor"
-                  (input)="setTagColor($any($event.target).value)"
-                />
+            <div class="lg:col-span-2">
+              <p class="text-xs text-muted-foreground">Pick a color</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <button
+                  *ngFor="let color of tagColors"
+                  type="button"
+                  class="h-7 w-7 rounded-md border border-border"
+                  [style.backgroundColor]="color.value"
+                  [class.ring-2]="tagColor === color.value"
+                  [class.ring-offset-2]="tagColor === color.value"
+                  (click)="setTagColor(color.value)"
+                  [attr.aria-label]="color.name"
+                ></button>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="color"
+                    class="h-7 w-7 cursor-pointer rounded-md border border-border"
+                    [value]="tagColor"
+                    (input)="setTagColor($any($event.target).value)"
+                  />
+                  <input
+                    type="text"
+                    class="w-24 rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground"
+                    [value]="tagColor"
+                    (input)="setTagColor($any($event.target).value)"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="mt-4 flex items-center gap-3">
-          <button
-            type="button"
-            class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-            [disabled]="!tagName.trim() || !tagColor"
-            (click)="saveTag()"
-          >
-            {{ editingTag ? 'Save changes' : 'Create tag' }}
-          </button>
-          <span class="text-xs text-muted-foreground">
-            Preview:
-            <span
-              class="ml-2 inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
-              [style.backgroundColor]="tagColor || '#64748b'"
+          <div class="mt-4 flex items-center gap-3">
+            <button
+              type="button"
+              class="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+              [disabled]="!tagName.trim() || !tagColor"
+              (click)="saveTag()"
             >
-              {{ tagName || 'Tag name' }}
+              {{ editingTag ? 'Save changes' : 'Create tag' }}
+            </button>
+            <span class="text-xs text-muted-foreground">
+              Preview:
+              <span
+                class="ml-2 inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
+                [style.backgroundColor]="tagColor || '#64748b'"
+              >
+                {{ tagName || 'Tag name' }}
+              </span>
             </span>
-          </span>
+          </div>
         </div>
       </div>
 
