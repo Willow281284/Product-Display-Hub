@@ -467,15 +467,108 @@ interface ExtraAttributeRow {
                 <div class="grid grid-cols-2 gap-4">
                   <div>
                     <label class="text-sm text-muted-foreground">Brand</label>
-                    <select
-                      class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-                      [(ngModel)]="productData.brand"
-                    >
-                      <option value="">Select brand...</option>
-                      <option *ngFor="let brand of brandOptions" [value]="brand">
-                        {{ brand }}
-                      </option>
-                    </select>
+                    <div class="relative mt-1" (click)="$event.stopPropagation()">
+                      <button
+                        type="button"
+                        class="flex w-full items-center justify-between rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        (click)="toggleBrandDropdown($event)"
+                      >
+                        <span class="truncate text-left">
+                          {{ productData.brand || 'Select brand...' }}
+                        </span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="h-4 w-4 text-muted-foreground"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </button>
+                      <div
+                        *ngIf="brandDropdownOpen"
+                        class="absolute z-50 mt-2 w-full rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
+                      >
+                        <div class="mb-2 flex items-center gap-2 rounded-md border border-border bg-background px-2 py-1.5 text-xs">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-3.5 w-3.5 text-muted-foreground"
+                          >
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                          <input
+                            type="text"
+                            class="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                            placeholder="Search brand..."
+                            [(ngModel)]="brandSearch"
+                            (click)="$event.stopPropagation()"
+                          />
+                        </div>
+                        <div class="max-h-48 overflow-auto">
+                          <button
+                            *ngFor="let brand of filteredBrands"
+                            type="button"
+                            class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
+                            [class.bg-primary]="brand === productData.brand"
+                            [class.text-primary-foreground]="brand === productData.brand"
+                            (click)="selectBrand(brand)"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="h-4 w-4"
+                            >
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span class="truncate">{{ brand }}</span>
+                          </button>
+                          <div
+                            *ngIf="filteredBrands.length === 0"
+                            class="px-2 py-2 text-xs text-muted-foreground"
+                          >
+                            No brands found.
+                          </div>
+                        </div>
+                        <div class="mt-2 border-t border-border pt-2">
+                          <button
+                            type="button"
+                            class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-primary hover:bg-muted"
+                            (click)="openAddBrandModal($event)"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="h-4 w-4"
+                            >
+                              <path d="M5 12h14"></path>
+                              <path d="M12 5v14"></path>
+                            </svg>
+                            Add New Brand
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <label class="text-sm text-muted-foreground">Vendor</label>
@@ -1384,6 +1477,78 @@ interface ExtraAttributeRow {
           </div>
         </div>
       </div>
+
+      <div
+        *ngIf="showAddBrandModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+        (click)="closeAddBrandModal()"
+      >
+        <div
+          class="w-full max-w-lg rounded-xl bg-card p-5 shadow-xl animate-in zoom-in-95"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="flex items-center justify-between border-b border-border pb-4">
+            <h3 class="text-lg font-semibold">Add New Brand</h3>
+            <button
+              type="button"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+              (click)="closeAddBrandModal()"
+              aria-label="Close"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="mt-5 grid gap-5">
+            <label class="grid gap-2 text-sm font-medium text-foreground">
+              Brand
+              <input
+                type="text"
+                class="h-11 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground"
+                placeholder="Enter brand..."
+                [(ngModel)]="newBrandName"
+              />
+            </label>
+            <label class="grid gap-2 text-sm font-medium text-foreground">
+              Brand Details
+              <textarea
+                rows="4"
+                class="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
+                placeholder="Enter brand details..."
+                [(ngModel)]="newBrandDetails"
+              ></textarea>
+            </label>
+          </div>
+          <div class="mt-6 flex items-center justify-end gap-3">
+            <button
+              type="button"
+              class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+              (click)="closeAddBrandModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+              [disabled]="!newBrandName.trim()"
+              (click)="addBrand()"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1411,7 +1576,7 @@ export class ProductCreatePageComponent implements OnInit {
     discountPercent: 0,
   };
 
-  readonly brandOptions = [
+  brandOptions = [
     'HyperX',
     'Logitech',
     'Razer',
@@ -1490,6 +1655,12 @@ export class ProductCreatePageComponent implements OnInit {
   newVendorName = '';
   newVendorDetails = '';
 
+  brandDropdownOpen = false;
+  brandSearch = '';
+  showAddBrandModal = false;
+  newBrandName = '';
+  newBrandDetails = '';
+
   kitComponents: KitComponentRow[] = mockProducts.slice(0, 2).map((product) => ({
     productId: product.id,
     name: product.name,
@@ -1527,6 +1698,52 @@ export class ProductCreatePageComponent implements OnInit {
     return this.vendorOptions.filter((vendor) =>
       vendor.toLowerCase().includes(query)
     );
+  }
+
+  get filteredBrands(): string[] {
+    const query = this.brandSearch.trim().toLowerCase();
+    if (!query) return this.brandOptions;
+    return this.brandOptions.filter((brand) =>
+      brand.toLowerCase().includes(query)
+    );
+  }
+
+  toggleBrandDropdown(event: MouseEvent): void {
+    event.stopPropagation();
+    this.brandDropdownOpen = !this.brandDropdownOpen;
+    if (this.brandDropdownOpen) {
+      this.brandSearch = '';
+    }
+  }
+
+  selectBrand(brand: string): void {
+    this.productData.brand = brand;
+    this.brandDropdownOpen = false;
+    this.brandSearch = '';
+  }
+
+  openAddBrandModal(event?: MouseEvent): void {
+    event?.stopPropagation();
+    this.brandDropdownOpen = false;
+    this.showAddBrandModal = true;
+    this.newBrandName = this.brandSearch.trim();
+    this.newBrandDetails = '';
+  }
+
+  closeAddBrandModal(): void {
+    this.showAddBrandModal = false;
+    this.newBrandName = '';
+    this.newBrandDetails = '';
+  }
+
+  addBrand(): void {
+    const name = this.newBrandName.trim();
+    if (!name) return;
+    if (!this.brandOptions.includes(name)) {
+      this.brandOptions = [...this.brandOptions, name];
+    }
+    this.productData.brand = name;
+    this.closeAddBrandModal();
   }
 
   toggleVendorDropdown(event: MouseEvent): void {
@@ -1570,6 +1787,7 @@ export class ProductCreatePageComponent implements OnInit {
   @HostListener('document:click')
   closeVendorDropdown(): void {
     this.vendorDropdownOpen = false;
+    this.brandDropdownOpen = false;
   }
 
   goBack(): void {
