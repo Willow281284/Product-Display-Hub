@@ -2946,8 +2946,8 @@ interface ColumnPreferences {
               </div>
             </div>
 
-            <div class="flex-1 overflow-x-scroll overflow-y-auto px-4 pb-2 pt-0">
-              <div class="relative mt-2 overflow-visible rounded-lg border border-border bg-background/40 shadow-sm">
+            <div class="flex-1 px-4 pb-2 pt-0">
+              <div class="relative mt-2 h-full overflow-x-scroll overflow-y-auto rounded-lg border border-border bg-background/40 shadow-sm">
                 <table class="w-full min-w-[1250px] text-sm">
             <thead class="relative z-10 bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
               <tr>
