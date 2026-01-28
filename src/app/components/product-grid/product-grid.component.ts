@@ -89,6 +89,13 @@ interface CustomFilterRule {
   value: string;
 }
 
+interface CustomFilter {
+  id: string;
+  name: string;
+  description: string;
+  rules: CustomFilterRule[];
+}
+
 const csvFields: CsvFieldConfig[] = [
   { id: 'name', label: 'Product Name', required: true },
   { id: 'vendorSku', label: 'SKU', required: true },
@@ -836,6 +843,9 @@ interface ColumnPreferences {
             >
               <summary
                 class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px] gap-2"
+                [ngClass]="{
+                  'bg-primary text-primary-foreground border-primary': !!activeCustomFilterId
+                }"
                 title="Custom filters"
                 data-tooltip="Custom filters"
                 (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('custom-filters')"
@@ -876,6 +886,10 @@ interface ColumnPreferences {
                     *ngFor="let filter of customFilters; let i = index"
                     type="button"
                     class="mt-2 flex w-full items-center justify-between rounded-md border border-border bg-background px-3 py-2 text-left text-xs hover:bg-muted"
+                    [ngClass]="{
+                      'border-primary bg-primary/10': activeCustomFilterId === filter.id
+                    }"
+                    (click)="toggleCustomFilter(filter.id)"
                   >
                     <div>
                       <p class="font-semibold">{{ filter.name }}</p>
@@ -888,6 +902,7 @@ interface ColumnPreferences {
                         type="button"
                         class="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
                         title="Edit"
+                        (click)="editCustomFilter(filter); $event.stopPropagation()"
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                           <path d="M12 20h9" />
@@ -898,6 +913,7 @@ interface ColumnPreferences {
                         type="button"
                         class="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border text-destructive hover:bg-muted"
                         title="Delete"
+                        (click)="deleteCustomFilter(filter.id); $event.stopPropagation()"
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
                           <path d="M3 6h18" />
@@ -910,25 +926,68 @@ interface ColumnPreferences {
                 </div>
               </div>
             </details>
-            <button
+            <details
               *ngIf="customFilters.length > 0"
-              type="button"
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px] gap-2"
-              title="Saved filters"
-              data-tooltip="Saved filters"
+              class="relative"
+              data-dropdown="saved-filters"
+              [open]="openDropdownId === 'saved-filters'"
             >
-              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                  <polyline points="17 21 17 13 7 13 7 21" />
-                  <polyline points="7 3 7 8 15 8" />
-                </svg>
-              </span>
-              Saved
-              <span class="rounded-full border border-border px-2 py-0.5 text-xs">
-                {{ customFilters.length }}
-              </span>
-            </button>
+              <summary
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px] gap-2"
+                [ngClass]="{
+                  'bg-primary text-primary-foreground border-primary': !!activeCustomFilterId
+                }"
+                title="Saved filters"
+                data-tooltip="Saved filters"
+                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('saved-filters')"
+              >
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <polyline points="17 21 17 13 7 13 7 21" />
+                    <polyline points="7 3 7 8 15 8" />
+                  </svg>
+                </span>
+                Saved
+                <span class="rounded-full border border-border px-2 py-0.5 text-xs">
+                  {{ customFilters.length }}
+                </span>
+              </summary>
+              <div
+                data-dropdown-panel
+                class="absolute z-50 dropdown-panel mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              >
+                <p class="text-[11px] font-semibold uppercase text-muted-foreground">Saved Filters</p>
+                <button
+                  *ngFor="let filter of customFilters"
+                  type="button"
+                  class="mt-2 flex w-full items-center justify-between rounded-md border border-border bg-background px-3 py-2 text-left text-xs hover:bg-muted"
+                  [ngClass]="{
+                    'border-primary bg-primary/10': activeCustomFilterId === filter.id
+                  }"
+                  (click)="toggleCustomFilter(filter.id)"
+                >
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border">
+                      <svg
+                        *ngIf="activeCustomFilterId === filter.id"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        class="h-3 w-3 text-primary"
+                        stroke-width="2"
+                      >
+                        <path d="M20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+                    <span class="font-semibold">{{ filter.name }}</span>
+                    <span class="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
+                      {{ filter.rules.length }}
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </details>
             <details
               class="relative"
               data-dropdown="columns"
@@ -3333,7 +3392,9 @@ export class ProductGridComponent implements OnInit {
   readonly offerTypes = this.offerService.getOfferTypeOptions();
 
   customFilterModalOpen = false;
-  customFilters: Array<{ name: string; description: string; rules: CustomFilterRule[] }> = [];
+  customFilters: CustomFilter[] = [];
+  activeCustomFilterId: string | null = null;
+  editingCustomFilterId: string | null = null;
   customFilterFields = [
     'Product Name',
     'Brand',
@@ -3820,6 +3881,7 @@ export class ProductGridComponent implements OnInit {
   openCustomFilterModal(): void {
     this.customFilterModalOpen = true;
     this.openDropdownId = null;
+    this.editingCustomFilterId = null;
     this.customFilterForm = {
       name: '',
       description: '',
@@ -3853,15 +3915,53 @@ export class ProductGridComponent implements OnInit {
   saveCustomFilter(): void {
     const name = this.customFilterForm.name.trim();
     if (!name) return;
-    this.customFilters = [
-      ...this.customFilters,
-      {
-        name,
-        description: this.customFilterForm.description.trim(),
-        rules: [...this.customFilterForm.rules],
-      },
-    ];
+    if (this.editingCustomFilterId) {
+      this.customFilters = this.customFilters.map((filter) =>
+        filter.id === this.editingCustomFilterId
+          ? {
+              ...filter,
+              name,
+              description: this.customFilterForm.description.trim(),
+              rules: [...this.customFilterForm.rules],
+            }
+          : filter
+      );
+    } else {
+      const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      this.customFilters = [
+        ...this.customFilters,
+        {
+          id,
+          name,
+          description: this.customFilterForm.description.trim(),
+          rules: [...this.customFilterForm.rules],
+        },
+      ];
+    }
     this.closeCustomFilterModal();
+  }
+
+  toggleCustomFilter(filterId: string): void {
+    this.activeCustomFilterId = this.activeCustomFilterId === filterId ? null : filterId;
+  }
+
+  editCustomFilter(filter: CustomFilter): void {
+    this.customFilterModalOpen = true;
+    this.openDropdownId = null;
+    this.editingCustomFilterId = filter.id;
+    this.customFilterForm = {
+      name: filter.name,
+      description: filter.description,
+      matchAll: true,
+      rules: filter.rules.map((rule) => ({ ...rule })),
+    };
+  }
+
+  deleteCustomFilter(filterId: string): void {
+    this.customFilters = this.customFilters.filter((filter) => filter.id !== filterId);
+    if (this.activeCustomFilterId === filterId) {
+      this.activeCustomFilterId = null;
+    }
   }
 
   closeManualDialog(): void {
