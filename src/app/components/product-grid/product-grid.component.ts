@@ -166,6 +166,24 @@ const marketplaceBadgeMap: Record<string, string> = {
   overstock: 'os',
 };
 
+const marketplaceBadgeClassMap: Record<string, string> = {
+  amazon: 'bg-amber-500 text-black',
+  walmart: 'bg-blue-600 text-white',
+  ebay: 'bg-slate-700 text-white',
+  newegg: 'bg-orange-600 text-white',
+  bestbuy: 'bg-blue-500 text-white',
+  target: 'bg-red-600 text-white',
+  etsy: 'bg-orange-500 text-white',
+  shopify: 'bg-emerald-600 text-white',
+  temu: 'bg-orange-500 text-white',
+  macys: 'bg-rose-600 text-white',
+  costco: 'bg-red-700 text-white',
+  homedepot: 'bg-orange-600 text-white',
+  lowes: 'bg-blue-700 text-white',
+  wayfair: 'bg-indigo-600 text-white',
+  overstock: 'bg-slate-600 text-white',
+};
+
 const csvSampleProducts: Record<string, string>[] = [
   {
     name: 'Wireless Bluetooth Headphones',
@@ -2572,13 +2590,16 @@ interface ColumnPreferences {
                     *ngFor="let platform of marketplaces"
                     type="button"
                     class="flex flex-col items-center gap-1 rounded-lg border p-2 text-[10px] transition-all"
-                    [ngClass]="offerDialogMarketplaces.includes(platform) ? 'border-primary bg-primary/10' : 'border-transparent hover:bg-muted'"
+                    [ngClass]="offerDialogMarketplaces.includes(platform) ? 'border-primary bg-primary/10 text-foreground' : 'border-transparent text-muted-foreground hover:bg-muted'"
                     (click)="toggleOfferMarketplace(platform)"
                   >
-                    <span class="flex h-6 w-6 items-center justify-center rounded-full border border-border bg-muted text-[10px] font-semibold">
+                    <span
+                      class="flex h-7 w-7 items-center justify-center rounded-md text-[10px] font-semibold"
+                      [ngClass]="marketplaceBadgeClass(platform)"
+                    >
                       {{ marketplaceBadgeLabel(platform) }}
                     </span>
-                    <span class="text-muted-foreground capitalize">{{ marketplaceName(platform) }}</span>
+                    <span class="capitalize">{{ marketplaceName(platform) }}</span>
                   </button>
                 </div>
               </div>
@@ -4753,6 +4774,10 @@ export class ProductGridComponent implements OnInit {
 
   marketplaceBadgeLabel(platform: string): string {
     return marketplaceBadgeMap[platform] ?? platform.charAt(0);
+  }
+
+  marketplaceBadgeClass(platform: string): string {
+    return marketplaceBadgeClassMap[platform] ?? 'bg-muted text-muted-foreground';
   }
 
   saveOfferDialog(): void {
