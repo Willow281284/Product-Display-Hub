@@ -1720,47 +1720,187 @@ interface ExtraAttributeRow {
         </div>
 
         <div *ngIf="activeTab === 'content'" class="py-6 space-y-6">
-          <div class="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-lg font-semibold">
+              <span class="text-primary">T</span>
+              Product Title
+            </div>
+            <input
+              type="text"
+              class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+              placeholder="Enter product title for listings"
+              [(ngModel)]="contentTitle"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-lg font-semibold">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              Description
+            </div>
+            <textarea
+              rows="5"
+              class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+              placeholder="Enter product description..."
+              [(ngModel)]="contentDescription"
+              [ngModelOptions]="{ standalone: true }"
+            ></textarea>
+          </div>
+
+          <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Listing content</h2>
+              <div class="flex items-center gap-2 text-lg font-semibold">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-5 w-5 text-primary"
+                >
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                Bullet Points
+              </div>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                (click)="addBulletPoint()"
               >
-                Validate
+                <span class="inline-flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5v14"></path>
+                  </svg>
+                  Add Point
+                </span>
               </button>
             </div>
-            <label class="grid gap-1 text-xs text-muted-foreground">
-              Product title
-              <input
-                type="text"
-                class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                placeholder="Listing title"
-              />
-            </label>
-            <label class="grid gap-1 text-xs text-muted-foreground">
-              Description
-              <textarea
-                rows="4"
-                class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-              >High-quality product description placeholder for marketplace listings.</textarea>
-            </label>
-          </div>
-          <div class="rounded-xl border border-border bg-card p-5">
-            <h3 class="text-sm font-semibold text-muted-foreground">Bullet points</h3>
-            <div class="mt-4 space-y-2">
+            <div class="space-y-2">
               <div
-                *ngFor="let bullet of bulletPoints; let i = index"
-                class="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs"
+                *ngFor="let bullet of bulletPoints; let i = index; trackBy: trackByIndex"
+                class="flex items-center gap-3"
               >
-                <span class="text-muted-foreground">{{ i + 1 }}.</span>
+                <span class="w-6 text-sm text-muted-foreground">{{ i + 1 }}.</span>
                 <input
                   type="text"
-                  class="flex-1 border-none bg-transparent text-sm text-foreground focus:outline-none"
-                  [value]="bullet"
+                  class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [placeholder]="'Bullet point ' + (i + 1)"
+                  [(ngModel)]="bulletPoints[i]"
+                  [ngModelOptions]="{ standalone: true }"
                 />
+                <button
+                  type="button"
+                  class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                  (click)="removeBulletPoint(i)"
+                  title="Remove"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
               </div>
             </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex items-center gap-2 text-lg font-semibold">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
+              >
+                <path d="M12 2 9.5 8.5 3 11l6.5 2.5L12 20l2.5-6.5L21 11l-6.5-2.5L12 2z"></path>
+              </svg>
+              A+ Content
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <div>
+                <p class="font-semibold">A+ Content Modules</p>
+                <p class="text-xs text-muted-foreground">
+                  Add rich content blocks to enhance your product listing
+                </p>
+              </div>
+              <span class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+                {{ aPlusModules.length }} module{{ aPlusModules.length === 1 ? '' : 's' }}
+              </span>
+            </div>
+            <div
+              *ngFor="let module of aPlusModules; let i = index; trackBy: trackByIndex"
+              class="rounded-xl border border-border bg-card p-4"
+            >
+              <div class="flex items-center gap-3 text-sm font-semibold">
+                <span class="text-muted-foreground">⋮⋮</span>
+                <span class="text-primary">T</span>
+                Text Block
+                <span class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
+                  #{{ i + 1 }}
+                </span>
+              </div>
+              <textarea
+                rows="3"
+                class="mt-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                placeholder="Enter your text content here..."
+                [(ngModel)]="module.content"
+                [ngModelOptions]="{ standalone: true }"
+              ></textarea>
+            </div>
+            <button
+              type="button"
+              class="w-full rounded-xl border border-border bg-background py-3 text-sm font-semibold text-muted-foreground hover:bg-muted"
+              (click)="addAplusModule()"
+            >
+              + Add Module
+            </button>
           </div>
         </div>
 
@@ -2199,6 +2339,12 @@ export class ProductCreatePageComponent implements OnInit {
   mediaUrlInput = '';
   mediaItems: Array<{ url: string; type: 'image' | 'video' }> = [];
 
+  contentTitle = '';
+  contentDescription = '';
+  bulletPoints: string[] = ['', '', '', ''];
+  aPlusModules: Array<{ id: number; content: string }> = [{ id: 1, content: '' }];
+  private moduleId = 1;
+
   toastMessages: Array<{ id: number; text: string }> = [];
   private toastId = 0;
 
@@ -2252,6 +2398,23 @@ export class ProductCreatePageComponent implements OnInit {
     const type: 'image' | 'video' = isVideo ? 'video' : 'image';
     this.mediaItems = [...this.mediaItems, { url, type }];
     this.mediaUrlInput = '';
+  }
+
+  addBulletPoint(): void {
+    this.bulletPoints = [...this.bulletPoints, ''];
+  }
+
+  removeBulletPoint(index: number): void {
+    if (this.bulletPoints.length <= 1) {
+      this.bulletPoints = [''];
+      return;
+    }
+    this.bulletPoints = this.bulletPoints.filter((_, i) => i !== index);
+  }
+
+  addAplusModule(): void {
+    this.moduleId += 1;
+    this.aPlusModules = [...this.aPlusModules, { id: this.moduleId, content: '' }];
   }
 
   addIdentifier(
