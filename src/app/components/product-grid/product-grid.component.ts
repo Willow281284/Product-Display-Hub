@@ -2548,7 +2548,7 @@ interface ColumnPreferences {
                         <p class="truncate text-sm font-medium">{{ product.name }}</p>
                         <p class="text-[10px] text-muted-foreground">{{ product.vendorSku }}</p>
                       </div>
-                      <span class="text-sm font-medium">${{ product.salePrice.toFixed(2) }}</span>
+                      <span class="text-sm font-medium">$ {{ product.salePrice.toFixed(2) }}</span>
                     </div>
                   </div>
                 </div>
