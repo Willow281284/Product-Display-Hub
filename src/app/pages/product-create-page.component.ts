@@ -2063,73 +2063,227 @@ interface ExtraAttributeRow {
         </div>
 
         <div *ngIf="activeTab === 'options'" class="py-6 space-y-6">
-          <div class="rounded-xl border border-border bg-card p-5 space-y-4">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Product options</h2>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-lg font-semibold">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
+              >
+                <circle cx="13.5" cy="6.5" r=".5"></circle>
+                <circle cx="17.5" cy="10.5" r=".5"></circle>
+                <circle cx="8.5" cy="7.5" r=".5"></circle>
+                <circle cx="6.5" cy="12.5" r=".5"></circle>
+                <path
+                  d="M12 22a10 10 0 1 0-10-10 3 3 0 0 0 3 3h2a2 2 0 0 1 2 2 3 3 0 0 0 3 3z"
+                ></path>
+              </svg>
+              Product Options
+            </div>
+            <div class="flex items-center gap-3">
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+                (click)="showManageOptionsModal = true"
               >
-                Manage options
+                <span class="inline-flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .66.26 1.3.73 1.77.47.47 1.11.73 1.77.73H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                  </svg>
+                  Manage Options
+                </span>
+              </button>
+              <button
+                type="button"
+                class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+                (click)="addProductOption()"
+              >
+                <span class="inline-flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5v14"></path>
+                  </svg>
+                  Add Option
+                </span>
               </button>
             </div>
-            <div class="grid gap-3 md:grid-cols-2">
-              <div
-                *ngFor="let option of optionSets"
-                class="rounded-lg border border-border bg-background p-3"
+          </div>
+
+          <div
+            *ngIf="productOptions.length === 0"
+            class="rounded-xl border border-border bg-card p-10 text-center"
+          >
+            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted/40">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-6 w-6 text-muted-foreground"
               >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm font-semibold capitalize">{{ option.name }}</p>
-                    <p class="text-xs text-muted-foreground">
-                      Display: {{ option.display }} | Image link:
-                      {{ option.linkImages ? 'On' : 'Off' }}
-                    </p>
-                  </div>
+                <circle cx="13.5" cy="6.5" r=".5"></circle>
+                <circle cx="17.5" cy="10.5" r=".5"></circle>
+                <circle cx="8.5" cy="7.5" r=".5"></circle>
+                <circle cx="6.5" cy="12.5" r=".5"></circle>
+                <path
+                  d="M12 22a10 10 0 1 0-10-10 3 3 0 0 0 3 3h2a2 2 0 0 1 2 2 3 3 0 0 0 3 3z"
+                ></path>
+              </svg>
+            </div>
+            <p class="font-semibold">No product options defined</p>
+            <p class="text-sm text-muted-foreground">
+              Add options like size, color, or material to create product variations
+            </p>
+            <button
+              type="button"
+              class="mt-4 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              (click)="addProductOption()"
+            >
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="M12 5v14"></path>
+                </svg>
+                Add First Option
+              </span>
+            </button>
+          </div>
+
+          <div *ngIf="productOptions.length > 0" class="grid gap-6 lg:grid-cols-2">
+            <div class="rounded-xl border border-border bg-card p-4 space-y-3">
+              <p class="font-semibold">Options</p>
+              <button
+                *ngFor="let option of productOptions; let i = index"
+                type="button"
+                class="flex w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-3 text-left text-sm"
+                [ngClass]="{
+                  'border-primary': selectedOptionIndex === i,
+                  'bg-primary/10': selectedOptionIndex === i
+                }"
+                (click)="selectOption(i)"
+              >
+                <div>
+                  <p class="font-semibold">{{ option.name }}</p>
+                  <p class="text-xs text-muted-foreground">{{ option.choices.length }} choices</p>
+                </div>
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
+                  (click)="removeProductOption(i); $event.stopPropagation()"
+                  title="Remove"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </button>
+            </div>
+
+            <div class="rounded-xl border border-border bg-card p-4 space-y-4" *ngIf="activeOption">
+              <p class="font-semibold">Edit: {{ activeOption.name.toLowerCase() }}</p>
+              <div class="space-y-2">
+                <label class="text-xs text-muted-foreground">Option Name</label>
+                <select
+                  class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [(ngModel)]="activeOption.name"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <option *ngFor="let option of productOptions" [ngValue]="option.name">
+                    {{ option.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs text-muted-foreground">Display As</label>
+                <select
+                  class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [(ngModel)]="activeOption.display"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <option value="list">List</option>
+                  <option value="swatch">Swatch</option>
+                </select>
+              </div>
+              <label class="flex items-center gap-3 text-sm">
+                <input type="checkbox" [(ngModel)]="activeOption.linkImages" [ngModelOptions]="{ standalone: true }" />
+                Link to Images
+              </label>
+              <div class="border-t border-border pt-3 space-y-2">
+                <label class="text-xs text-muted-foreground">Choices</label>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="text"
+                    class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="Add new choice"
+                    [(ngModel)]="newOptionChoice"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
                   <button
                     type="button"
-                    class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                    class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+                    (click)="addOptionChoice()"
                   >
-                    Edit
+                    Add
                   </button>
                 </div>
-                <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                <div class="flex flex-wrap gap-2">
                   <span
-                    *ngFor="let choice of option.choices"
-                    class="rounded-full border border-border px-2 py-0.5"
+                    *ngFor="let choice of activeOption.choices"
+                    class="rounded-full border border-border px-2 py-1 text-xs"
                   >
                     {{ choice }}
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="rounded-xl border border-border bg-card p-5">
-            <h3 class="text-sm font-semibold text-muted-foreground">Variation matrix</h3>
-            <div class="mt-4 overflow-x-auto">
-              <table class="w-full min-w-[540px] text-sm">
-                <thead>
-                  <tr class="border-b border-border text-xs text-muted-foreground">
-                    <th class="py-2 text-left">Variation</th>
-                    <th class="py-2 text-left">SKU</th>
-                    <th class="py-2 text-right">Stock</th>
-                    <th class="py-2 text-right">Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    *ngFor="let row of variationRows"
-                    class="border-b border-border/60"
-                  >
-                    <td class="py-2 font-medium">{{ row.name }}</td>
-                    <td class="py-2 text-xs text-muted-foreground">{{ row.sku }}</td>
-                    <td class="py-2 text-right">{{ row.stock }}</td>
-                    <td class="py-2 text-right">
-                      {{ row.price | currency: 'USD' : 'symbol' : '1.2-2' }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
           </div>
         </div>
@@ -2352,6 +2506,165 @@ interface ExtraAttributeRow {
       </div>
 
       <div
+        *ngIf="showManageOptionsModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+        (click)="showManageOptionsModal = false"
+      >
+        <div
+          class="w-full max-w-5xl rounded-2xl bg-card p-0 shadow-xl animate-in zoom-in-95"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="flex items-start justify-between border-b border-border px-6 py-5">
+            <div>
+              <h3 class="text-lg font-semibold">Manage Product Options</h3>
+              <p class="text-xs text-muted-foreground">
+                Add, edit, or remove product options and their values. Options with linked variations cannot be deleted.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+              (click)="showManageOptionsModal = false"
+              aria-label="Close"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="max-h-[60vh] overflow-y-auto px-6 py-5">
+            <div
+              *ngFor="let option of productOptions; let i = index"
+              class="rounded-xl border border-border bg-background p-4 mb-4"
+            >
+              <div class="flex flex-wrap items-center gap-4">
+                <span class="text-muted-foreground">⋮⋮</span>
+                <div class="flex items-center gap-2 text-sm">
+                  <span class="text-muted-foreground">Type:</span>
+                  <select
+                    class="rounded-md border border-border bg-card px-3 py-2 text-sm"
+                    [(ngModel)]="option.name"
+                    [ngModelOptions]="{ standalone: true }"
+                  >
+                    <option *ngFor="let item of productOptions" [ngValue]="item.name">
+                      {{ item.name }}
+                    </option>
+                  </select>
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-3 py-1 text-xs text-primary"
+                  >
+                    + Custom
+                  </button>
+                </div>
+                <div class="flex items-center gap-2 text-sm">
+                  <span class="text-muted-foreground">Display:</span>
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-3 py-1 text-xs"
+                    [ngClass]="{ 'bg-primary text-primary-foreground': option.display === 'list' }"
+                    (click)="setOptionDisplay(i, 'list')"
+                  >
+                    List
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-3 py-1 text-xs"
+                    [ngClass]="{ 'bg-primary text-primary-foreground': option.display === 'swatch' }"
+                    (click)="setOptionDisplay(i, 'swatch')"
+                  >
+                    Swatch
+                  </button>
+                </div>
+                <span class="ml-auto rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
+                  {{ option.choices.length }} values
+                </span>
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                  (click)="removeProductOption(i)"
+                  title="Delete"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="mt-4 rounded-lg border border-border bg-card p-4">
+                <p class="text-sm font-semibold">Option Values</p>
+                <div class="mt-3 flex items-center gap-2">
+                  <input
+                    type="text"
+                    class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="Type a value and press Enter..."
+                    [(ngModel)]="manageOptionInputs[i]"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-3 py-2 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addManageOptionValue(i)"
+                  >
+                    + Add
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="w-full rounded-xl border border-border bg-background py-3 text-sm font-semibold text-muted-foreground hover:bg-muted"
+              (click)="addProductOption()"
+            >
+              + Add Another Option
+            </button>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
+            <button
+              type="button"
+              class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+              (click)="showManageOptionsModal = false"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              (click)="showManageOptionsModal = false"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
         class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 flex-col gap-2"
       >
         <div
@@ -2415,20 +2728,18 @@ export class ProductCreatePageComponent implements OnInit {
   readonly mediaSlots = [1, 2, 3, 4];
 
 
-  readonly optionSets: OptionSet[] = [
+  productOptions: OptionSet[] = [
     {
-      name: 'color',
-      display: 'Swatch',
-      choices: ['Black', 'White', 'Crimson', 'Navy'],
-      linkImages: true,
-    },
-    {
-      name: 'size',
-      display: 'List',
-      choices: ['Small', 'Medium', 'Large', 'XL'],
+      name: 'Size',
+      display: 'list',
+      choices: [],
       linkImages: false,
     },
   ];
+  selectedOptionIndex = 0;
+  newOptionChoice = '';
+  showManageOptionsModal = false;
+  manageOptionInputs: Record<number, string> = {};
 
   readonly variationRows: VariationRow[] = [
     { name: 'Black / Medium', sku: 'BLK-M-1120', stock: 48, price: 129.99 },
@@ -2539,6 +2850,52 @@ export class ProductCreatePageComponent implements OnInit {
 
   trackByIndex(index: number): number {
     return index;
+  }
+
+  get activeOption(): OptionSet | null {
+    return this.productOptions[this.selectedOptionIndex] ?? null;
+  }
+
+  selectOption(index: number): void {
+    this.selectedOptionIndex = index;
+  }
+
+  addProductOption(): void {
+    const nextIndex = this.productOptions.length + 1;
+    this.productOptions = [
+      ...this.productOptions,
+      { name: `Option ${nextIndex}`, display: 'list', choices: [], linkImages: false },
+    ];
+    this.selectedOptionIndex = this.productOptions.length - 1;
+  }
+
+  removeProductOption(index: number): void {
+    this.productOptions = this.productOptions.filter((_, i) => i !== index);
+    if (this.selectedOptionIndex >= this.productOptions.length) {
+      this.selectedOptionIndex = Math.max(0, this.productOptions.length - 1);
+    }
+  }
+
+  addOptionChoice(): void {
+    const value = this.newOptionChoice.trim();
+    if (!value || !this.activeOption) return;
+    this.activeOption.choices = [...this.activeOption.choices, value];
+    this.newOptionChoice = '';
+  }
+
+  addManageOptionValue(index: number): void {
+    const value = (this.manageOptionInputs[index] || '').trim();
+    if (!value) return;
+    const option = this.productOptions[index];
+    if (!option) return;
+    option.choices = [...option.choices, value];
+    this.manageOptionInputs[index] = '';
+  }
+
+  setOptionDisplay(index: number, display: 'list' | 'swatch'): void {
+    const option = this.productOptions[index];
+    if (!option) return;
+    option.display = display;
   }
 
   get mediaImageCount(): number {
