@@ -28,19 +28,40 @@ import {
 } from '@/types/offer';
 import { OfferService } from '@/app/services/offer.service';
 
-type SortKey =
+type ColumnId =
+  | 'image'
   | 'name'
-  | 'vendorSku'
+  | 'productType'
+  | 'tags'
+  | 'offers'
+  | 'sku'
   | 'brand'
   | 'productId'
   | 'variationId'
-  | 'vendorName'
+  | 'vendor'
+  | 'mpn'
+  | 'asin'
+  | 'fnsku'
+  | 'gtin'
+  | 'ean'
+  | 'isbn'
+  | 'landedCost'
+  | 'shippingCost'
   | 'salePrice'
-  | 'stockQty'
+  | 'purchaseQty'
   | 'soldQty'
+  | 'stockQty'
+  | 'returnQty'
+  | 'profitMargin'
+  | 'profitAmount'
+  | 'velocity'
+  | 'stockDays'
   | 'restockStatus'
+  | 'suggestedRestockQty'
   | 'marketplaces'
-  | 'productType';
+  | 'actions';
+
+type SortKey = ColumnId;
 
 type SortDirection = 'asc' | 'desc';
 
@@ -269,12 +290,46 @@ interface MarketplaceRow {
 }
 
 interface ColumnConfig {
-  id: string;
+  id: ColumnId;
   label: string;
   visible: boolean;
   sortable?: boolean;
   align?: 'left' | 'right';
 }
+
+const columnTooltips: Record<ColumnId, string> = {
+  image: 'Product image thumbnail',
+  name: 'Full product name or title',
+  tags: 'Product tags for categorization',
+  offers: 'Active promotions and discounts for this product',
+  productType: 'Product type: Single, Kit, or Variation',
+  sku: 'Vendor Stock Keeping Unit - unique identifier from your vendor',
+  brand: 'Product brand or manufacturer name',
+  productId: 'Internal product identifier in your system',
+  variationId: 'Variation ID for products with color/size variants',
+  vendor: 'Name of the vendor or supplier',
+  mpn: 'Manufacturer Part Number',
+  asin: 'Amazon Standard Identification Number',
+  fnsku: 'Fulfillment Network Stock Keeping Unit',
+  gtin: 'Global Trade Item Number (includes UPC, EAN)',
+  ean: 'European Article Number',
+  isbn: 'International Standard Book Number',
+  landedCost: 'Total cost including product, shipping, and handling',
+  shippingCost: 'Cost to ship the product to customer',
+  salePrice: 'Current selling price of the product',
+  purchaseQty: 'Total quantity purchased from vendor',
+  soldQty: 'Total quantity sold to customers',
+  stockQty: 'Current inventory quantity in stock',
+  returnQty: 'Number of units returned by customers',
+  profitMargin: 'Gross profit as a percentage of sale price',
+  profitAmount: 'Gross profit amount in dollars',
+  velocity: 'Average units sold per day (last 30 days)',
+  stockDays: 'Estimated days of stock remaining',
+  restockStatus: 'Current restock status',
+  suggestedRestockQty: 'Recommended quantity to reorder',
+  marketplaces: 'Sales channels where the product is listed',
+  actions: 'Available actions for this product',
+};
 
 interface ColumnPreferences {
   order: string[];
@@ -2907,6 +2962,35 @@ interface ColumnPreferences {
                   />
                 </th>
                 <th
+                  *ngIf="isColumnVisible('image')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('image')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('image')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('image', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <span [attr.data-tooltip]="columnTooltip('image')">Image</span>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'image')"
+                  ></span>
+                </th>
+                <th
                   *ngIf="isColumnVisible('name')"
                   class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
                   [style.width.px]="columnWidth('name')"
@@ -2934,7 +3018,7 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('name')"
                   >
-                    Product
+                    <span [attr.data-tooltip]="columnTooltip('name')">Product Name</span>
                     <span class="text-[10px]">{{ sortIcon('name') }}</span>
                   </button>
                   <span
@@ -2970,7 +3054,7 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('productType')"
                   >
-                    Type
+                    <span [attr.data-tooltip]="columnTooltip('productType')">Type</span>
                     <span class="text-[10px]">{{ sortIcon('productType') }}</span>
                   </button>
                   <span
@@ -3001,7 +3085,7 @@ interface ColumnPreferences {
                       <circle cx="9" cy="9" r="1" />
                     </svg>
                   </span>
-                  Tags
+                  <span [attr.data-tooltip]="columnTooltip('tags')">Tags</span>
                   <span
                     class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
                     (mousedown)="startResize($event, 'tags')"
@@ -3030,24 +3114,24 @@ interface ColumnPreferences {
                       <circle cx="9" cy="9" r="1" />
                     </svg>
                   </span>
-                  Offers
+                  <span [attr.data-tooltip]="columnTooltip('offers')">Offers</span>
                   <span
                     class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
                     (mousedown)="startResize($event, 'offers')"
                   ></span>
                 </th>
                 <th
-                  *ngIf="isColumnVisible('vendorName')"
+                  *ngIf="isColumnVisible('sku')"
                   class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                  [style.width.px]="columnWidth('vendorName')"
+                  [style.width.px]="columnWidth('sku')"
                   (dragover)="allowColumnDrop($event)"
-                  (drop)="onColumnDrop('vendorName')"
+                  (drop)="onColumnDrop('sku')"
                 >
                   <span
                     class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                     draggable="true"
                     title="Drag to reorder"
-                    (dragstart)="startColumnDrag('vendorName', $event)"
+                    (dragstart)="startColumnDrag('sku', $event)"
                     (dragend)="endColumnDrag()"
                   >
                     <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
@@ -3062,14 +3146,50 @@ interface ColumnPreferences {
                   <button
                     type="button"
                     class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                    (click)="setSort('vendorName')"
+                    (click)="setSort('sku')"
                   >
-                    Vendor
-                    <span class="text-[10px]">{{ sortIcon('vendorName') }}</span>
+                    <span [attr.data-tooltip]="columnTooltip('sku')">SKU</span>
+                    <span class="text-[10px]">{{ sortIcon('sku') }}</span>
                   </button>
                   <span
                     class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                    (mousedown)="startResize($event, 'vendorName')"
+                    (mousedown)="startResize($event, 'sku')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('vendor')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('vendor')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('vendor')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('vendor', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('vendor')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('vendor')">Vendor</span>
+                    <span class="text-[10px]">{{ sortIcon('vendor') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'vendor')"
                   ></span>
                 </th>
                 <th
@@ -3100,7 +3220,7 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('brand')"
                   >
-                    Brand
+                    <span [attr.data-tooltip]="columnTooltip('brand')">Brand</span>
                     <span class="text-[10px]">{{ sortIcon('brand') }}</span>
                   </button>
                   <span
@@ -3109,17 +3229,17 @@ interface ColumnPreferences {
                   ></span>
                 </th>
                 <th
-                  *ngIf="isColumnVisible('marketplaces')"
+                  *ngIf="isColumnVisible('productId')"
                   class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
-                  [style.width.px]="columnWidth('marketplaces')"
+                  [style.width.px]="columnWidth('productId')"
                   (dragover)="allowColumnDrop($event)"
-                  (drop)="onColumnDrop('marketplaces')"
+                  (drop)="onColumnDrop('productId')"
                 >
                   <span
                     class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
                     draggable="true"
                     title="Drag to reorder"
-                    (dragstart)="startColumnDrag('marketplaces', $event)"
+                    (dragstart)="startColumnDrag('productId', $event)"
                     (dragend)="endColumnDrag()"
                   >
                     <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
@@ -3134,14 +3254,338 @@ interface ColumnPreferences {
                   <button
                     type="button"
                     class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                    (click)="setSort('marketplaces')"
+                    (click)="setSort('productId')"
                   >
-                    Marketplaces
-                    <span class="text-[10px]">{{ sortIcon('marketplaces') }}</span>
+                    <span [attr.data-tooltip]="columnTooltip('productId')">Product ID</span>
+                    <span class="text-[10px]">{{ sortIcon('productId') }}</span>
                   </button>
                   <span
                     class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                    (mousedown)="startResize($event, 'marketplaces')"
+                    (mousedown)="startResize($event, 'productId')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('variationId')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('variationId')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('variationId')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('variationId', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('variationId')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('variationId')">Variation ID</span>
+                    <span class="text-[10px]">{{ sortIcon('variationId') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'variationId')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('mpn')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('mpn')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('mpn')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('mpn', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('mpn')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('mpn')">MPN</span>
+                    <span class="text-[10px]">{{ sortIcon('mpn') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'mpn')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('asin')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('asin')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('asin')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('asin', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('asin')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('asin')">ASIN</span>
+                    <span class="text-[10px]">{{ sortIcon('asin') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'asin')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('fnsku')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('fnsku')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('fnsku')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('fnsku', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('fnsku')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('fnsku')">FNSKU</span>
+                    <span class="text-[10px]">{{ sortIcon('fnsku') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'fnsku')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('gtin')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('gtin')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('gtin')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('gtin', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('gtin')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('gtin')">GTIN</span>
+                    <span class="text-[10px]">{{ sortIcon('gtin') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'gtin')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('ean')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('ean')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('ean')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('ean', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('ean')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('ean')">EAN</span>
+                    <span class="text-[10px]">{{ sortIcon('ean') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'ean')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('isbn')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('isbn')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('isbn')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('isbn', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('isbn')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('isbn')">ISBN</span>
+                    <span class="text-[10px]">{{ sortIcon('isbn') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'isbn')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('landedCost')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('landedCost')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('landedCost')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('landedCost', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('landedCost')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('landedCost')">Landed Cost</span>
+                    <span class="text-[10px]">{{ sortIcon('landedCost') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'landedCost')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('shippingCost')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('shippingCost')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('shippingCost')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('shippingCost', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('shippingCost')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('shippingCost')">Shipping</span>
+                    <span class="text-[10px]">{{ sortIcon('shippingCost') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'shippingCost')"
                   ></span>
                 </th>
                 <th
@@ -3172,12 +3616,48 @@ interface ColumnPreferences {
                     class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('salePrice')"
                   >
-                    Price
+                    <span [attr.data-tooltip]="columnTooltip('salePrice')">Sale Price</span>
                     <span class="text-[10px]">{{ sortIcon('salePrice') }}</span>
                   </button>
                   <span
                     class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
                     (mousedown)="startResize($event, 'salePrice')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('purchaseQty')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('purchaseQty')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('purchaseQty')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('purchaseQty', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('purchaseQty')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('purchaseQty')">Purchased</span>
+                    <span class="text-[10px]">{{ sortIcon('purchaseQty') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'purchaseQty')"
                   ></span>
                 </th>
                 <th
@@ -3208,7 +3688,7 @@ interface ColumnPreferences {
                     class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('soldQty')"
                   >
-                    Sold
+                    <span [attr.data-tooltip]="columnTooltip('soldQty')">Sold</span>
                     <span class="text-[10px]">{{ sortIcon('soldQty') }}</span>
                   </button>
                   <span
@@ -3244,12 +3724,192 @@ interface ColumnPreferences {
                     class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('stockQty')"
                   >
-                    Stock
+                    <span [attr.data-tooltip]="columnTooltip('stockQty')">In Stock</span>
                     <span class="text-[10px]">{{ sortIcon('stockQty') }}</span>
                   </button>
                   <span
                     class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
                     (mousedown)="startResize($event, 'stockQty')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('returnQty')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('returnQty')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('returnQty')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('returnQty', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('returnQty')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('returnQty')">Returns</span>
+                    <span class="text-[10px]">{{ sortIcon('returnQty') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'returnQty')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('profitMargin')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('profitMargin')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('profitMargin')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('profitMargin', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('profitMargin')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('profitMargin')">Margin %</span>
+                    <span class="text-[10px]">{{ sortIcon('profitMargin') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'profitMargin')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('profitAmount')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('profitAmount')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('profitAmount')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('profitAmount', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('profitAmount')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('profitAmount')">Profit $</span>
+                    <span class="text-[10px]">{{ sortIcon('profitAmount') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'profitAmount')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('velocity')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('velocity')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('velocity')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('velocity', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('velocity')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('velocity')">Velocity</span>
+                    <span class="text-[10px]">{{ sortIcon('velocity') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'velocity')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('stockDays')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('stockDays')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('stockDays')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('stockDays', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('stockDays')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('stockDays')">Stock Days</span>
+                    <span class="text-[10px]">{{ sortIcon('stockDays') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'stockDays')"
                   ></span>
                 </th>
                 <th
@@ -3280,12 +3940,113 @@ interface ColumnPreferences {
                     class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('restockStatus')"
                   >
-                    Restock
+                    <span [attr.data-tooltip]="columnTooltip('restockStatus')">Restock Status</span>
                     <span class="text-[10px]">{{ sortIcon('restockStatus') }}</span>
                   </button>
                   <span
                     class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
                     (mousedown)="startResize($event, 'restockStatus')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('suggestedRestockQty')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 text-right"
+                  [style.width.px]="columnWidth('suggestedRestockQty')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('suggestedRestockQty')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('suggestedRestockQty', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('suggestedRestockQty')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('suggestedRestockQty')">Restock Qty</span>
+                    <span class="text-[10px]">{{ sortIcon('suggestedRestockQty') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'suggestedRestockQty')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('marketplaces')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('marketplaces')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('marketplaces')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('marketplaces', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    (click)="setSort('marketplaces')"
+                  >
+                    <span [attr.data-tooltip]="columnTooltip('marketplaces')">Marketplaces</span>
+                    <span class="text-[10px]">{{ sortIcon('marketplaces') }}</span>
+                  </button>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'marketplaces')"
+                  ></span>
+                </th>
+                <th
+                  *ngIf="isColumnVisible('actions')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  [style.width.px]="columnWidth('actions')"
+                  (dragover)="allowColumnDrop($event)"
+                  (drop)="onColumnDrop('actions')"
+                >
+                  <span
+                    class="absolute left-1 top-1/2 -translate-y-1/2 cursor-grab rounded px-1 py-0.5 text-muted-foreground/70 text-[10px] opacity-60 hover:bg-muted hover:opacity-100"
+                    draggable="true"
+                    title="Drag to reorder"
+                    (dragstart)="startColumnDrag('actions', $event)"
+                    (dragend)="endColumnDrag()"
+                  >
+                    <svg viewBox="0 0 12 12" fill="currentColor" class="h-3 w-3">
+                      <circle cx="3" cy="3" r="1" />
+                      <circle cx="9" cy="3" r="1" />
+                      <circle cx="3" cy="6" r="1" />
+                      <circle cx="9" cy="6" r="1" />
+                      <circle cx="3" cy="9" r="1" />
+                      <circle cx="9" cy="9" r="1" />
+                    </svg>
+                  </span>
+                  <span [attr.data-tooltip]="columnTooltip('actions')">Actions</span>
+                  <span
+                    class="absolute right-0 top-0 h-full w-2 cursor-col-resize"
+                    (mousedown)="startResize($event, 'actions')"
                   ></span>
                 </th>
               </tr>
@@ -3308,34 +4069,38 @@ interface ColumnPreferences {
                   />
                 </td>
                 <td
+                  *ngIf="isColumnVisible('image')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('image')"
+                >
+                  <img
+                    [src]="product.image"
+                    [alt]="product.name"
+                    class="h-12 w-12 rounded-md border border-border object-cover"
+                  />
+                </td>
+                <td
                   *ngIf="isColumnVisible('name')"
                   class="p-4 align-middle"
                   [style.width.px]="columnWidth('name')"
                 >
-                  <div class="flex items-center gap-3">
-                    <img
-                      [src]="product.image"
-                      [alt]="product.name"
-                      class="h-12 w-12 rounded-md border border-border object-cover"
-                    />
-                    <div class="space-y-1">
-                      <button
-                        type="button"
-                        class="text-left font-medium text-foreground hover:underline"
-                        (click)="$event.stopPropagation(); openProductDialog(product)"
-                      >
-                        {{ product.name }}
-                      </button>
-                      <p class="text-xs text-muted-foreground">
-                        SKU {{ product.vendorSku }} · ID {{ product.productId }}
-                      </p>
-                      <p
-                        *ngIf="product.variationId"
-                        class="text-xs text-muted-foreground"
-                      >
-                        Variation {{ product.variationId }}
-                      </p>
-                    </div>
+                  <div class="space-y-1">
+                    <button
+                      type="button"
+                      class="text-left font-medium text-foreground hover:underline"
+                      (click)="$event.stopPropagation(); openProductDialog(product)"
+                    >
+                      {{ product.name }}
+                    </button>
+                    <p class="text-xs text-muted-foreground">
+                      SKU {{ product.vendorSku }} · ID {{ product.productId }}
+                    </p>
+                    <p
+                      *ngIf="product.variationId"
+                      class="text-xs text-muted-foreground"
+                    >
+                      Variation {{ product.variationId }}
+                    </p>
                   </div>
                 </td>
                 <td
@@ -3455,14 +4220,18 @@ interface ColumnPreferences {
                   </div>
                 </td>
                 <td
-                  *ngIf="isColumnVisible('vendorName')"
+                  *ngIf="isColumnVisible('sku')"
                   class="p-4 align-middle"
-                  [style.width.px]="columnWidth('vendorName')"
+                  [style.width.px]="columnWidth('sku')"
+                >
+                  <div class="text-sm font-medium">{{ product.vendorSku }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('vendor')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('vendor')"
                 >
                   <div class="text-sm font-medium">{{ product.vendorName }}</div>
-                  <div class="text-xs text-muted-foreground">
-                    {{ product.manufacturerPart }}
-                  </div>
                 </td>
                 <td
                   *ngIf="isColumnVisible('brand')"
@@ -3470,9 +4239,170 @@ interface ColumnPreferences {
                   [style.width.px]="columnWidth('brand')"
                 >
                   <div class="text-sm font-medium">{{ product.brand }}</div>
-                  <div class="text-xs text-muted-foreground">
-                    ASIN {{ product.asin }}
-                  </div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('productId')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('productId')"
+                >
+                  <div class="text-sm font-medium">{{ product.productId }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('variationId')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('variationId')"
+                >
+                  <div class="text-sm font-medium">{{ product.variationId || '-' }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('mpn')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('mpn')"
+                >
+                  <div class="text-sm font-medium">{{ product.manufacturerPart || '-' }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('asin')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('asin')"
+                >
+                  <div class="text-sm font-medium">{{ product.asin || '-' }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('fnsku')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('fnsku')"
+                >
+                  <div class="text-sm font-medium">{{ product.fnsku || '-' }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('gtin')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('gtin')"
+                >
+                  <div class="text-sm font-medium">{{ product.gtin || '-' }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('ean')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('ean')"
+                >
+                  <div class="text-sm font-medium">{{ product.ean || '-' }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('isbn')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('isbn')"
+                >
+                  <div class="text-sm font-medium">{{ product.isbn || '-' }}</div>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('landedCost')"
+                  class="px-4 py-4 text-right"
+                  [style.width.px]="columnWidth('landedCost')"
+                >
+                  <p class="font-medium">
+                    {{ product.landedCost | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('shippingCost')"
+                  class="px-4 py-4 text-right"
+                  [style.width.px]="columnWidth('shippingCost')"
+                >
+                  <p class="font-medium">
+                    {{ product.shippingCost | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('salePrice')"
+                  class="px-4 py-4 text-right"
+                  [style.width.px]="columnWidth('salePrice')"
+                >
+                  <p class="font-medium">
+                    {{ product.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('purchaseQty')"
+                  class="px-4 py-4 text-right"
+                  [style.width.px]="columnWidth('purchaseQty')"
+                >
+                  <p class="font-medium">{{ product.purchaseQty }}</p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('soldQty')"
+                  class="px-4 py-4 text-right"
+                  [style.width.px]="columnWidth('soldQty')"
+                >
+                  <p class="font-medium">{{ soldQty(product) }}</p>
+                  <p class="text-xs text-muted-foreground">
+                    {{ soldPeriodLabel(filters.soldPeriod) }}
+                  </p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('stockQty')"
+                  class="p-4 align-middle text-right"
+                  [style.width.px]="columnWidth('stockQty')"
+                >
+                  <p class="font-medium">{{ product.stockQty }}</p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('returnQty')"
+                  class="p-4 align-middle text-right"
+                  [style.width.px]="columnWidth('returnQty')"
+                >
+                  <p class="font-medium">{{ product.returnQty }}</p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('profitMargin')"
+                  class="p-4 align-middle text-right"
+                  [style.width.px]="columnWidth('profitMargin')"
+                >
+                  <p class="font-medium">{{ product.grossProfitPercent }}%</p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('profitAmount')"
+                  class="p-4 align-middle text-right"
+                  [style.width.px]="columnWidth('profitAmount')"
+                >
+                  <p class="font-medium">
+                    {{ product.grossProfitAmount | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('velocity')"
+                  class="p-4 align-middle text-right"
+                  [style.width.px]="columnWidth('velocity')"
+                >
+                  <p class="font-medium">{{ product.velocity }}</p>
+                  <p class="text-xs text-muted-foreground">per day</p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('stockDays')"
+                  class="p-4 align-middle text-right"
+                  [style.width.px]="columnWidth('stockDays')"
+                >
+                  <p class="font-medium">{{ product.stockDays }}</p>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('restockStatus')"
+                  class="p-4 align-middle"
+                  [style.width.px]="columnWidth('restockStatus')"
+                >
+                  <span
+                    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                    [ngClass]="restockClasses[product.restockStatus]"
+                  >
+                    {{ restockLabels[product.restockStatus] }}
+                  </span>
+                </td>
+                <td
+                  *ngIf="isColumnVisible('suggestedRestockQty')"
+                  class="p-4 align-middle text-right"
+                  [style.width.px]="columnWidth('suggestedRestockQty')"
+                >
+                  <p class="font-medium">{{ product.suggestedRestockQty }}</p>
                 </td>
                 <td
                   *ngIf="isColumnVisible('marketplaces')"
@@ -3497,48 +4427,17 @@ interface ColumnPreferences {
                   </button>
                 </td>
                 <td
-                  *ngIf="isColumnVisible('salePrice')"
-                  class="px-4 py-4 text-right"
-                  [style.width.px]="columnWidth('salePrice')"
-                >
-                  <p class="font-medium">
-                    {{ product.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
-                  </p>
-                  <p class="text-xs text-muted-foreground">
-                    Margin {{ product.grossProfitPercent }}%
-                  </p>
-                </td>
-                <td
-                  *ngIf="isColumnVisible('soldQty')"
-                  class="px-4 py-4 text-right"
-                  [style.width.px]="columnWidth('soldQty')"
-                >
-                  <p class="font-medium">{{ soldQty(product) }}</p>
-                  <p class="text-xs text-muted-foreground">
-                    {{ soldPeriodLabel(filters.soldPeriod) }}
-                  </p>
-                </td>
-                <td
-                  *ngIf="isColumnVisible('stockQty')"
-                  class="p-4 align-middle text-right"
-                  [style.width.px]="columnWidth('stockQty')"
-                >
-                  <p class="font-medium">{{ product.stockQty }}</p>
-                  <p class="text-xs text-muted-foreground">
-                    {{ product.stockDays }} days
-                  </p>
-                </td>
-                <td
-                  *ngIf="isColumnVisible('restockStatus')"
+                  *ngIf="isColumnVisible('actions')"
                   class="p-4 align-middle"
-                  [style.width.px]="columnWidth('restockStatus')"
+                  [style.width.px]="columnWidth('actions')"
                 >
-                  <span
-                    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
-                    [ngClass]="restockClasses[product.restockStatus]"
+                  <button
+                    type="button"
+                    class="inline-flex items-center rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                    (click)="$event.stopPropagation(); openProductDialog(product)"
                   >
-                    {{ restockLabels[product.restockStatus] }}
-                  </span>
+                    View
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -3725,31 +4624,71 @@ export class ProductGridComponent implements OnInit {
   kitQuantity = 1;
 
   columns: ColumnConfig[] = [
-    { id: 'name', label: 'Product', visible: true, sortable: true },
+    { id: 'image', label: 'Image', visible: true },
+    { id: 'name', label: 'Product Name', visible: true, sortable: true },
     { id: 'productType', label: 'Type', visible: true, sortable: true },
     { id: 'tags', label: 'Tags', visible: true },
     { id: 'offers', label: 'Offers', visible: true },
-    { id: 'vendorName', label: 'Vendor', visible: true, sortable: true },
+    { id: 'sku', label: 'SKU', visible: true, sortable: true },
     { id: 'brand', label: 'Brand', visible: true, sortable: true },
-    { id: 'marketplaces', label: 'Marketplaces', visible: true },
-    { id: 'salePrice', label: 'Price', visible: true, sortable: true, align: 'right' },
+    { id: 'productId', label: 'Product ID', visible: true, sortable: true },
+    { id: 'variationId', label: 'Variation ID', visible: true, sortable: true },
+    { id: 'vendor', label: 'Vendor', visible: true, sortable: true },
+    { id: 'mpn', label: 'MPN', visible: true, sortable: true },
+    { id: 'asin', label: 'ASIN', visible: false, sortable: true },
+    { id: 'fnsku', label: 'FNSKU', visible: false, sortable: true },
+    { id: 'gtin', label: 'GTIN', visible: false, sortable: true },
+    { id: 'ean', label: 'EAN', visible: false, sortable: true },
+    { id: 'isbn', label: 'ISBN', visible: false, sortable: true },
+    { id: 'landedCost', label: 'Landed Cost', visible: true, sortable: true, align: 'right' },
+    { id: 'shippingCost', label: 'Shipping', visible: true, sortable: true, align: 'right' },
+    { id: 'salePrice', label: 'Sale Price', visible: true, sortable: true, align: 'right' },
+    { id: 'purchaseQty', label: 'Purchased', visible: true, sortable: true, align: 'right' },
     { id: 'soldQty', label: 'Sold', visible: true, sortable: true, align: 'right' },
-    { id: 'stockQty', label: 'Stock', visible: true, sortable: true, align: 'right' },
-    { id: 'restockStatus', label: 'Restock', visible: true, sortable: true },
+    { id: 'stockQty', label: 'In Stock', visible: true, sortable: true, align: 'right' },
+    { id: 'returnQty', label: 'Returns', visible: true, sortable: true, align: 'right' },
+    { id: 'profitMargin', label: 'Margin %', visible: true, sortable: true, align: 'right' },
+    { id: 'profitAmount', label: 'Profit $', visible: true, sortable: true, align: 'right' },
+    { id: 'velocity', label: 'Velocity', visible: true, sortable: true, align: 'right' },
+    { id: 'stockDays', label: 'Stock Days', visible: true, sortable: true, align: 'right' },
+    { id: 'restockStatus', label: 'Restock Status', visible: true, sortable: true },
+    { id: 'suggestedRestockQty', label: 'Restock Qty', visible: true, sortable: true, align: 'right' },
+    { id: 'marketplaces', label: 'Marketplaces', visible: true },
+    { id: 'actions', label: 'Actions', visible: true },
   ];
 
   private readonly defaultColumnWidths: Record<string, number> = {
+    image: 80,
     name: 320,
     productType: 140,
-    tags: 240,
+    tags: 220,
     offers: 200,
-    vendorName: 200,
+    sku: 140,
     brand: 160,
-    marketplaces: 200,
+    productId: 160,
+    variationId: 160,
+    vendor: 200,
+    mpn: 160,
+    asin: 140,
+    fnsku: 140,
+    gtin: 140,
+    ean: 140,
+    isbn: 140,
+    landedCost: 140,
+    shippingCost: 140,
     salePrice: 140,
+    purchaseQty: 120,
     soldQty: 120,
     stockQty: 120,
-    restockStatus: 150,
+    returnQty: 120,
+    profitMargin: 140,
+    profitAmount: 140,
+    velocity: 120,
+    stockDays: 120,
+    restockStatus: 160,
+    suggestedRestockQty: 150,
+    marketplaces: 200,
+    actions: 120,
   };
 
   private resizingColumnId: string | null = null;
@@ -5079,6 +6018,10 @@ export class ProductGridComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
+  columnTooltip(columnId: ColumnId): string {
+    return columnTooltips[columnId] ?? columnId;
+  }
+
   columnWidth(columnId: string): number {
     return this.columnWidths[columnId] ?? 150;
   }
@@ -5733,9 +6676,10 @@ export class ProductGridComponent implements OnInit {
 
   private getSortValue(product: Product, key: SortKey): string | number {
     switch (key) {
+      case 'image':
       case 'name':
         return product.name;
-      case 'vendorSku':
+      case 'sku':
         return product.vendorSku;
       case 'brand':
         return product.brand;
@@ -5743,20 +6687,52 @@ export class ProductGridComponent implements OnInit {
         return product.productId;
       case 'variationId':
         return product.variationId ?? '';
-      case 'vendorName':
+      case 'vendor':
         return product.vendorName;
+      case 'mpn':
+        return product.manufacturerPart;
+      case 'asin':
+        return product.asin;
+      case 'fnsku':
+        return product.fnsku;
+      case 'gtin':
+        return product.gtin;
+      case 'ean':
+        return product.ean;
+      case 'isbn':
+        return product.isbn;
+      case 'landedCost':
+        return product.landedCost;
+      case 'shippingCost':
+        return product.shippingCost;
       case 'salePrice':
         return product.salePrice;
+      case 'purchaseQty':
+        return product.purchaseQty;
       case 'stockQty':
         return product.stockQty;
       case 'soldQty':
         return this.soldQty(product);
+      case 'returnQty':
+        return product.returnQty;
+      case 'profitMargin':
+        return product.grossProfitPercent;
+      case 'profitAmount':
+        return product.grossProfitAmount;
+      case 'velocity':
+        return product.velocity;
+      case 'stockDays':
+        return product.stockDays;
       case 'restockStatus':
         return this.restockRank[product.restockStatus];
+      case 'suggestedRestockQty':
+        return product.suggestedRestockQty;
       case 'marketplaces':
         return product.marketplaces.length;
       case 'productType':
         return product.productType;
+      case 'actions':
+        return product.name;
       default:
         return product.name;
     }
