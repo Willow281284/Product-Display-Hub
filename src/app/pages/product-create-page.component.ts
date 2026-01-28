@@ -2412,30 +2412,89 @@ interface ExtraAttributeRow {
         </div>
 
         <div *ngIf="activeTab === 'tags'" class="py-6 space-y-6">
-          <div class="rounded-xl border border-border bg-card p-5">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Tags &amp; labels</h2>
-              <button
-                type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-lg font-semibold">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
               >
-                Manage tags
-              </button>
+                <path d="M20.59 13.41 12 22 3 13.41a2 2 0 0 1 0-2.82L12 2l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                <circle cx="7" cy="7" r="1.5"></circle>
+              </svg>
+              Product Tags
             </div>
-            <div class="mt-4 flex flex-wrap gap-2 text-xs">
-              <button
-                *ngFor="let tag of tagOptions"
-                type="button"
-                class="rounded-full border border-border px-3 py-1"
-                [class.bg-muted]="selectedTags.includes(tag)"
-                (click)="toggleTag(tag)"
+            <button
+              type="button"
+              class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              (click)="openTagModal()"
+            >
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="M12 5v14"></path>
+                </svg>
+                Manage Tags
+              </span>
+            </button>
+          </div>
+
+          <div class="rounded-xl border border-border bg-card p-8 text-center">
+            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted/30">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-6 w-6 text-muted-foreground"
               >
-                {{ tag }}
-              </button>
+                <path d="M20.59 13.41 12 22 3 13.41a2 2 0 0 1 0-2.82L12 2l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                <circle cx="7" cy="7" r="1.5"></circle>
+              </svg>
             </div>
-            <div class="mt-4 rounded-lg border border-dashed border-border bg-background p-4 text-xs text-muted-foreground">
-              Use tags to organize bundles, launches, and seasonal promotions.
-            </div>
+            <p class="font-semibold">No tags assigned</p>
+            <p class="text-sm text-muted-foreground">
+              Add tags to organize and filter your products
+            </p>
+            <button
+              type="button"
+              class="mt-4 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              (click)="openTagModal()"
+            >
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="M12 5v14"></path>
+                </svg>
+                Add Tags
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -2758,6 +2817,115 @@ interface ExtraAttributeRow {
           {{ toast.text }}
         </div>
       </div>
+
+      <div
+        *ngIf="showTagModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+        (click)="closeTagModal()"
+      >
+        <div
+          class="w-full max-w-lg rounded-xl bg-card p-5 shadow-xl animate-in zoom-in-95"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="flex items-center justify-between border-b border-border pb-4">
+            <h3 class="text-lg font-semibold">Create Tag</h3>
+            <button
+              type="button"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+              (click)="closeTagModal()"
+              aria-label="Close"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="mt-5 grid gap-5">
+            <label class="grid gap-2 text-sm font-medium text-foreground">
+              Tag Name
+              <input
+                type="text"
+                class="h-11 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground"
+                placeholder="Enter tag name..."
+                [(ngModel)]="tagNameInput"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </label>
+
+            <div>
+              <p class="text-sm font-medium text-foreground">Color</p>
+              <div class="mt-3 grid grid-cols-6 gap-3">
+                <button
+                  *ngFor="let color of tagPalette"
+                  type="button"
+                  class="h-8 w-8 rounded-full border-2"
+                  [ngStyle]="{ 'background-color': color, 'border-color': tagSelectedColor === color ? color : 'transparent' }"
+                  (click)="selectTagColor(color)"
+                >
+                  <span
+                    *ngIf="tagSelectedColor === color"
+                    class="inline-block h-2 w-2 rounded-full bg-white"
+                  ></span>
+                </button>
+              </div>
+              <div class="mt-4 flex items-center gap-3">
+                <span class="text-xs text-muted-foreground">Custom:</span>
+                <input
+                  type="color"
+                  class="h-9 w-12 rounded-md border border-border bg-background"
+                  [(ngModel)]="tagCustomColor"
+                  (ngModelChange)="updateCustomColor($event)"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+                <input
+                  type="text"
+                  class="h-9 flex-1 rounded-md border border-border bg-background px-3 text-sm text-foreground"
+                  [(ngModel)]="tagCustomColor"
+                  (ngModelChange)="updateCustomColor($event)"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </div>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium text-foreground">Preview</p>
+              <span
+                class="mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold text-white"
+                [ngStyle]="{ 'background-color': tagSelectedColor }"
+              >
+                {{ tagNameInput || 'Tag Name' }}
+              </span>
+            </div>
+          </div>
+          <div class="mt-6 flex items-center justify-end gap-3">
+            <button
+              type="button"
+              class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+              (click)="closeTagModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+              [disabled]="!tagNameInput.trim()"
+              (click)="createTag()"
+            >
+              Create Tag
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.Default,
@@ -2836,16 +3004,16 @@ export class ProductCreatePageComponent implements OnInit {
     { name: '', value: '', type: 'text' },
   ];
 
-  readonly tagOptions = [
-    'New launch',
-    'Seasonal',
-    'Bundle candidate',
-    'Needs review',
-    'High margin',
-    'Core catalog',
+  tagOptions: Array<{ name: string; color: string }> = [
+    { name: 'New launch', color: '#f97316' },
+    { name: 'Seasonal', color: '#f59e0b' },
+    { name: 'Bundle candidate', color: '#10b981' },
+    { name: 'Needs review', color: '#6366f1' },
+    { name: 'High margin', color: '#22c55e' },
+    { name: 'Core catalog', color: '#64748b' },
   ];
 
-  selectedTags = ['New launch', 'High margin'];
+  selectedTags: string[] = [];
 
   selectedMarketplaces = ['amazon', 'walmart', 'ebay', 'target'];
 
@@ -2880,6 +3048,30 @@ export class ProductCreatePageComponent implements OnInit {
   newBrandName = '';
   newBrandDetails = '';
 
+  showTagModal = false;
+  tagNameInput = '';
+  tagSelectedColor = '#f43f5e';
+  tagCustomColor = '#6366f1';
+  readonly tagPalette = [
+    '#ef4444',
+    '#f97316',
+    '#f59e0b',
+    '#eab308',
+    '#84cc16',
+    '#22c55e',
+    '#10b981',
+    '#14b8a6',
+    '#06b6d4',
+    '#0ea5e9',
+    '#3b82f6',
+    '#6366f1',
+    '#8b5cf6',
+    '#a855f7',
+    '#d946ef',
+    '#ec4899',
+    '#f43f5e',
+    '#64748b',
+  ];
   mediaUrlInput = '';
   mediaItems: Array<{ url: string; type: 'image' | 'video' }> = [];
 
@@ -2982,6 +3174,44 @@ export class ProductCreatePageComponent implements OnInit {
     const option = this.productOptions[index];
     if (!option) return;
     option.display = display;
+  }
+
+  openTagModal(): void {
+    this.showTagModal = true;
+    this.tagNameInput = '';
+    this.tagSelectedColor = this.tagPalette[0];
+    this.tagCustomColor = '#6366f1';
+  }
+
+  closeTagModal(): void {
+    this.showTagModal = false;
+  }
+
+  selectTagColor(color: string): void {
+    this.tagSelectedColor = color;
+    this.tagCustomColor = color;
+  }
+
+  updateCustomColor(value: string): void {
+    this.tagCustomColor = value;
+    if (value.startsWith('#') && value.length === 7) {
+      this.tagSelectedColor = value;
+    }
+  }
+
+  createTag(): void {
+    const name = this.tagNameInput.trim();
+    if (!name) return;
+    if (!this.tagOptions.some((tag) => tag.name.toLowerCase() === name.toLowerCase())) {
+      this.tagOptions = [
+        ...this.tagOptions,
+        { name, color: this.tagSelectedColor },
+      ];
+    }
+    if (!this.selectedTags.includes(name)) {
+      this.selectedTags = [...this.selectedTags, name];
+    }
+    this.closeTagModal();
   }
 
   addExtraAttribute(): void {
