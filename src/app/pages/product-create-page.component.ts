@@ -1874,30 +1874,183 @@ interface ExtraAttributeRow {
                 {{ aPlusModules.length }} module{{ aPlusModules.length === 1 ? '' : 's' }}
               </span>
             </div>
+            <div *ngIf="showModulePicker" class="rounded-xl border border-border bg-card p-4">
+              <div class="grid gap-4 md:grid-cols-2">
+                <button
+                  type="button"
+                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                  (click)="addAplusModule('text')"
+                >
+                  <span class="text-primary">T</span>
+                  Text Block
+                </button>
+                <button
+                  type="button"
+                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                  (click)="addAplusModule('image')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4 text-primary"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <path d="m21 15-5-5L5 21"></path>
+                  </svg>
+                  Image
+                </button>
+                <button
+                  type="button"
+                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                  (click)="addAplusModule('video')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4 text-primary"
+                  >
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                  </svg>
+                  Video
+                </button>
+                <button
+                  type="button"
+                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                  (click)="addAplusModule('pdf')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4 text-primary"
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  PDF Document
+                </button>
+                <button
+                  type="button"
+                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                  (click)="addAplusModule('other')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4 text-primary"
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  Other File
+                </button>
+              </div>
+            </div>
+
             <div
-              *ngFor="let module of aPlusModules; let i = index; trackBy: trackByIndex"
+              *ngFor="let module of aPlusModules; let i = index; trackBy: trackByModuleId"
               class="rounded-xl border border-border bg-card p-4"
             >
-              <div class="flex items-center gap-3 text-sm font-semibold">
-                <span class="text-muted-foreground">⋮⋮</span>
-                <span class="text-primary">T</span>
-                Text Block
-                <span class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
-                  #{{ i + 1 }}
-                </span>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3 text-sm font-semibold">
+                  <span class="text-muted-foreground">⋮⋮</span>
+                  <span class="text-primary">
+                    {{ module.type === 'text' ? 'T' : '' }}
+                  </span>
+                  <span class="capitalize">{{ module.type === 'pdf' ? 'PDF Document' : module.type }}</span>
+                  <span class="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
+                    #{{ i + 1 }}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
+                  (click)="removeAplusModule(module.id)"
+                  title="Remove"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-4 w-4"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
               </div>
-              <textarea
-                rows="3"
-                class="mt-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-                placeholder="Enter your text content here..."
-                [(ngModel)]="module.content"
-                [ngModelOptions]="{ standalone: true }"
-              ></textarea>
+
+              <ng-container *ngIf="module.type === 'text'">
+                <textarea
+                  rows="3"
+                  class="mt-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  placeholder="Enter your text content here..."
+                  [(ngModel)]="module.content"
+                  [ngModelOptions]="{ standalone: true }"
+                ></textarea>
+              </ng-container>
+
+              <ng-container *ngIf="module.type !== 'text'">
+                <div class="mt-3 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted"
+                  >
+                    Upload File
+                  </button>
+                  <span class="text-xs text-muted-foreground">or</span>
+                  <div class="flex-1">
+                    <input
+                      type="text"
+                      class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Paste URL..."
+                      [(ngModel)]="module.url"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  class="mt-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  placeholder="Add a caption (optional)"
+                  [(ngModel)]="module.caption"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </ng-container>
             </div>
+
             <button
               type="button"
               class="w-full rounded-xl border border-border bg-background py-3 text-sm font-semibold text-muted-foreground hover:bg-muted"
-              (click)="addAplusModule()"
+              (click)="toggleModulePicker()"
             >
               + Add Module
             </button>
@@ -2335,8 +2488,15 @@ export class ProductCreatePageComponent implements OnInit {
   contentTitle = '';
   contentDescription = '';
   bulletPoints: string[] = ['', '', '', ''];
-  aPlusModules: Array<{ id: number; content: string }> = [{ id: 1, content: '' }];
-  private moduleId = 1;
+  showModulePicker = false;
+  aPlusModules: Array<{
+    id: number;
+    type: 'text' | 'image' | 'video' | 'pdf' | 'other';
+    content: string;
+    url: string;
+    caption: string;
+  }> = [];
+  private moduleId = 0;
 
   toastMessages: Array<{ id: number; text: string }> = [];
   private toastId = 0;
@@ -2405,9 +2565,25 @@ export class ProductCreatePageComponent implements OnInit {
     this.bulletPoints = this.bulletPoints.filter((_, i) => i !== index);
   }
 
-  addAplusModule(): void {
+  trackByModuleId(index: number, module: { id: number }): number {
+    return module.id;
+  }
+
+  toggleModulePicker(): void {
+    this.showModulePicker = !this.showModulePicker;
+  }
+
+  addAplusModule(type: 'text' | 'image' | 'video' | 'pdf' | 'other'): void {
     this.moduleId += 1;
-    this.aPlusModules = [...this.aPlusModules, { id: this.moduleId, content: '' }];
+    this.aPlusModules = [
+      ...this.aPlusModules,
+      { id: this.moduleId, type, content: '', url: '', caption: '' },
+    ];
+    this.showModulePicker = false;
+  }
+
+  removeAplusModule(id: number): void {
+    this.aPlusModules = this.aPlusModules.filter((module) => module.id !== id);
   }
 
   addIdentifier(
