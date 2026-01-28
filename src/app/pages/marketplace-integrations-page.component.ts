@@ -450,12 +450,49 @@ const integrationsSeed: MarketplaceIntegration[] = marketplacePlatforms.map((pla
 
             <ng-template #amazonOauth>
               <div class="mt-4 rounded-lg border border-border bg-background/40 p-4 text-xs text-muted-foreground">
-                OAuth flow connects your Amazon account securely using seller authorization.
-                In production, this will redirect to Amazon OAuth.
+                OAuth authorization will redirect you to Amazon to grant access to your seller account.
               </div>
+
+              <div class="mt-4 space-y-4">
+                <label class="grid gap-2 text-xs">
+                  <span class="font-semibold text-foreground">Store Name *</span>
+                  <input
+                    type="text"
+                    class="h-10 rounded-md border border-border bg-background px-3 text-sm"
+                    placeholder="My Amazon Store"
+                    [(ngModel)]="amazonConnectForm.storeName"
+                  />
+                </label>
+                <label class="grid gap-2 text-xs">
+                  <span class="font-semibold text-foreground">Marketplace *</span>
+                  <select
+                    class="h-10 rounded-md border border-border bg-background px-3 text-sm"
+                    [(ngModel)]="amazonConnectForm.marketplace"
+                  >
+                    <option>United States (NA)</option>
+                    <option>Canada (NA)</option>
+                    <option>United Kingdom (EU)</option>
+                  </select>
+                </label>
+              </div>
+
+              <button
+                type="button"
+                class="mt-5 flex w-full items-center justify-center gap-2 rounded-md bg-emerald-500 px-4 py-2 text-xs font-semibold text-white"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M15 14l5-5-5-5" />
+                  <path d="M4 20v-7a4 4 0 0 1 4-4h12" />
+                </svg>
+                Authorize with Amazon
+              </button>
+
+              <p class="mt-3 text-[10px] text-muted-foreground">
+                Note: OAuth requires your app to be registered in the Amazon Developer Console
+              </p>
             </ng-template>
 
-            <div class="mt-6 flex items-center justify-end gap-2">
+            <div *ngIf="connectTab === 'api'" class="mt-6 flex items-center justify-end gap-2">
               <button
                 type="button"
                 class="rounded-md border border-border px-4 py-2 text-xs font-semibold text-foreground"
