@@ -2256,13 +2256,6 @@ export class ProductCreatePageComponent implements OnInit {
   readonly marketplaces = marketplacePlatforms;
   readonly mediaSlots = [1, 2, 3, 4];
 
-  readonly bulletPoints = [
-    'Premium build with durable materials.',
-    'Compatible with leading marketplace standards.',
-    'Includes accessories for quick setup.',
-    'Optimized for warehouse fulfillment.',
-    'Backed by 12-month warranty.',
-  ];
 
   readonly optionSets: OptionSet[] = [
     {
