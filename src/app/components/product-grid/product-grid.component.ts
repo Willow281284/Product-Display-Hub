@@ -6517,7 +6517,7 @@ export class ProductGridComponent implements OnInit {
       if (order && Array.isArray(order)) {
         const map = new Map(this.columns.map((column) => [column.id, column]));
         const ordered = order
-          .map((id: string) => map.get(id))
+          .map((id: string) => map.get(id as ColumnId))
           .filter((column): column is ColumnConfig => Boolean(column));
         const remaining = this.columns.filter(
           (column) => !order.includes(column.id)
