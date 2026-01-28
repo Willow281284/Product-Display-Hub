@@ -1874,100 +1874,6 @@ interface ExtraAttributeRow {
                 {{ aPlusModules.length }} module{{ aPlusModules.length === 1 ? '' : 's' }}
               </span>
             </div>
-            <div *ngIf="showModulePicker" class="rounded-xl border border-border bg-card p-4">
-              <div class="grid gap-4 md:grid-cols-2">
-                <button
-                  type="button"
-                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
-                  (click)="addAplusModule('text')"
-                >
-                  <span class="text-primary">T</span>
-                  Text Block
-                </button>
-                <button
-                  type="button"
-                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
-                  (click)="addAplusModule('image')"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-4 w-4 text-primary"
-                  >
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <path d="m21 15-5-5L5 21"></path>
-                  </svg>
-                  Image
-                </button>
-                <button
-                  type="button"
-                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
-                  (click)="addAplusModule('video')"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-4 w-4 text-primary"
-                  >
-                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                  </svg>
-                  Video
-                </button>
-                <button
-                  type="button"
-                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
-                  (click)="addAplusModule('pdf')"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-4 w-4 text-primary"
-                  >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
-                  PDF Document
-                </button>
-                <button
-                  type="button"
-                  class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
-                  (click)="addAplusModule('other')"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-4 w-4 text-primary"
-                  >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
-                  Other File
-                </button>
-              </div>
-            </div>
-
             <div
               *ngFor="let module of aPlusModules; let i = index; trackBy: trackByModuleId"
               class="rounded-xl border border-border bg-card p-4"
@@ -2047,13 +1953,112 @@ interface ExtraAttributeRow {
               </ng-container>
             </div>
 
-            <button
-              type="button"
-              class="w-full rounded-xl border border-border bg-background py-3 text-sm font-semibold text-muted-foreground hover:bg-muted"
-              (click)="toggleModulePicker()"
-            >
-              + Add Module
-            </button>
+            <div class="relative">
+              <div
+                *ngIf="showModulePicker"
+                class="absolute bottom-full left-0 mb-3 w-full rounded-xl border border-border bg-card p-4 shadow-xl"
+              >
+                <div class="grid gap-4 md:grid-cols-2">
+                  <button
+                    type="button"
+                    class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                    (click)="addAplusModule('text')"
+                  >
+                    <span class="text-primary">T</span>
+                    Text Block
+                  </button>
+                  <button
+                    type="button"
+                    class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                    (click)="addAplusModule('image')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4 text-primary"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <path d="m21 15-5-5L5 21"></path>
+                    </svg>
+                    Image
+                  </button>
+                  <button
+                    type="button"
+                    class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                    (click)="addAplusModule('video')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4 text-primary"
+                    >
+                      <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                    Video
+                  </button>
+                  <button
+                    type="button"
+                    class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                    (click)="addAplusModule('pdf')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4 text-primary"
+                    >
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    PDF Document
+                  </button>
+                  <button
+                    type="button"
+                    class="flex items-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-semibold hover:bg-muted"
+                    (click)="addAplusModule('other')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4 text-primary"
+                    >
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Other File
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="w-full rounded-xl border border-border bg-background py-3 text-sm font-semibold text-muted-foreground hover:bg-muted"
+                (click)="toggleModulePicker()"
+              >
+                + Add Module
+              </button>
+            </div>
           </div>
         </div>
 
