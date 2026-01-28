@@ -67,6 +67,9 @@ type SortDirection = 'asc' | 'desc';
 
 type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
 
+type BulkListingStep = 'configure' | 'preview';
+type BulkPublishMethod = 'ai' | 'upc' | 'manual';
+
 interface CsvFieldConfig {
   id: string;
   label: string;
@@ -104,6 +107,15 @@ interface ManualFieldConfig {
   placeholder: string;
   required?: boolean;
   type?: string;
+}
+
+interface BulkListingItemData {
+  sku: string;
+  stockQty: number | null;
+  salePrice: number | null;
+  msrp: number | null;
+  shippingCost: number | null;
+  condition: string;
 }
 
 interface CustomFilterRule {
@@ -204,6 +216,35 @@ const marketplaceBadgeClassMap: Record<string, string> = {
   wayfair: 'bg-indigo-600 text-white',
   overstock: 'bg-slate-600 text-white',
 };
+
+const bulkListingMethods = [
+  {
+    id: 'ai' as BulkPublishMethod,
+    label: 'AI Auto-Fill',
+    description: 'Use AI to generate optimized titles, descriptions & attributes',
+    icon: 'sparkles',
+  },
+  {
+    id: 'upc' as BulkPublishMethod,
+    label: 'UPC Match',
+    description: 'Match products using UPC/barcode to existing marketplace listings',
+    icon: 'barcode',
+  },
+  {
+    id: 'manual' as BulkPublishMethod,
+    label: 'Manual Publish',
+    description: 'Publish with existing product data as-is',
+    icon: 'upload',
+  },
+];
+
+const bulkConditionOptions = [
+  'New',
+  'Refurbished',
+  'Used - Like New',
+  'Used - Good',
+  'Used - Acceptable',
+];
 
 const csvSampleProducts: Record<string, string>[] = [
   {
@@ -2370,6 +2411,432 @@ interface ColumnPreferences {
               (click)="saveMarketplaceDialog()"
             >
               Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="bulkListingOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+      >
+        <div class="flex w-full max-w-[98vw] flex-col overflow-hidden rounded-xl bg-card shadow-xl animate-in zoom-in-95 md:max-w-5xl max-h-[90vh]">
+          <div class="flex items-center justify-between border-b border-border px-6 py-4">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <svg *ngIf="bulkListingStep === 'configure'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                  <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
+                  <path d="M2 7h20" />
+                </svg>
+                <svg *ngIf="bulkListingStep === 'preview'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </span>
+              <div>
+                <h3 class="text-lg font-semibold">
+                  {{ bulkListingStep === 'preview' ? 'Preview Batch Data' : 'Bulk List to Marketplaces' }}
+                </h3>
+                <p class="text-xs text-muted-foreground">
+                  {{
+                    bulkListingStep === 'preview'
+                      ? 'Review and edit listings before publishing.'
+                      : 'Select marketplaces and publish method for selected products.'
+                  }}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="rounded-md border border-border px-3 py-1 text-xs"
+              (click)="closeBulkListing()"
+            >
+              Close
+            </button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto px-6 py-4">
+            <ng-container *ngIf="bulkListingStep === 'configure'; else bulkListingPreview">
+              <div class="space-y-5">
+                <div class="space-y-2">
+                  <label class="text-xs font-semibold text-foreground">Batch Name</label>
+                  <input
+                    type="text"
+                    class="h-10 w-full rounded-md border border-border bg-background px-3 text-sm"
+                    placeholder="e.g., January 2025 Product Launch"
+                    [(ngModel)]="bulkListingBatchName"
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label class="text-xs font-semibold text-foreground">Publish Method</label>
+                  <div class="grid gap-2">
+                    <button
+                      *ngFor="let method of bulkListingMethods"
+                      type="button"
+                      class="flex items-start gap-3 rounded-lg border p-3 text-left transition-colors"
+                      [ngClass]="bulkListingPublishMethod === method.id ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'"
+                      (click)="bulkListingPublishMethod = method.id"
+                    >
+                      <span class="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                        <svg *ngIf="method.icon === 'sparkles'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+                        </svg>
+                        <svg *ngIf="method.icon === 'barcode'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M4 5v14" />
+                          <path d="M8 5v14" />
+                          <path d="M12 5v14" />
+                          <path d="M16 5v14" />
+                          <path d="M20 5v14" />
+                        </svg>
+                        <svg *ngIf="method.icon === 'upload'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M12 3v12" />
+                          <path d="m7 8 5-5 5 5" />
+                          <path d="M4 21h16" />
+                        </svg>
+                      </span>
+                      <div class="flex-1">
+                        <p class="text-sm font-medium text-foreground">{{ method.label }}</p>
+                        <p class="text-xs text-muted-foreground">{{ method.description }}</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs font-semibold text-foreground">Select Marketplaces</label>
+                    <div class="flex gap-2">
+                      <button
+                        type="button"
+                        class="h-7 rounded-md border border-border px-2 text-[10px]"
+                        (click)="bulkListingSelectAllMarketplaces()"
+                      >
+                        Select All
+                      </button>
+                      <button
+                        type="button"
+                        class="h-7 rounded-md border border-border px-2 text-[10px]"
+                        (click)="bulkListingClearMarketplaces()"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                  <div class="max-h-[180px] rounded-lg border border-border p-3 overflow-y-auto">
+                    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      <label
+                        *ngFor="let marketplace of marketplaces"
+                        class="flex items-center gap-2 rounded-lg border p-2 text-xs transition-colors"
+                        [ngClass]="bulkListingMarketplaces.includes(marketplace) ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'"
+                      >
+                        <input
+                          type="checkbox"
+                          class="h-4 w-4"
+                          [checked]="bulkListingMarketplaces.includes(marketplace)"
+                          (change)="bulkListingToggleMarketplace(marketplace)"
+                        />
+                        <span class="flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-semibold"
+                          [ngClass]="marketplaceBadgeClass(marketplace)"
+                        >
+                          {{ marketplaceBadgeLabel(marketplace) }}
+                        </span>
+                        <span class="truncate">{{ marketplaceName(marketplace) }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rounded-lg border border-border bg-muted/50 p-3 text-xs">
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Products:</span>
+                    <span class="font-semibold">{{ bulkListingProducts.length }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Marketplaces:</span>
+                    <span class="font-semibold">{{ bulkListingMarketplaces.length }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Method:</span>
+                    <span class="font-semibold">{{ bulkListingSelectedMethod()?.label }}</span>
+                  </div>
+                  <div class="mt-2 flex justify-between border-t border-border pt-2">
+                    <span class="text-muted-foreground">Total Listings:</span>
+                    <span class="font-semibold text-primary">{{ bulkListingTotalItems() }}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-template #bulkListingPreview>
+              <div class="flex flex-1 flex-col gap-3">
+                <div class="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-muted/50 p-3 text-xs">
+                  <span class="font-semibold">{{ bulkListingProducts.length }} Products</span>
+                  <span class="font-semibold">{{ bulkListingMarketplaces.length }} Marketplaces</span>
+                  <span class="font-semibold">{{ bulkListingSelectedMethod()?.label }}</span>
+                  <span class="ml-auto rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
+                    {{ bulkListingTotalItems() }} listings
+                  </span>
+                  <span
+                    *ngIf="bulkListingItemsWithIssues() > 0"
+                    class="rounded-full border border-destructive px-2 py-0.5 text-[10px] text-destructive"
+                  >
+                    {{ bulkListingItemsWithIssues() }} missing
+                  </span>
+                </div>
+
+                <div class="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                  <span>Edit data per marketplace. Use copy to apply values to all marketplaces for a product.</span>
+                  <button
+                    type="button"
+                    class="rounded-md border border-border px-2 py-1 text-[10px]"
+                    (click)="bulkListingFillOpen = !bulkListingFillOpen"
+                  >
+                    Fill All
+                  </button>
+                </div>
+
+                <div *ngIf="bulkListingFillOpen" class="grid gap-3 rounded-lg border border-border bg-background/50 p-3 text-xs">
+                  <div class="grid gap-2 sm:grid-cols-2">
+                    <label class="grid gap-1">
+                      Stock Quantity
+                      <div class="flex gap-2">
+                        <input
+                          type="number"
+                          class="h-8 w-full rounded-md border border-border bg-background px-2 text-xs"
+                          [(ngModel)]="bulkListingFillStock"
+                        />
+                        <button type="button" class="h-8 rounded-md border border-border px-2" (click)="bulkListingApplyFill('stockQty', bulkListingFillStock)">
+                          Apply
+                        </button>
+                      </div>
+                    </label>
+                    <label class="grid gap-1">
+                      Sale Price
+                      <div class="flex gap-2">
+                        <input
+                          type="number"
+                          class="h-8 w-full rounded-md border border-border bg-background px-2 text-xs"
+                          [(ngModel)]="bulkListingFillPrice"
+                        />
+                        <button type="button" class="h-8 rounded-md border border-border px-2" (click)="bulkListingApplyFill('salePrice', bulkListingFillPrice)">
+                          Apply
+                        </button>
+                      </div>
+                    </label>
+                    <label class="grid gap-1">
+                      Shipping
+                      <div class="flex gap-2">
+                        <input
+                          type="number"
+                          class="h-8 w-full rounded-md border border-border bg-background px-2 text-xs"
+                          [(ngModel)]="bulkListingFillShipping"
+                        />
+                        <button type="button" class="h-8 rounded-md border border-border px-2" (click)="bulkListingApplyFill('shippingCost', bulkListingFillShipping)">
+                          Apply
+                        </button>
+                      </div>
+                    </label>
+                    <label class="grid gap-1">
+                      MSRP
+                      <div class="flex gap-2">
+                        <input
+                          type="number"
+                          class="h-8 w-full rounded-md border border-border bg-background px-2 text-xs"
+                          [(ngModel)]="bulkListingFillMsrp"
+                        />
+                        <button type="button" class="h-8 rounded-md border border-border px-2" (click)="bulkListingApplyFill('msrp', bulkListingFillMsrp)">
+                          Apply
+                        </button>
+                      </div>
+                    </label>
+                  </div>
+                  <label class="grid gap-1">
+                    Condition
+                    <select
+                      class="h-8 rounded-md border border-border bg-background px-2 text-xs"
+                      [(ngModel)]="bulkListingFillCondition"
+                      (change)="bulkListingApplyFill('condition', bulkListingFillCondition)"
+                    >
+                      <option *ngFor="let condition of bulkConditionOptions" [value]="condition">
+                        {{ condition }}
+                      </option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="min-h-[280px] overflow-auto rounded-lg border border-border">
+                  <table class="w-full min-w-[900px] text-xs">
+                    <thead class="sticky top-0 bg-card">
+                      <tr class="border-b border-border text-muted-foreground">
+                        <th class="px-3 py-2 text-left w-[180px]">Product</th>
+                        <th class="px-3 py-2 text-left w-[110px]">Marketplace</th>
+                        <th class="px-3 py-2 text-left w-[120px]">SKU</th>
+                        <th class="px-3 py-2 text-right w-[80px]">Stock</th>
+                        <th class="px-3 py-2 text-right w-[90px]">Price</th>
+                        <th class="px-3 py-2 text-right w-[90px]">MSRP</th>
+                        <th class="px-3 py-2 text-right w-[90px]">Shipping</th>
+                        <th class="px-3 py-2 text-left w-[120px]">Condition</th>
+                        <th class="px-3 py-2 text-center w-[70px]">Status</th>
+                        <th class="px-3 py-2 text-center w-[50px]"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="let item of bulkListingPreviewItems(); trackBy: trackByBulkListingItem"
+                        class="border-b border-border"
+                        [ngClass]="{ 'bg-destructive/5': bulkListingItemStatus(item.product.id, item.marketplace).hasIssues }"
+                      >
+                        <td class="px-3 py-2">
+                          <div class="flex items-center gap-2">
+                            <img
+                              *ngIf="item.isFirstForProduct"
+                              [src]="item.product.image"
+                              [alt]="item.product.name"
+                              class="h-7 w-7 rounded object-cover"
+                            />
+                            <span class="truncate text-xs font-medium">
+                              {{ item.isFirstForProduct ? item.product.name : '↳' }}
+                            </span>
+                          </div>
+                        </td>
+                        <td class="px-3 py-2">
+                          <div class="flex items-center gap-1">
+                            <span class="flex h-5 w-5 items-center justify-center rounded-md text-[9px] font-semibold"
+                              [ngClass]="marketplaceBadgeClass(item.marketplace)"
+                            >
+                              {{ marketplaceBadgeLabel(item.marketplace) }}
+                            </span>
+                            <span class="text-xs font-medium">{{ marketplaceName(item.marketplace) }}</span>
+                          </div>
+                        </td>
+                        <td class="px-2 py-1">
+                          <input
+                            type="text"
+                            class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs"
+                            [ngModel]="bulkListingEditedItems[item.key]?.sku || ''"
+                            (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'sku', $event)"
+                          />
+                        </td>
+                        <td class="px-2 py-1">
+                          <input
+                            type="number"
+                            class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs text-right"
+                            [ngModel]="bulkListingEditedItems[item.key]?.stockQty ?? ''"
+                            (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'stockQty', parseNumberInput($event))"
+                          />
+                        </td>
+                        <td class="px-2 py-1">
+                          <input
+                            type="number"
+                            class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs text-right"
+                            [ngModel]="bulkListingEditedItems[item.key]?.salePrice ?? ''"
+                            (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'salePrice', parseNumberInput($event))"
+                          />
+                        </td>
+                        <td class="px-2 py-1">
+                          <input
+                            type="number"
+                            class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs text-right"
+                            [ngModel]="bulkListingEditedItems[item.key]?.msrp ?? ''"
+                            (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'msrp', parseNumberInput($event))"
+                          />
+                        </td>
+                        <td class="px-2 py-1">
+                          <input
+                            type="number"
+                            class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs text-right"
+                            [ngModel]="bulkListingEditedItems[item.key]?.shippingCost ?? ''"
+                            (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'shippingCost', parseNumberInput($event))"
+                          />
+                        </td>
+                        <td class="px-2 py-1">
+                          <select
+                            class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs"
+                            [ngModel]="bulkListingEditedItems[item.key]?.condition || 'New'"
+                            (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'condition', $event)"
+                          >
+                            <option *ngFor="let condition of bulkConditionOptions" [value]="condition">
+                              {{ condition }}
+                            </option>
+                          </select>
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                          <span
+                            class="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px]"
+                            [ngClass]="bulkListingItemStatus(item.product.id, item.marketplace).hasIssues ? 'border-destructive text-destructive' : 'border-emerald-500 text-emerald-500'"
+                          >
+                            {{
+                              bulkListingItemStatus(item.product.id, item.marketplace).hasIssues
+                                ? bulkListingItemStatus(item.product.id, item.marketplace).missingFields.length
+                                : '✓'
+                            }}
+                          </span>
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                          <button
+                            *ngIf="bulkListingMarketplaces.length > 1"
+                            type="button"
+                            class="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                            title="Copy to all marketplaces"
+                            (click)="bulkListingCopyToAllMarketplaces(item.product.id, item.marketplace)"
+                          >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                              <rect x="9" y="9" width="13" height="13" rx="2" />
+                              <rect x="2" y="2" width="13" height="13" rx="2" />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div *ngIf="bulkListingPublishMethod === 'ai'" class="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs text-muted-foreground">
+                  <span class="font-semibold text-foreground">AI Auto-Fill:</span>
+                  Missing fields will be generated using AI based on product data.
+                </div>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="flex items-center justify-between gap-2 border-t border-border px-6 py-4">
+            <button
+              *ngIf="bulkListingStep === 'preview'"
+              type="button"
+              class="rounded-md border border-border px-3 py-2 text-xs"
+              (click)="bulkListingStep = 'configure'"
+            >
+              Back
+            </button>
+            <span class="flex-1"></span>
+            <button
+              *ngIf="bulkListingStep === 'configure'"
+              type="button"
+              class="rounded-md border border-border px-4 py-2 text-xs"
+              (click)="closeBulkListing()"
+            >
+              Cancel
+            </button>
+            <button
+              *ngIf="bulkListingStep === 'configure'"
+              type="button"
+              class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
+              [disabled]="!bulkListingCanProceed()"
+              (click)="bulkListingProceedToPreview()"
+            >
+              Preview Data
+            </button>
+            <button
+              *ngIf="bulkListingStep === 'preview'"
+              type="button"
+              class="rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
+              (click)="bulkListingCreateBatch()"
+            >
+              {{ bulkListingPublishMethod === 'ai' ? 'AI Publish' : bulkListingPublishMethod === 'upc' ? 'UPC Match' : 'Publish' }}
+              ({{ bulkListingTotalItems() }} items)
             </button>
           </div>
         </div>
@@ -4738,6 +5205,21 @@ export class ProductGridComponent implements OnInit {
   bulkStockQty = '';
   bulkLandedCost = '';
   bulkPurchaseQty = '';
+  bulkListingOpen = false;
+  bulkListingStep: BulkListingStep = 'configure';
+  bulkListingBatchName = '';
+  bulkListingPublishMethod: BulkPublishMethod = 'ai';
+  bulkListingMarketplaces: string[] = [];
+  bulkListingProducts: Product[] = [];
+  bulkListingEditedItems: Record<string, BulkListingItemData> = {};
+  bulkListingFillOpen = false;
+  bulkListingFillStock = '';
+  bulkListingFillPrice = '';
+  bulkListingFillShipping = '';
+  bulkListingFillMsrp = '';
+  bulkListingFillCondition = 'New';
+  readonly bulkListingMethods = bulkListingMethods;
+  readonly bulkConditionOptions = bulkConditionOptions;
   openDropdownId: string | null = null;
 
   readonly soldPeriods: Array<{ value: SoldPeriod; label: string }> = [
@@ -5879,7 +6361,201 @@ export class ProductGridComponent implements OnInit {
   }
 
   openBulkListing(): void {
-    window.alert('Bulk listing flow is not wired yet.');
+    const selected = this.products.filter((product) =>
+      this.selectedProductIds.has(product.id)
+    );
+    if (selected.length === 0) {
+      window.alert('Select at least one product to list.');
+      return;
+    }
+    this.bulkListingProducts = selected;
+    this.bulkListingBatchName = '';
+    this.bulkListingPublishMethod = 'ai';
+    this.bulkListingMarketplaces = [];
+    this.bulkListingEditedItems = {};
+    this.bulkListingStep = 'configure';
+    this.bulkListingFillOpen = false;
+    this.bulkListingFillStock = '';
+    this.bulkListingFillPrice = '';
+    this.bulkListingFillShipping = '';
+    this.bulkListingFillMsrp = '';
+    this.bulkListingFillCondition = 'New';
+    this.bulkListingOpen = true;
+  }
+
+  closeBulkListing(): void {
+    this.bulkListingOpen = false;
+    this.bulkListingStep = 'configure';
+    this.bulkListingEditedItems = {};
+    this.bulkListingFillOpen = false;
+  }
+
+  bulkListingSelectedMethod() {
+    return this.bulkListingMethods.find(
+      (method) => method.id === this.bulkListingPublishMethod
+    );
+  }
+
+  bulkListingTotalItems(): number {
+    return this.bulkListingProducts.length * this.bulkListingMarketplaces.length;
+  }
+
+  bulkListingCanProceed(): boolean {
+    return (
+      this.bulkListingBatchName.trim().length > 0 &&
+      this.bulkListingMarketplaces.length > 0
+    );
+  }
+
+  bulkListingToggleMarketplace(marketplace: string): void {
+    if (this.bulkListingMarketplaces.includes(marketplace)) {
+      this.bulkListingMarketplaces = this.bulkListingMarketplaces.filter(
+        (item) => item !== marketplace
+      );
+      return;
+    }
+    this.bulkListingMarketplaces = [...this.bulkListingMarketplaces, marketplace];
+  }
+
+  bulkListingSelectAllMarketplaces(): void {
+    this.bulkListingMarketplaces = [...this.marketplaces];
+  }
+
+  bulkListingClearMarketplaces(): void {
+    this.bulkListingMarketplaces = [];
+  }
+
+  bulkListingProceedToPreview(): void {
+    if (!this.bulkListingCanProceed()) return;
+    this.bulkListingInitializeEditedItems();
+    this.bulkListingStep = 'preview';
+  }
+
+  bulkListingItemKey(productId: string, marketplace: string): string {
+    return `${productId}|${marketplace}`;
+  }
+
+  bulkListingInitializeEditedItems(): void {
+    const initial: Record<string, BulkListingItemData> = {};
+    this.bulkListingProducts.forEach((product) => {
+      this.bulkListingMarketplaces.forEach((marketplace) => {
+        const key = this.bulkListingItemKey(product.id, marketplace);
+        initial[key] = {
+          sku: product.vendorSku || '',
+          stockQty: product.stockQty ?? null,
+          salePrice: product.salePrice ?? null,
+          msrp: null,
+          shippingCost: null,
+          condition: 'New',
+        };
+      });
+    });
+    this.bulkListingEditedItems = initial;
+  }
+
+  bulkListingUpdateItemField(
+    productId: string,
+    marketplace: string,
+    field: keyof BulkListingItemData,
+    value: string | number | null
+  ): void {
+    const key = this.bulkListingItemKey(productId, marketplace);
+    this.bulkListingEditedItems = {
+      ...this.bulkListingEditedItems,
+      [key]: {
+        ...this.bulkListingEditedItems[key],
+        [field]: value,
+      },
+    };
+  }
+
+  bulkListingCopyToAllMarketplaces(productId: string, sourceMarketplace: string): void {
+    const sourceKey = this.bulkListingItemKey(productId, sourceMarketplace);
+    const sourceData = this.bulkListingEditedItems[sourceKey];
+    if (!sourceData) return;
+    const updated = { ...this.bulkListingEditedItems };
+    this.bulkListingMarketplaces.forEach((marketplace) => {
+      if (marketplace === sourceMarketplace) return;
+      const key = this.bulkListingItemKey(productId, marketplace);
+      updated[key] = { ...sourceData };
+    });
+    this.bulkListingEditedItems = updated;
+  }
+
+  bulkListingApplyFill(field: keyof BulkListingItemData, rawValue: string): void {
+    if (!rawValue && field !== 'condition') return;
+    let value: string | number | null = rawValue;
+    if (field !== 'sku' && field !== 'condition') {
+      value = rawValue ? Number(rawValue) : null;
+    }
+    const updated = { ...this.bulkListingEditedItems };
+    Object.keys(updated).forEach((key) => {
+      updated[key] = { ...updated[key], [field]: value };
+    });
+    this.bulkListingEditedItems = updated;
+    this.showToast('Updated', `Applied ${field} to all listings.`);
+  }
+
+  bulkListingItemStatus(productId: string, marketplace: string): { missingFields: string[]; hasIssues: boolean } {
+    const key = this.bulkListingItemKey(productId, marketplace);
+    const edited = this.bulkListingEditedItems[key];
+    const missingFields: string[] = [];
+    if (!edited?.sku) missingFields.push('SKU');
+    if (edited?.salePrice === null || edited?.salePrice === undefined) missingFields.push('Price');
+    if (edited?.stockQty === null || edited?.stockQty === undefined) missingFields.push('Stock');
+    return { missingFields, hasIssues: missingFields.length > 0 };
+  }
+
+  bulkListingItemsWithIssues(): number {
+    let count = 0;
+    this.bulkListingProducts.forEach((product) => {
+      this.bulkListingMarketplaces.forEach((marketplace) => {
+        if (this.bulkListingItemStatus(product.id, marketplace).hasIssues) count += 1;
+      });
+    });
+    return count;
+  }
+
+  bulkListingPreviewItems(): Array<{
+    product: Product;
+    marketplace: string;
+    key: string;
+    isFirstForProduct: boolean;
+  }> {
+    const items: Array<{
+      product: Product;
+      marketplace: string;
+      key: string;
+      isFirstForProduct: boolean;
+    }> = [];
+    this.bulkListingProducts.forEach((product) => {
+      this.bulkListingMarketplaces.forEach((marketplace, index) => {
+        items.push({
+          product,
+          marketplace,
+          key: this.bulkListingItemKey(product.id, marketplace),
+          isFirstForProduct: index === 0,
+        });
+      });
+    });
+    return items;
+  }
+
+  trackByBulkListingItem(index: number, item: { key: string }): string {
+    return item.key;
+  }
+
+  bulkListingCreateBatch(): void {
+    const totalItems = this.bulkListingTotalItems();
+    const batchName = this.bulkListingBatchName.trim();
+    this.closeBulkListing();
+    this.showToast('Batch created', `"${batchName}" created with ${totalItems} listings.`);
+  }
+
+  parseNumberInput(value: string): number | null {
+    if (value === undefined || value === null || value === '') return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
   }
 
   openHistory(): void {
