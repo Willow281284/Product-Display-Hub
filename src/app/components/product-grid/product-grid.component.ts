@@ -3629,6 +3629,16 @@ interface ColumnPreferences {
         </ng-container>
       </div>
     </div>
+
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+      <div
+        *ngFor="let toast of toastMessages"
+        class="min-w-[240px] rounded-lg border border-border bg-card px-4 py-3 text-sm text-foreground shadow-lg"
+      >
+        <p class="text-sm font-semibold">{{ toast.title }}</p>
+        <p class="text-xs text-muted-foreground">{{ toast.text }}</p>
+      </div>
+    </div>
   </section>
 
 `,
@@ -3782,6 +3792,8 @@ export class ProductGridComponent implements OnInit {
   offerDialogDescription = '';
   offerDialogProductSearch = '';
   offerDialogHideProductSelection = false;
+  toastMessages: Array<{ id: number; title: string; text: string }> = [];
+  private toastId = 0;
 
   bulkSalePrice = '';
   bulkStockQty = '';
@@ -4768,6 +4780,16 @@ export class ProductGridComponent implements OnInit {
     return endDate >= startDate;
   }
 
+  showToast(title: string, text: string): void {
+    const id = (this.toastId += 1);
+    this.toastMessages = [...this.toastMessages, { id, title, text }];
+    this.cdr.markForCheck();
+    setTimeout(() => {
+      this.toastMessages = this.toastMessages.filter((toast) => toast.id !== id);
+      this.cdr.markForCheck();
+    }, 3200);
+  }
+
   marketplaceName(platform: string): string {
     return marketplaceLabelMap[platform] ?? platform;
   }
@@ -4821,8 +4843,14 @@ export class ProductGridComponent implements OnInit {
             : undefined,
     };
 
+    const productCount = this.offerDialogProductIds.length;
+    const offerName = this.offerDialogName.trim();
     this.offerService.addOffer(offer);
     this.closeOfferDialog();
+    this.showToast(
+      'Offer created',
+      `"${offerName}" has been created for ${productCount} product${productCount === 1 ? '' : 's'}.`
+    );
   }
 
   deleteOffer(offerId: string): void {
