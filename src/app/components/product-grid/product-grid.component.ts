@@ -48,6 +48,7 @@ type StatusFilter = 'live' | 'inactive' | 'error' | 'not_listed';
 interface CsvFieldConfig {
   id: string;
   label: string;
+  description?: string;
   required?: boolean;
 }
 
@@ -118,14 +119,14 @@ const csvFields: CsvFieldConfig[] = [
 ];
 
 const csvIdentifierOptions: CsvFieldConfig[] = [
-  { id: 'vendorSku', label: 'SKU' },
-  { id: 'productId', label: 'Product ID' },
-  { id: 'gtin', label: 'UPC/GTIN' },
-  { id: 'asin', label: 'ASIN' },
-  { id: 'fnsku', label: 'FNSKU' },
-  { id: 'ean', label: 'EAN' },
-  { id: 'isbn', label: 'ISBN' },
-  { id: 'manufacturerPart', label: 'MPN' },
+  { id: 'vendorSku', label: 'SKU', description: 'Vendor Stock Keeping Unit' },
+  { id: 'productId', label: 'Product ID', description: 'Internal product identifier' },
+  { id: 'gtin', label: 'UPC/GTIN', description: 'Universal Product Code' },
+  { id: 'asin', label: 'ASIN', description: 'Amazon Standard ID' },
+  { id: 'fnsku', label: 'FNSKU', description: 'Fulfillment Network SKU' },
+  { id: 'ean', label: 'EAN', description: 'European Article Number' },
+  { id: 'isbn', label: 'ISBN', description: 'International Standard Book Number' },
+  { id: 'manufacturerPart', label: 'MPN', description: 'Manufacturer Part Number' },
 ];
 
 const csvSampleProducts: Record<string, string>[] = [
@@ -248,6 +249,7 @@ interface ColumnPreferences {
             type="button"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-2"
             title="Marketplace integrations"
+            (click)="goToMarketplaceIntegrations()"
           >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link2 w-4 h-4"><path d="M9 17H7A5 5 0 0 1 7 7h2"></path><path d="M15 7h2a5 5 0 1 1 0 10h-2"></path><line x1="8" x2="16" y1="12" y2="12"></line></svg>
             Marketplace Integrations
@@ -1670,10 +1672,19 @@ interface ColumnPreferences {
           <div class="flex items-center justify-between border-b border-border pb-3">
             <div>
               <h3 class="text-lg font-semibold">
-                {{ csvMode === 'create' ? 'Import Products' : 'Update Products' }}
+                {{ csvMode === 'create' ? 'Import Products from CSV/Excel' : 'Update Products from CSV/Excel' }}
               </h3>
               <p class="text-xs text-muted-foreground">
-                {{ csvStep === 'upload' ? 'Upload a CSV or Excel file.' : 'Map CSV columns to product fields.' }}
+                <ng-container *ngIf="csvStep === 'upload'; else csvMappingHint">
+                  {{
+                    csvMode === 'update'
+                      ? 'Upload a CSV or Excel file to update existing products.'
+                      : 'Upload a CSV or Excel file to create new products.'
+                  }}
+                </ng-container>
+                <ng-template #csvMappingHint>
+                  Map CSV columns to product fields.
+                </ng-template>
               </p>
             </div>
             <button
@@ -1686,51 +1697,95 @@ interface ColumnPreferences {
           </div>
 
           <div *ngIf="csvStep === 'upload'" class="mt-4 space-y-4">
-            <div class="rounded-lg border border-border bg-muted/30 p-3">
-              <p class="text-xs font-semibold">Need a template?</p>
-              <p class="text-xs text-muted-foreground">
-                Download a CSV template with sample data.
-              </p>
-              <button
-                type="button"
-                class="mt-2 rounded-md border border-border px-3 py-1 text-xs"
-                (click)="downloadCsvTemplate()"
-              >
-                Download template
-              </button>
+            <div class="rounded-xl border border-border bg-muted/30 p-4">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-sm font-semibold">Need a template?</p>
+                  <p class="text-xs text-muted-foreground">
+                    Download a sample CSV file with the correct column headers and example data.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs font-semibold"
+                  (click)="downloadCsvTemplate()"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <path d="M12 3v12" />
+                    <path d="m7 10 5 5 5-5" />
+                    <path d="M5 21h14" />
+                  </svg>
+                  Download Template
+                </button>
+              </div>
             </div>
 
-            <div class="rounded-lg border border-border bg-muted/30 p-3">
-              <p class="text-xs font-semibold">
-                {{ csvMode === 'update' ? 'Match products by' : 'Identifiers in file' }}
-              </p>
-              <div class="mt-2 grid grid-cols-2 gap-2">
+            <div class="rounded-xl border border-border bg-card/60 p-4">
+              <div>
+                <p class="text-sm font-semibold">
+                  {{ csvMode === 'update' ? 'Match products by (select one or more):' : 'Identifiers in file' }}
+                </p>
+                <p class="text-xs text-muted-foreground">
+                  Products will be matched using any of the selected identifiers
+                </p>
+              </div>
+              <div class="mt-4 grid gap-3 sm:grid-cols-2">
                 <label
                   *ngFor="let field of csvIdentifierOptions"
-                  class="flex items-center gap-2 text-xs"
+                  class="group flex items-start gap-3 rounded-lg border border-border bg-background/60 p-3 text-xs transition hover:border-muted-foreground/60"
+                  [ngClass]="{
+                    'border-emerald-500/60 bg-emerald-500/10': csvMatchFields.includes(field.id)
+                  }"
                 >
                   <input
                     type="checkbox"
-                    class="h-4 w-4"
+                    class="mt-0.5 h-4 w-4 rounded border-border text-emerald-500 focus:ring-emerald-500/40"
                     [checked]="csvMatchFields.includes(field.id)"
                     (change)="toggleCsvMatchField(field.id)"
                   />
-                  <span>{{ field.label }}</span>
+                  <span>
+                    <span class="block font-semibold text-foreground">{{ field.label }}</span>
+                    <span class="text-[10px] text-muted-foreground">{{ field.description }}</span>
+                  </span>
                 </label>
               </div>
             </div>
 
-            <div class="rounded-lg border border-dashed border-border p-4 text-center">
-              <p class="text-xs text-muted-foreground">
-                {{ csvFileName ? csvFileName : 'No file selected' }}
+            <div class="rounded-xl border border-dashed border-border bg-background/40 p-6 text-center">
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-muted/40">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-6 w-6" stroke-width="2">
+                  <path d="M12 16v-8" />
+                  <path d="M8 12h8" />
+                  <path d="M4 6a2 2 0 0 1 2-2h9l5 5v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" />
+                </svg>
+              </div>
+              <p class="mt-3 text-xs text-muted-foreground">
+                Drag and drop a CSV or Excel file, or click to browse
               </p>
+              <button
+                type="button"
+                class="mt-4 inline-flex items-center gap-2 rounded-md bg-emerald-500 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-emerald-600"
+                (click)="csvFileInput.click()"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M12 16v-8" />
+                  <path d="M8 12h8" />
+                  <path d="M4 6a2 2 0 0 1 2-2h9l5 5v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" />
+                </svg>
+                Select File
+              </button>
+              <p class="mt-3 text-[10px] text-muted-foreground">Supported formats: CSV, XLSX, XLS</p>
+              <p *ngIf="csvFileName" class="mt-2 text-xs text-muted-foreground">
+                {{ csvFileName }}
+              </p>
+              <p *ngIf="csvError" class="mt-2 text-xs text-destructive">{{ csvError }}</p>
               <input
+                #csvFileInput
                 type="file"
                 accept=".csv,.xlsx,.xls"
-                class="mt-3 w-full text-xs"
+                class="hidden"
                 (change)="onCsvFileChange($event)"
               />
-              <p *ngIf="csvError" class="mt-2 text-xs text-destructive">{{ csvError }}</p>
             </div>
           </div>
 
@@ -3876,6 +3931,11 @@ export class ProductGridComponent implements OnInit {
     this.manualDialogOpen = false;
     const queryParams = type === 'kit' ? { type: 'kit' } : undefined;
     void this.router.navigate(['/product/new'], { queryParams });
+  }
+
+  goToMarketplaceIntegrations(): void {
+    this.openDropdownId = null;
+    void this.router.navigate(['/marketplace-integrations']);
   }
 
   openCustomFilterModal(): void {

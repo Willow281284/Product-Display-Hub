@@ -23,6 +23,13 @@ export const appRoutes: Routes = [
       ),
   },
   {
+    path: 'marketplace-integrations',
+    loadComponent: () =>
+      import('./pages/marketplace-integrations-page.component').then(
+        (m) => m.MarketplaceIntegrationsPageComponent
+      ),
+  },
+  {
     path: 'product/new',
     loadComponent: () =>
       import('./pages/product-create-page.component').then(
