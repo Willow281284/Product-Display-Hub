@@ -2289,46 +2289,125 @@ interface ExtraAttributeRow {
         </div>
 
         <div *ngIf="activeTab === 'extra'" class="py-6 space-y-6">
-          <div class="rounded-xl border border-border bg-card p-5">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold">Extra attributes</h2>
-              <button
-                type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-lg font-semibold">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 text-primary"
               >
-                Add attribute
-              </button>
+                <path d="M20 7h-9"></path>
+                <path d="M14 17H5"></path>
+                <circle cx="17" cy="17" r="3"></circle>
+                <circle cx="7" cy="7" r="3"></circle>
+              </svg>
+              Extra Attributes
             </div>
-            <div class="mt-4 overflow-x-auto">
-              <table class="w-full min-w-[480px] text-sm">
-                <thead>
-                  <tr class="border-b border-border text-xs text-muted-foreground">
-                    <th class="py-2 text-left">Attribute</th>
-                    <th class="py-2 text-left">Value</th>
-                    <th class="py-2 text-left">Type</th>
-                    <th class="py-2 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    *ngFor="let attribute of extraAttributes"
-                    class="border-b border-border/60"
+            <button
+              type="button"
+              class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              (click)="addExtraAttribute()"
+            >
+              <span class="inline-flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="M12 5v14"></path>
+                </svg>
+                Add Attribute
+              </span>
+            </button>
+          </div>
+
+          <div class="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+            <div class="space-y-4">
+              <div
+                *ngFor="let attribute of extraAttributes; let i = index; trackBy: trackByIndex"
+                class="rounded-xl border border-border bg-card p-4"
+              >
+                <div class="flex items-center justify-between">
+                  <label class="text-xs text-muted-foreground">Attribute name</label>
+                  <button
+                    type="button"
+                    class="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
+                    (click)="removeExtraAttribute(i)"
+                    title="Remove"
                   >
-                    <td class="py-2 font-medium">{{ attribute.name }}</td>
-                    <td class="py-2 text-muted-foreground">{{ attribute.value }}</td>
-                    <td class="py-2 text-xs text-muted-foreground">{{ attribute.type }}</td>
-                    <td class="py-2 text-right">
-                      <button
-                        type="button"
-                        class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4"
+                    >
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                      <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  placeholder="Attribute name"
+                  [(ngModel)]="extraAttributes[i].name"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+                <label class="mt-4 block text-xs text-muted-foreground">Value</label>
+                <input
+                  type="text"
+                  class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  placeholder="Value"
+                  [(ngModel)]="extraAttributes[i].value"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+                <div class="mt-4 flex items-center gap-2">
+                  <button
+                    type="button"
+                    class="flex-1 rounded-md border border-border px-3 py-2 text-xs font-semibold"
+                    [ngClass]="{ 'bg-muted text-foreground': extraAttributes[i].type === 'text' }"
+                    (click)="setExtraAttributeType(i, 'text')"
+                  >
+                    Text
+                  </button>
+                  <button
+                    type="button"
+                    class="flex-1 rounded-md border border-border px-3 py-2 text-xs font-semibold"
+                    [ngClass]="{ 'bg-muted text-foreground': extraAttributes[i].type === 'number' }"
+                    (click)="setExtraAttributeType(i, 'number')"
+                  >
+                    Number
+                  </button>
+                </div>
+              </div>
             </div>
+
+            <button
+              type="button"
+              class="flex h-full min-h-[220px] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card/40 text-sm text-muted-foreground hover:bg-muted/30"
+              (click)="addExtraAttribute()"
+            >
+              <span class="text-2xl">+</span>
+              Add Attribute
+            </button>
           </div>
         </div>
 
@@ -2753,11 +2832,8 @@ export class ProductCreatePageComponent implements OnInit {
     { name: 'Navy / Medium', sku: 'NVY-M-1122', stock: 21, price: 131.49 },
   ];
 
-  readonly extraAttributes: ExtraAttributeRow[] = [
-    { name: 'Batteries Included', value: 'No', type: 'Boolean' },
-    { name: 'Department', value: 'Unisex adult', type: 'Text' },
-    { name: 'Material', value: 'Zinc alloy', type: 'Text' },
-    { name: 'Item Package Quantity', value: '1', type: 'Number' },
+  extraAttributes: ExtraAttributeRow[] = [
+    { name: '', value: '', type: 'text' },
   ];
 
   readonly tagOptions = [
@@ -2906,6 +2982,27 @@ export class ProductCreatePageComponent implements OnInit {
     const option = this.productOptions[index];
     if (!option) return;
     option.display = display;
+  }
+
+  addExtraAttribute(): void {
+    this.extraAttributes = [
+      ...this.extraAttributes,
+      { name: '', value: '', type: 'text' },
+    ];
+  }
+
+  removeExtraAttribute(index: number): void {
+    if (this.extraAttributes.length <= 1) {
+      this.extraAttributes = [{ name: '', value: '', type: 'text' }];
+      return;
+    }
+    this.extraAttributes = this.extraAttributes.filter((_, i) => i !== index);
+  }
+
+  setExtraAttributeType(index: number, type: 'text' | 'number'): void {
+    const attribute = this.extraAttributes[index];
+    if (!attribute) return;
+    attribute.type = type;
   }
 
   get mediaImageCount(): number {
