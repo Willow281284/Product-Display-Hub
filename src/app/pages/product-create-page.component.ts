@@ -1693,15 +1693,19 @@ interface ExtraAttributeRow {
               *ngFor="let platform of marketplaces"
               type="button"
               class="flex items-center justify-between rounded-lg border border-border bg-card/80 px-4 py-3 text-sm transition hover:border-primary/60"
-              [class.border-primary]="isMarketplaceSelected(platform)"
-              [class.bg-primary/10]="isMarketplaceSelected(platform)"
+              [ngClass]="{
+                'border-primary': isMarketplaceSelected(platform),
+                'bg-primary/10': isMarketplaceSelected(platform)
+              }"
               (click)="toggleMarketplace(platform)"
             >
               <div class="flex items-center gap-3">
                 <span
                   class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border"
-                  [class.border-primary]="isMarketplaceSelected(platform)"
-                  [class.bg-primary]="isMarketplaceSelected(platform)"
+                  [ngClass]="{
+                    'border-primary': isMarketplaceSelected(platform),
+                    'bg-primary': isMarketplaceSelected(platform)
+                  }"
                 ></span>
                 <span
                   class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
