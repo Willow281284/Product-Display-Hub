@@ -2547,6 +2547,7 @@ interface ExtraAttributeRow {
             <div
               *ngFor="let option of productOptions; let i = index"
               class="rounded-xl border border-border bg-background p-4 mb-4"
+              (click)="manageOptionExpandedIndex = i"
             >
               <div class="flex flex-wrap items-center gap-4">
                 <span class="text-muted-foreground">⋮⋮</span>
@@ -2615,7 +2616,10 @@ interface ExtraAttributeRow {
                 </button>
               </div>
 
-              <div class="mt-4 rounded-lg border border-border bg-card p-4">
+              <div
+                *ngIf="manageOptionExpandedIndex === i"
+                class="mt-4 rounded-lg border border-border bg-card p-4"
+              >
                 <p class="text-sm font-semibold">Option Values</p>
                 <div class="mt-3 flex items-center gap-2">
                   <input
@@ -2624,11 +2628,12 @@ interface ExtraAttributeRow {
                     placeholder="Type a value and press Enter..."
                     [(ngModel)]="manageOptionInputs[i]"
                     [ngModelOptions]="{ standalone: true }"
+                    (click)="$event.stopPropagation()"
                   />
                   <button
                     type="button"
                     class="rounded-md border border-border px-3 py-2 text-xs text-muted-foreground hover:bg-muted"
-                    (click)="addManageOptionValue(i)"
+                    (click)="addManageOptionValue(i); $event.stopPropagation()"
                   >
                     + Add
                   </button>
@@ -2740,6 +2745,7 @@ export class ProductCreatePageComponent implements OnInit {
   newOptionChoice = '';
   showManageOptionsModal = false;
   manageOptionInputs: Record<number, string> = {};
+  manageOptionExpandedIndex = 0;
 
   readonly variationRows: VariationRow[] = [
     { name: 'Black / Medium', sku: 'BLK-M-1120', stock: 48, price: 129.99 },
@@ -2867,12 +2873,16 @@ export class ProductCreatePageComponent implements OnInit {
       { name: `Option ${nextIndex}`, display: 'list', choices: [], linkImages: false },
     ];
     this.selectedOptionIndex = this.productOptions.length - 1;
+    this.manageOptionExpandedIndex = this.selectedOptionIndex;
   }
 
   removeProductOption(index: number): void {
     this.productOptions = this.productOptions.filter((_, i) => i !== index);
     if (this.selectedOptionIndex >= this.productOptions.length) {
       this.selectedOptionIndex = Math.max(0, this.productOptions.length - 1);
+    }
+    if (this.manageOptionExpandedIndex >= this.productOptions.length) {
+      this.manageOptionExpandedIndex = Math.max(0, this.productOptions.length - 1);
     }
   }
 
