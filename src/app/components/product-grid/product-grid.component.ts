@@ -83,6 +83,12 @@ interface ManualFieldConfig {
   type?: string;
 }
 
+interface CustomFilterRule {
+  field: string;
+  condition: string;
+  value: string;
+}
+
 const csvFields: CsvFieldConfig[] = [
   { id: 'name', label: 'Product Name', required: true },
   { id: 'vendorSku', label: 'SKU', required: true },
@@ -823,19 +829,49 @@ interface ColumnPreferences {
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw w-3.5 h-3.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
               Reset
             </button>
-            <button
-              type="button"
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px] gap-2"
-              title="Custom filters"
-              data-tooltip="Custom filters"
+            <details
+              class="relative"
+              data-dropdown="custom-filters"
+              [open]="openDropdownId === 'custom-filters'"
             >
-              <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                  <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
-                </svg>
-              </span>
-              Custom Filters
-            </button>
+              <summary
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground px-2 py-2 h-[34px] gap-2"
+                title="Custom filters"
+                data-tooltip="Custom filters"
+                (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('custom-filters')"
+              >
+                <span class="inline-flex h-5 w-5 items-center justify-center text-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
+                  </svg>
+                </span>
+                Custom Filters
+              </summary>
+              <div
+                data-dropdown-panel
+                class="absolute z-50 dropdown-panel mt-2 w-64 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              >
+                <button
+                  type="button"
+                  class="flex w-full items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+                  (click)="openCustomFilterModal()"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                  </svg>
+                  Create New Filter
+                </button>
+                <div class="mt-3 rounded-md border border-border bg-background/40 p-3 text-center text-xs text-muted-foreground">
+                  <div class="mb-2 flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                      <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
+                    </svg>
+                  </div>
+                  No custom filters yet
+                </div>
+              </div>
+            </details>
             <details
               class="relative"
               data-dropdown="columns"
@@ -1096,6 +1132,174 @@ interface ColumnPreferences {
               (click)="saveTag()"
             >
               {{ editingTag ? 'Save Tag' : 'Create Tag' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="customFilterModalOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+        (click)="closeCustomFilterModal()"
+      >
+        <div
+          class="w-full max-w-3xl rounded-2xl bg-card p-0 shadow-xl animate-in zoom-in-95"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="flex items-start justify-between border-b border-border px-6 py-5">
+            <div class="flex items-start gap-3">
+              <div class="mt-1 flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold">Create Custom Filter</h3>
+                <p class="text-xs text-muted-foreground">
+                  Build advanced filters to find specific products
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+              (click)="closeCustomFilterModal()"
+              aria-label="Close"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                <path d="M18 6L6 18" />
+                <path d="M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="max-h-[65vh] overflow-y-auto px-6 py-5">
+            <div class="text-xs font-semibold text-muted-foreground">FILTER DETAILS</div>
+            <p class="mt-1 text-xs text-muted-foreground">Give your filter a name</p>
+
+            <label class="mt-3 block text-sm font-semibold text-foreground">
+              Filter Name <span class="text-destructive">*</span>
+            </label>
+            <input
+              type="text"
+              class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+              placeholder="e.g., Low Stock, Amazon Errors"
+              [(ngModel)]="customFilterForm.name"
+              [ngModelOptions]="{ standalone: true }"
+            />
+
+            <label class="mt-4 block text-sm font-semibold text-foreground">
+              Description <span class="text-muted-foreground">(optional)</span>
+            </label>
+            <input
+              type="text"
+              class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+              placeholder="What does this filter find?"
+              [(ngModel)]="customFilterForm.description"
+              [ngModelOptions]="{ standalone: true }"
+            />
+
+            <div class="mt-6 flex items-center justify-between">
+              <div class="text-xs font-semibold text-muted-foreground">
+                FILTER RULES
+                <span class="ml-2 rounded-full border border-border px-2 py-0.5 text-xs">
+                  {{ customFilterForm.rules.length }} rule{{ customFilterForm.rules.length === 1 ? '' : 's' }}
+                </span>
+              </div>
+              <button
+                type="button"
+                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                (click)="toggleCustomFilterMatchAll()"
+              >
+                Matches <span class="font-semibold">ALL</span> rules
+              </button>
+            </div>
+
+            <div
+              *ngFor="let rule of customFilterForm.rules; let i = index"
+              class="mt-4 rounded-xl border border-border bg-background p-4"
+            >
+              <div class="flex items-center justify-between">
+                <span class="rounded-md bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  Rule {{ i + 1 }}
+                </span>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"
+                  (click)="removeCustomFilterRule(i)"
+                  [disabled]="customFilterForm.rules.length === 1"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
+                  Remove
+                </button>
+              </div>
+              <div class="mt-4 grid gap-3 md:grid-cols-3">
+                <div>
+                  <label class="text-xs text-muted-foreground">Field</label>
+                  <select
+                    class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    [(ngModel)]="rule.field"
+                    [ngModelOptions]="{ standalone: true }"
+                  >
+                    <option *ngFor="let field of customFilterFields" [value]="field">
+                      {{ field }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs text-muted-foreground">Condition</label>
+                  <select
+                    class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    [(ngModel)]="rule.condition"
+                    [ngModelOptions]="{ standalone: true }"
+                  >
+                    <option *ngFor="let condition of customFilterConditions" [value]="condition">
+                      {{ condition }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs text-muted-foreground">Value</label>
+                  <input
+                    type="text"
+                    class="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="Enter value..."
+                    [(ngModel)]="rule.value"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="mt-4 w-full rounded-xl border border-dashed border-border bg-background py-3 text-sm font-semibold text-muted-foreground hover:bg-muted"
+              (click)="addCustomFilterRule()"
+            >
+              + Add Another Rule
+            </button>
+            <p class="mt-4 text-xs text-muted-foreground">Saved locally in your browser</p>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
+            <button
+              type="button"
+              class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+              (click)="closeCustomFilterModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
+              [disabled]="!customFilterForm.name.trim()"
+              (click)="saveCustomFilter()"
+            >
+              Save Filter
             </button>
           </div>
         </div>
@@ -3071,6 +3275,39 @@ export class ProductGridComponent implements OnInit {
   readonly offerTypeLabels = offerTypeLabels;
   readonly offerTypes = this.offerService.getOfferTypeOptions();
 
+  customFilterModalOpen = false;
+  customFilters: Array<{ name: string; description: string; rules: CustomFilterRule[] }> = [];
+  customFilterFields = [
+    'Product Name',
+    'Brand',
+    'Vendor',
+    'SKU',
+    'Product ID',
+    'Sale Price',
+    'Stock Qty',
+    'Sold Qty',
+    'Marketplace',
+    'Tags',
+  ];
+  customFilterConditions = [
+    'Contains',
+    'Equals',
+    'Starts with',
+    'Ends with',
+    'Greater than',
+    'Less than',
+    'Is empty',
+    'Is not empty',
+  ];
+  customFilterForm = {
+    name: '',
+    description: '',
+    matchAll: true,
+    rules: [
+      { field: 'Product Name', condition: 'Contains', value: '' } as CustomFilterRule,
+    ],
+  };
+
   csvDialogOpen = false;
   csvMode: 'create' | 'update' = 'create';
   csvStep: 'upload' | 'mapping' = 'upload';
@@ -3521,6 +3758,53 @@ export class ProductGridComponent implements OnInit {
     this.manualDialogOpen = false;
     const queryParams = type === 'kit' ? { type: 'kit' } : undefined;
     void this.router.navigate(['/product/new'], { queryParams });
+  }
+
+  openCustomFilterModal(): void {
+    this.customFilterModalOpen = true;
+    this.openDropdownId = null;
+    this.customFilterForm = {
+      name: '',
+      description: '',
+      matchAll: true,
+      rules: [
+        { field: 'Product Name', condition: 'Contains', value: '' } as CustomFilterRule,
+      ],
+    };
+  }
+
+  closeCustomFilterModal(): void {
+    this.customFilterModalOpen = false;
+  }
+
+  addCustomFilterRule(): void {
+    this.customFilterForm.rules = [
+      ...this.customFilterForm.rules,
+      { field: 'Product Name', condition: 'Contains', value: '' },
+    ];
+  }
+
+  removeCustomFilterRule(index: number): void {
+    if (this.customFilterForm.rules.length <= 1) return;
+    this.customFilterForm.rules = this.customFilterForm.rules.filter((_, i) => i !== index);
+  }
+
+  toggleCustomFilterMatchAll(): void {
+    this.customFilterForm.matchAll = !this.customFilterForm.matchAll;
+  }
+
+  saveCustomFilter(): void {
+    const name = this.customFilterForm.name.trim();
+    if (!name) return;
+    this.customFilters = [
+      ...this.customFilters,
+      {
+        name,
+        description: this.customFilterForm.description.trim(),
+        rules: [...this.customFilterForm.rules],
+      },
+    ];
+    this.closeCustomFilterModal();
   }
 
   closeManualDialog(): void {
