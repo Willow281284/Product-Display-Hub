@@ -4666,8 +4666,12 @@ export class ProductGridComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  openOfferDialog(productIds: string[], hideProductSelection = false): void {
-    if (productIds.length === 0) {
+  openOfferDialog(
+    productIds: string[],
+    hideProductSelection = false,
+    allowEmptySelection = false
+  ): void {
+    if (productIds.length === 0 && !allowEmptySelection) {
       window.alert('Select at least one product to create an offer.');
       return;
     }
@@ -4879,7 +4883,7 @@ export class ProductGridComponent implements OnInit {
   }
 
   openBulkOffer(): void {
-    this.openOfferDialog(Array.from(this.selectedProductIds), false);
+    this.openOfferDialog(Array.from(this.selectedProductIds), false, true);
   }
 
   openBulkListing(): void {
