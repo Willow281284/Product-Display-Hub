@@ -1475,60 +1475,241 @@ interface SalesRow {
           </div>
 
           <div *ngIf="activeTab === 'offers'" class="py-6 space-y-6">
-            <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold">Offers</h3>
-              <button
-                type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-              >
-                Create offer
-              </button>
-            </div>
-            <div class="rounded-lg border border-border bg-card p-4">
-              <div class="overflow-x-auto">
-                <table class="w-full min-w-[640px] text-sm">
-                  <thead>
-                    <tr class="border-b border-border text-xs text-muted-foreground">
-                      <th class="py-2 text-left">Offer</th>
-                      <th class="py-2 text-left">Status</th>
-                      <th class="py-2 text-left">Discount</th>
-                      <th class="py-2 text-right">Duration</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      *ngFor="let offer of offerRows"
-                      class="border-b border-border/60"
+            <div class="flex flex-wrap items-start justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <path d="M20.59 13.41 12 22 3 13.41a2 2 0 0 1 0-2.82L12 2l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                    <circle cx="7" cy="7" r="1.5"></circle>
+                  </svg>
+                </span>
+                <div>
+                  <h3 class="text-lg font-semibold">Product Offers</h3>
+                  <p class="text-xs text-muted-foreground">Manage offers and promotions for this product</p>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <details class="relative" [open]="offerRangeOpen">
+                  <summary
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground"
+                    (click)="$event.preventDefault(); offerRangeOpen = !offerRangeOpen"
+                  >
+                    {{ offerRange }}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <div class="absolute right-0 mt-2 w-40 rounded-lg border border-border bg-card p-1 shadow-lg">
+                    <button
+                      *ngFor="let option of offerRanges"
+                      type="button"
+                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                      (click)="setOfferRange(option)"
                     >
-                      <td class="py-2 font-medium">{{ offer.name }}</td>
-                      <td class="py-2">
-                        <span class="rounded-full border border-border px-2 py-0.5 text-[10px]">
-                          {{ offer.status }}
-                        </span>
-                      </td>
-                      <td class="py-2 text-muted-foreground">{{ offer.discount }}</td>
-                      <td class="py-2 text-right text-xs text-muted-foreground">
-                        {{ offer.duration }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                      <span>{{ option }}</span>
+                      <span *ngIf="offerRange === option">✓</span>
+                    </button>
+                  </div>
+                </details>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M7 7h10v10H7z" />
+                    <path d="M5 11h2M17 11h2M11 5v2M11 17v2" />
+                  </svg>
+                  All Marketplaces
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 3v18h18" />
+                    <path d="M7 15v-4" />
+                    <path d="M12 15V8" />
+                    <path d="M17 15v-6" />
+                  </svg>
+                  All Offers
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500/90"
+                >
+                  <span class="text-sm">+</span>
+                  Add to Offer
+                </button>
               </div>
             </div>
-            <div class="rounded-lg border border-border bg-card p-4">
-              <h4 class="text-sm font-semibold mb-3">Offer Insights</h4>
-              <div class="grid gap-3 md:grid-cols-3">
-                <div class="rounded-lg bg-muted/30 p-3 text-center">
-                  <p class="text-xs text-muted-foreground">Active offers</p>
-                  <p class="text-lg font-semibold">3</p>
+
+            <div class="grid gap-4 xl:grid-cols-5">
+              <div class="rounded-xl border border-border bg-card/40 p-4">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs text-muted-foreground">Active Offers</p>
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                      <path d="M5 12l4 4L19 7" />
+                    </svg>
+                  </span>
                 </div>
-                <div class="rounded-lg bg-muted/30 p-3 text-center">
-                  <p class="text-xs text-muted-foreground">Avg discount</p>
-                  <p class="text-lg font-semibold">18%</p>
+                <p class="mt-3 text-2xl font-semibold">{{ offerStats.activeOffers }}</p>
+                <p class="text-xs text-muted-foreground">of {{ offerStats.totalOffers }} total</p>
+              </div>
+              <div class="rounded-xl border border-border bg-card/40 p-4">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs text-muted-foreground">Revenue</p>
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">$</span>
                 </div>
-                <div class="rounded-lg bg-muted/30 p-3 text-center">
-                  <p class="text-xs text-muted-foreground">Revenue lift</p>
-                  <p class="text-lg font-semibold text-emerald-600">+22%</p>
+                <p class="mt-3 text-2xl font-semibold text-foreground">
+                  {{ offerStats.revenue | currency: 'USD' : 'symbol' : '1.2-2' }}
+                </p>
+                <p class="text-xs text-muted-foreground">{{ offerStats.conversions }} conv.</p>
+              </div>
+              <div class="rounded-xl border border-border bg-card/40 p-4">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs text-muted-foreground">Conv. Rate</p>
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 text-blue-400">%</span>
+                </div>
+                <p class="mt-3 text-2xl font-semibold">
+                  {{ offerStats.conversionRate | number: '1.1-1' }}%
+                </p>
+                <p class="text-xs text-muted-foreground">{{ offerStats.clicks }} clicks</p>
+              </div>
+              <div class="rounded-xl border border-border bg-card/40 p-4">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs text-muted-foreground">Ad Spend</p>
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10 text-amber-400">$</span>
+                </div>
+                <p class="mt-3 text-2xl font-semibold">
+                  {{ offerStats.adSpend | currency: 'USD' : 'symbol' : '1.2-2' }}
+                </p>
+                <p class="text-xs text-muted-foreground">total spend</p>
+              </div>
+              <div class="rounded-xl border border-border bg-card/40 p-4">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs text-muted-foreground">ROAS</p>
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                      <path d="M4 14l5-5 4 4 7-7" />
+                    </svg>
+                  </span>
+                </div>
+                <p class="mt-3 text-2xl font-semibold">
+                  {{ offerStats.roas | number: '1.2-2' }}x
+                </p>
+                <p class="text-xs text-muted-foreground">return on ad spend</p>
+              </div>
+            </div>
+
+            <div class="rounded-xl border border-border bg-card/40 p-5">
+              <h4 class="text-sm font-semibold">Performance Funnel</h4>
+              <div class="mt-4 flex flex-wrap items-center gap-3">
+                <div class="flex-1 min-w-[180px] rounded-lg border border-border/60 bg-muted/20 p-4 text-center">
+                  <div class="text-xs text-muted-foreground">Impressions</div>
+                  <div class="mt-2 text-xl font-semibold">{{ offerStats.impressions | number: '1.0-0' }}</div>
+                </div>
+                <div class="hidden xl:flex text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <path d="M5 12h14" />
+                    <path d="m13 6 6 6-6 6" />
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-[180px] rounded-lg border border-border/60 bg-muted/20 p-4 text-center">
+                  <div class="text-xs text-muted-foreground">Clicks ({{ offerStats.conversionRate | number: '1.1-1' }}%)</div>
+                  <div class="mt-2 text-xl font-semibold">{{ offerStats.clicks }}</div>
+                </div>
+                <div class="hidden xl:flex text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <path d="M5 12h14" />
+                    <path d="m13 6 6 6-6 6" />
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-[180px] rounded-lg border border-border/60 bg-muted/20 p-4 text-center">
+                  <div class="text-xs text-muted-foreground">Conversions ({{ offerStats.conversionRate | number: '1.1-1' }}%)</div>
+                  <div class="mt-2 text-xl font-semibold">{{ offerStats.conversions }}</div>
+                </div>
+                <div class="hidden xl:flex text-muted-foreground">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <path d="M5 12h14" />
+                    <path d="m13 6 6 6-6 6" />
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-[200px] rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-center text-emerald-400">
+                  <div class="text-xs">Revenue</div>
+                  <div class="mt-2 text-xl font-semibold">
+                    {{ offerStats.revenue | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-xl border border-border bg-card/40 p-5 space-y-4">
+              <div class="flex items-center justify-between">
+                <h4 class="text-sm font-semibold">Offers Performance</h4>
+                <button type="button" class="text-xs text-muted-foreground">View all</button>
+              </div>
+              <div class="rounded-lg border border-border/60 bg-muted/20 p-4">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-semibold">Summer Sale</span>
+                      <span class="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-400">Active</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground">20% Off • 0/10 marketplaces</p>
+                  </div>
+                  <div class="flex items-center gap-6 text-xs text-muted-foreground">
+                    <div class="text-right">
+                      <p>Conv.</p>
+                      <p class="text-sm font-semibold text-foreground">{{ offerStats.conversions }}</p>
+                    </div>
+                    <div class="text-right">
+                      <p>Revenue</p>
+                      <p class="text-sm font-semibold text-emerald-400">
+                        {{ offerStats.revenue | currency: 'USD' : 'symbol' : '1.2-2' }}
+                      </p>
+                    </div>
+                    <div class="text-right">
+                      <p>ROAS</p>
+                      <p class="text-sm font-semibold text-emerald-400">{{ offerStats.roas | number: '1.2-2' }}x</p>
+                    </div>
+                    <button type="button" class="rounded-full border border-border px-2 py-1 text-xs text-muted-foreground">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                        <path d="M6 15l6-6 6 6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <p class="text-xs font-semibold text-muted-foreground">Marketplace Performance</p>
+                  <div class="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                    <div
+                      *ngFor="let marketplace of offerMarketplaceOptions"
+                      class="rounded-lg border border-border/60 bg-background/40 p-3 text-xs text-muted-foreground"
+                    >
+                      <div class="flex items-center justify-between">
+                        <span class="font-semibold text-foreground">{{ marketplace.label }}</span>
+                        <button
+                          type="button"
+                          class="relative inline-flex h-5 w-9 items-center rounded-full border border-border transition"
+                          [ngClass]="offerMarketplaceStates[marketplace.id] ? 'bg-emerald-500/20' : 'bg-muted'"
+                          (click)="toggleOfferMarketplace(marketplace.id)"
+                        >
+                          <span
+                            class="inline-block h-3.5 w-3.5 transform rounded-full bg-foreground transition"
+                            [ngClass]="offerMarketplaceStates[marketplace.id] ? 'translate-x-4' : 'translate-x-1'"
+                          ></span>
+                        </button>
+                      </div>
+                      <p class="mt-2 text-[11px] text-muted-foreground">Click toggle to activate</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1569,6 +1750,55 @@ export class ProductEditPageComponent {
     'Last 90 days',
     'Last 365 days',
   ];
+
+  offerRangeOpen = false;
+  offerRange = 'Last 30 days';
+  readonly offerRanges = [
+    'Last 7 days',
+    'Last 14 days',
+    'Last 30 days',
+    'Last 60 days',
+    'Last 90 days',
+    'Last 365 days',
+  ];
+
+  readonly offerStats = {
+    activeOffers: 1,
+    totalOffers: 1,
+    revenue: 8927,
+    conversions: 79,
+    conversionRate: 8.9,
+    clicks: 888,
+    adSpend: 370,
+    roas: 24.13,
+    impressions: 7402,
+  };
+
+  readonly offerMarketplaceOptions = [
+    { id: 'amazon', label: 'Amazon' },
+    { id: 'walmart', label: 'Walmart' },
+    { id: 'ebay', label: 'eBay' },
+    { id: 'target', label: 'Target' },
+    { id: 'etsy', label: 'Etsy' },
+    { id: 'shopify', label: 'Shopify' },
+    { id: 'bestbuy', label: 'Best Buy' },
+    { id: 'wayfair', label: 'Wayfair' },
+    { id: 'newegg', label: 'Newegg' },
+    { id: 'homedepot', label: 'Home Depot' },
+  ];
+
+  offerMarketplaceStates: Record<string, boolean> = {
+    amazon: false,
+    walmart: false,
+    ebay: false,
+    target: false,
+    etsy: false,
+    shopify: false,
+    bestbuy: false,
+    wayfair: false,
+    newegg: false,
+    homedepot: false,
+  };
 
   toastMessages: Array<{ id: number; title: string; text: string }> = [];
   private toastId = 0;
@@ -1746,6 +1976,18 @@ export class ProductEditPageComponent {
 
   selectTab(tab: TabId): void {
     this.activeTab = tab;
+  }
+
+  setOfferRange(option: string): void {
+    this.offerRange = option;
+    this.offerRangeOpen = false;
+  }
+
+  toggleOfferMarketplace(id: string): void {
+    this.offerMarketplaceStates = {
+      ...this.offerMarketplaceStates,
+      [id]: !this.offerMarketplaceStates[id],
+    };
   }
 
   goBack(): void {
