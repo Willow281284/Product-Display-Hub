@@ -61,6 +61,8 @@ interface SalesRow {
   revenue: number;
 }
 
+type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | 'isbns';
+
 @Component({
   selector: 'app-product-edit-page',
   standalone: true,
@@ -1217,86 +1219,323 @@ interface SalesRow {
           </div>
 
           <div *ngIf="activeTab === 'identifiers'" class="py-6 space-y-6">
+            <ng-container *ngIf="initIdentifierLists(product)"></ng-container>
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold">Product Identifiers</h3>
-              <p class="text-xs text-muted-foreground">
-                Track multiple identifiers per marketplace listing.
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
+                  <path d="M4 7h16" />
+                  <path d="M6 11h12" />
+                  <path d="M5 15h14" />
+                </svg>
+                Product Identifiers
+              </h3>
+              <p class="text-sm text-muted-foreground">
+                Add multiple identifiers for the same product when selling across marketplaces
               </p>
             </div>
+
             <div class="rounded-lg bg-muted/30 p-4">
-              <h4 class="text-sm font-semibold mb-4">Primary Identifiers</h4>
-              <div class="grid gap-4 md:grid-cols-2">
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  SKU
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                    [value]="product.vendorSku"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  UPC
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                    [value]="product.gtin"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  ASIN
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                    [value]="product.asin"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  FNSKU
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                    [value]="product.fnsku"
-                  />
-                </label>
+              <h4 class="mb-4 flex items-center gap-2 text-sm font-medium">
+                <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  #
+                </span>
+                Primary Identifiers
+              </h4>
+              <div class="grid gap-6 md:grid-cols-2">
+                <div class="space-y-3">
+                  <label class="text-xs text-muted-foreground">SKU (Stock Keeping Unit)</label>
+                  <div class="space-y-2">
+                    <div *ngFor="let value of identifierLists.skus; let i = index" class="flex items-center gap-2">
+                      <input
+                        type="text"
+                        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        placeholder="Enter SKU..."
+                        [(ngModel)]="identifierLists.skus[i]"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      <button
+                        *ngIf="identifierLists.skus.length > 1"
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground"
+                        (click)="removeIdentifier('skus', i)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6v14" />
+                          <path d="M16 6v14" />
+                          <path d="M5 6l1-2h12l1 2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('skus')"
+                  >
+                    <span class="text-sm">+</span>
+                    Add SKU
+                  </button>
+                </div>
+
+                <div class="space-y-3">
+                  <label class="text-xs text-muted-foreground">UPC (Universal Product Code)</label>
+                  <div class="space-y-2">
+                    <div *ngFor="let value of identifierLists.upcs; let i = index" class="flex items-center gap-2">
+                      <input
+                        type="text"
+                        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        placeholder="Enter UPC..."
+                        [(ngModel)]="identifierLists.upcs[i]"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      <button
+                        *ngIf="identifierLists.upcs.length > 1"
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground"
+                        (click)="removeIdentifier('upcs', i)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6v14" />
+                          <path d="M16 6v14" />
+                          <path d="M5 6l1-2h12l1 2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('upcs')"
+                  >
+                    <span class="text-sm">+</span>
+                    Add UPC
+                  </button>
+                </div>
+
+                <div class="space-y-3">
+                  <label class="text-xs text-muted-foreground">ASIN (Amazon Standard ID)</label>
+                  <div class="space-y-2">
+                    <div *ngFor="let value of identifierLists.asins; let i = index" class="flex items-center gap-2">
+                      <input
+                        type="text"
+                        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        placeholder="Enter ASIN..."
+                        [(ngModel)]="identifierLists.asins[i]"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      <button
+                        *ngIf="identifierLists.asins.length > 1"
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground"
+                        (click)="removeIdentifier('asins', i)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6v14" />
+                          <path d="M16 6v14" />
+                          <path d="M5 6l1-2h12l1 2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('asins')"
+                  >
+                    <span class="text-sm">+</span>
+                    Add ASIN
+                  </button>
+                </div>
+
+                <div class="space-y-3">
+                  <label class="text-xs text-muted-foreground">FNSKU (Fulfillment Network SKU)</label>
+                  <div class="space-y-2">
+                    <div *ngFor="let value of identifierLists.fnskus; let i = index" class="flex items-center gap-2">
+                      <input
+                        type="text"
+                        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        placeholder="Enter FNSKU..."
+                        [(ngModel)]="identifierLists.fnskus[i]"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      <button
+                        *ngIf="identifierLists.fnskus.length > 1"
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground"
+                        (click)="removeIdentifier('fnskus', i)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6v14" />
+                          <path d="M16 6v14" />
+                          <path d="M5 6l1-2h12l1 2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('fnskus')"
+                  >
+                    <span class="text-sm">+</span>
+                    Add FNSKU
+                  </button>
+                </div>
               </div>
             </div>
+
             <div class="rounded-lg bg-muted/30 p-4">
-              <h4 class="text-sm font-semibold mb-4">Global Identifiers</h4>
-              <div class="grid gap-4 md:grid-cols-3">
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  GTIN
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                    [value]="product.gtin"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  EAN
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                    [value]="product.ean"
-                  />
-                </label>
-                <label class="grid gap-1 text-xs text-muted-foreground">
-                  ISBN
-                  <input
-                    type="text"
-                    class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                    [value]="product.isbn"
-                  />
-                </label>
+              <h4 class="mb-4 flex items-center gap-2 text-sm font-medium">
+                <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  🌍
+                </span>
+                Global Identifiers
+              </h4>
+              <div class="grid gap-6 md:grid-cols-3">
+                <div class="space-y-3">
+                  <label class="text-xs text-muted-foreground">GTIN (Global Trade Item Number)</label>
+                  <div class="space-y-2">
+                    <div *ngFor="let value of identifierLists.gtins; let i = index" class="flex items-center gap-2">
+                      <input
+                        type="text"
+                        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        placeholder="Enter GTIN..."
+                        [(ngModel)]="identifierLists.gtins[i]"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      <button
+                        *ngIf="identifierLists.gtins.length > 1"
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground"
+                        (click)="removeIdentifier('gtins', i)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6v14" />
+                          <path d="M16 6v14" />
+                          <path d="M5 6l1-2h12l1 2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('gtins')"
+                  >
+                    <span class="text-sm">+</span>
+                    Add GTIN
+                  </button>
+                </div>
+
+                <div class="space-y-3">
+                  <label class="text-xs text-muted-foreground">EAN (European Article Number)</label>
+                  <div class="space-y-2">
+                    <div *ngFor="let value of identifierLists.eans; let i = index" class="flex items-center gap-2">
+                      <input
+                        type="text"
+                        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        placeholder="Enter EAN..."
+                        [(ngModel)]="identifierLists.eans[i]"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      <button
+                        *ngIf="identifierLists.eans.length > 1"
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground"
+                        (click)="removeIdentifier('eans', i)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6v14" />
+                          <path d="M16 6v14" />
+                          <path d="M5 6l1-2h12l1 2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('eans')"
+                  >
+                    <span class="text-sm">+</span>
+                    Add EAN
+                  </button>
+                </div>
+
+                <div class="space-y-3">
+                  <label class="text-xs text-muted-foreground">ISBN (Book Identifier)</label>
+                  <div class="space-y-2">
+                    <div *ngFor="let value of identifierLists.isbns; let i = index" class="flex items-center gap-2">
+                      <input
+                        type="text"
+                        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        placeholder="Enter ISBN..."
+                        [(ngModel)]="identifierLists.isbns[i]"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      <button
+                        *ngIf="identifierLists.isbns.length > 1"
+                        type="button"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground"
+                        (click)="removeIdentifier('isbns', i)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 6h18" />
+                          <path d="M8 6v14" />
+                          <path d="M16 6v14" />
+                          <path d="M5 6l1-2h12l1 2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addIdentifier('isbns')"
+                  >
+                    <span class="text-sm">+</span>
+                    Add ISBN
+                  </button>
+                </div>
               </div>
             </div>
+
             <div class="rounded-lg border border-border bg-card p-4">
-              <h4 class="text-sm font-semibold mb-3">Identifier Summary</h4>
-              <div class="flex flex-wrap gap-2 text-xs">
-                <span class="rounded-full border border-border px-2 py-0.5">SKU: 1</span>
-                <span class="rounded-full border border-border px-2 py-0.5">UPC: 1</span>
-                <span class="rounded-full border border-border px-2 py-0.5">ASIN: 1</span>
-                <span class="rounded-full border border-border px-2 py-0.5">FNSKU: 1</span>
-                <span class="rounded-full border border-border px-2 py-0.5">GTIN: 1</span>
+              <h4 class="mb-3 text-sm font-medium">Identifier Summary</h4>
+              <div class="flex flex-wrap gap-3 text-xs">
+                <span *ngIf="identifierCount('skus') > 0" class="rounded-full border border-border px-2 py-0.5">
+                  {{ identifierCount('skus') }} SKU{{ identifierCount('skus') > 1 ? 's' : '' }}
+                </span>
+                <span *ngIf="identifierCount('upcs') > 0" class="rounded-full border border-border px-2 py-0.5">
+                  {{ identifierCount('upcs') }} UPC{{ identifierCount('upcs') > 1 ? 's' : '' }}
+                </span>
+                <span *ngIf="identifierCount('asins') > 0" class="rounded-full border border-border px-2 py-0.5">
+                  {{ identifierCount('asins') }} ASIN{{ identifierCount('asins') > 1 ? 's' : '' }}
+                </span>
+                <span *ngIf="identifierCount('fnskus') > 0" class="rounded-full border border-border px-2 py-0.5">
+                  {{ identifierCount('fnskus') }} FNSKU{{ identifierCount('fnskus') > 1 ? 's' : '' }}
+                </span>
+                <span *ngIf="identifierCount('gtins') > 0" class="rounded-full border border-border px-2 py-0.5">
+                  {{ identifierCount('gtins') }} GTIN{{ identifierCount('gtins') > 1 ? 's' : '' }}
+                </span>
+                <span *ngIf="identifierCount('eans') > 0" class="rounded-full border border-border px-2 py-0.5">
+                  {{ identifierCount('eans') }} EAN{{ identifierCount('eans') > 1 ? 's' : '' }}
+                </span>
+                <span *ngIf="identifierCount('isbns') > 0" class="rounded-full border border-border px-2 py-0.5">
+                  {{ identifierCount('isbns') }} ISBN{{ identifierCount('isbns') > 1 ? 's' : '' }}
+                </span>
+                <span
+                  *ngIf="identifierTotalCount() === 0"
+                  class="text-sm text-muted-foreground"
+                >
+                  No identifiers added yet
+                </span>
               </div>
             </div>
           </div>
@@ -1420,60 +1659,128 @@ interface SalesRow {
           </div>
 
           <div *ngIf="activeTab === 'content'" class="py-6 space-y-6">
-            <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold">Listing Content</h3>
-              <button
-                type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-              >
-                Validate content
-              </button>
-            </div>
-            <div class="rounded-lg bg-muted/30 p-4 space-y-4">
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Product Title
-                <input
-                  type="text"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                  [value]="product.name"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Description
-                <textarea
-                  rows="4"
-                  class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                >High-quality product description placeholder for marketplace listings.</textarea>
-              </label>
-            </div>
-            <div class="rounded-lg border border-border bg-card p-4">
-              <h4 class="text-sm font-semibold mb-3">Bullet Points</h4>
-              <div class="space-y-2">
-                <div
-                  *ngFor="let bullet of bulletPoints; let i = index"
-                  class="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs"
-                >
-                  <span class="text-muted-foreground">{{ i + 1 }}.</span>
+            <ng-container *ngIf="initContentFields(product)"></ng-container>
+            <div class="space-y-6">
+              <div class="space-y-4">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
+                    <path d="M4 4h16v16H4z" />
+                    <path d="M8 8h8" />
+                    <path d="M8 12h8" />
+                    <path d="M8 16h5" />
+                  </svg>
+                  Product Title
+                </h3>
+                <div class="rounded-lg bg-muted/30 p-4">
                   <input
                     type="text"
-                    class="flex-1 border-none bg-transparent text-sm text-foreground focus:outline-none"
-                    [value]="bullet"
+                    class="w-full rounded-md border border-border bg-background px-3 py-2 text-lg"
+                    placeholder="Enter product title..."
+                    [(ngModel)]="productTitle"
+                    [ngModelOptions]="{ standalone: true }"
                   />
+                  <p class="mt-2 text-xs text-muted-foreground">
+                    The main title displayed on marketplace listings.
+                  </p>
                 </div>
               </div>
-            </div>
-            <div class="rounded-lg border border-border bg-card p-4">
-              <h4 class="text-sm font-semibold mb-3">A+ Content</h4>
-              <div class="grid gap-4 md:grid-cols-2">
-                <div class="rounded-lg border border-dashed border-border p-4">
-                  <p class="text-xs text-muted-foreground">
-                    A+ module layout placeholder. Drag modules to arrange.
+
+              <div class="space-y-4">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6" />
+                    <path d="M8 13h8" />
+                    <path d="M8 17h8" />
+                    <path d="M8 9h3" />
+                  </svg>
+                  Product Description
+                </h3>
+                <div class="rounded-lg bg-muted/30 p-4">
+                  <textarea
+                    rows="4"
+                    class="min-h-[120px] w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="Enter a detailed product description..."
+                    [(ngModel)]="productDescription"
+                    [ngModelOptions]="{ standalone: true }"
+                  ></textarea>
+                  <p class="mt-2 text-xs text-muted-foreground">
+                    Write a compelling description that highlights key features and benefits.
                   </p>
                 </div>
-                <div class="rounded-lg border border-dashed border-border p-4">
+              </div>
+
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
+                      <path d="M8 6h13" />
+                      <path d="M8 12h13" />
+                      <path d="M8 18h13" />
+                      <path d="M3 6h.01" />
+                      <path d="M3 12h.01" />
+                      <path d="M3 18h.01" />
+                    </svg>
+                    Bullet Points
+                  </h3>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                    (click)="addBulletPoint()"
+                  >
+                    <span class="text-sm">+</span>
+                    Add Bullet
+                  </button>
+                </div>
+                <div class="rounded-lg bg-muted/30 p-4 space-y-3">
+                  <div *ngFor="let bullet of bulletPoints; let i = index" class="flex items-center gap-3">
+                    <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
+                      {{ i + 1 }}
+                    </span>
+                    <input
+                      type="text"
+                      class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="Bullet point..."
+                      [ngModel]="bullet"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="updateBulletPoint(i, $event)"
+                    />
+                    <button
+                      *ngIf="bulletPoints.length > 1"
+                      type="button"
+                      class="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:text-rose-400"
+                      (click)="removeBulletPoint(i)"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                        <path d="M3 6h18" />
+                        <path d="M8 6v14" />
+                        <path d="M16 6v14" />
+                        <path d="M5 6l1-2h12l1 2" />
+                      </svg>
+                    </button>
+                  </div>
                   <p class="text-xs text-muted-foreground">
-                    Upload brand story content and premium media.
+                    Use bullet points to highlight key product features. Most marketplaces support 5 bullet points, but you can add more for internal use.
                   </p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6" />
+                  </svg>
+                  A+ Content
+                </h3>
+                <div class="rounded-lg bg-muted/30 p-4">
+                  <textarea
+                    rows="4"
+                    class="min-h-[120px] w-full resize-none rounded-md border border-dashed border-border bg-background px-3 py-2 text-sm text-muted-foreground"
+                    placeholder="Add A+ content modules..."
+                    [(ngModel)]="aplusContent"
+                    [ngModelOptions]="{ standalone: true }"
+                  ></textarea>
                 </div>
               </div>
             </div>
@@ -1549,47 +1856,85 @@ interface SalesRow {
             </div>
           </div>
 
-          <div *ngIf="activeTab === 'extra'" class="py-6 space-y-6">
+          <div *ngIf="activeTab === 'extra'" class="py-6 space-y-4">
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold">Extra Attributes</h3>
+              <h3 class="text-lg font-semibold flex items-center gap-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
+                  <path d="M20 7h-9" />
+                  <path d="M14 17H5" />
+                  <circle cx="17" cy="17" r="3" />
+                  <circle cx="7" cy="7" r="3" />
+                </svg>
+                Extra Attributes
+              </h3>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                class="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground"
+                (click)="addExtraAttribute()"
               >
-                Add attribute
+                <span class="text-sm">+</span>
+                Add Attribute
               </button>
             </div>
-            <div class="rounded-lg border border-border bg-card p-4">
-              <div class="overflow-x-auto">
-                <table class="w-full min-w-[600px] text-sm">
-                  <thead>
-                    <tr class="border-b border-border text-xs text-muted-foreground">
-                      <th class="py-2 text-left">Attribute</th>
-                      <th class="py-2 text-left">Value</th>
-                      <th class="py-2 text-left">Type</th>
-                      <th class="py-2 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      *ngFor="let attribute of extraAttributes"
-                      class="border-b border-border/60"
-                    >
-                      <td class="py-2 font-medium">{{ attribute.name }}</td>
-                      <td class="py-2 text-muted-foreground">{{ attribute.value }}</td>
-                      <td class="py-2 text-xs text-muted-foreground">{{ attribute.type }}</td>
-                      <td class="py-2 text-right">
-                        <button
-                          type="button"
-                          class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                        >
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+
+            <div class="grid gap-4 md:grid-cols-3">
+              <div
+                *ngFor="let attr of extraAttributes; let i = index"
+                class="rounded-lg bg-muted/30 p-4 space-y-3"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <input
+                    type="text"
+                    class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium"
+                    placeholder="Attribute name"
+                    [ngModel]="attr.name"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="updateExtraAttribute(i, 'name', $event)"
+                  />
+                  <button
+                    type="button"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-md text-rose-400 hover:text-rose-300"
+                    (click)="removeExtraAttribute(i)"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                      <path d="M3 6h18" />
+                      <path d="M8 6v14" />
+                      <path d="M16 6v14" />
+                      <path d="M5 6l1-2h12l1 2" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <select
+                    class="h-10 w-24 rounded-md border border-border bg-background px-2 text-sm"
+                    [ngModel]="attr.type"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="updateExtraAttribute(i, 'type', $event)"
+                  >
+                    <option value="text">Text</option>
+                    <option value="number">Number</option>
+                  </select>
+                  <input
+                    [type]="attr.type === 'number' ? 'number' : 'text'"
+                    class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                    placeholder="Value"
+                    [ngModel]="attr.value"
+                    [ngModelOptions]="{ standalone: true }"
+                    (ngModelChange)="updateExtraAttribute(i, 'value', $event)"
+                  />
+                </div>
               </div>
+
+              <button
+                type="button"
+                class="rounded-lg border-2 border-dashed border-muted-foreground/30 bg-muted/30 p-4 text-center text-sm text-muted-foreground hover:border-primary/50 hover:bg-muted/50"
+                (click)="addExtraAttribute()"
+              >
+                <div class="flex flex-col items-center gap-2">
+                  <span class="text-lg">+</span>
+                  Add Attribute
+                </div>
+              </button>
             </div>
           </div>
 
@@ -1626,45 +1971,243 @@ interface SalesRow {
 
           <div *ngIf="activeTab === 'sales'" class="py-6 space-y-6">
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold">Sales Overview</h3>
-              <button
-                type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-              >
-                Adjust date range
-              </button>
-            </div>
-            <div class="grid gap-4 md:grid-cols-3">
-              <div class="rounded-lg border border-border bg-card p-4">
-                <p class="text-xs text-muted-foreground">Net Revenue</p>
-                <p class="text-2xl font-semibold text-emerald-600">$128,440</p>
-                <p class="text-xs text-muted-foreground">+12.4% vs last period</p>
+              <div class="flex items-center gap-3">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
+                    <path d="M4 14l5-5 4 4 7-7" />
+                  </svg>
+                  Sales
+                </h3>
+                <span class="text-muted-foreground" title="Sales data synced from connected marketplaces">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8h.01" />
+                    <path d="M12 12v4" />
+                  </svg>
+                </span>
               </div>
-              <div class="rounded-lg border border-border bg-card p-4">
-                <p class="text-xs text-muted-foreground">Units Sold</p>
-                <p class="text-2xl font-semibold">3,452</p>
-                <p class="text-xs text-muted-foreground">+8.1% vs last period</p>
-              </div>
-              <div class="rounded-lg border border-border bg-card p-4">
-                <p class="text-xs text-muted-foreground">Return Rate</p>
-                <p class="text-2xl font-semibold">3.1%</p>
-                <p class="text-xs text-muted-foreground">Stable</p>
-              </div>
-            </div>
-            <div class="rounded-lg border border-border bg-card p-4">
-              <h4 class="text-sm font-semibold mb-3">Sales by Period</h4>
-              <div class="space-y-2 text-xs">
-                <div
-                  *ngFor="let row of salesRows"
-                  class="flex items-center justify-between rounded-md border border-border bg-background px-3 py-2"
+              <div class="flex items-center gap-3">
+                <span class="text-xs text-muted-foreground flex items-center gap-1">
+                  Last updated: {{ salesLastUpdated }}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                    <path d="M3 12a9 9 0 0 1 9-9" />
+                    <path d="M3 12a9 9 0 0 0 9 9" />
+                    <path d="M21 12a9 9 0 0 1-9 9" />
+                    <path d="M21 12a9 9 0 0 0-9-9" />
+                  </svg>
+                </span>
+                <span class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-600">
+                  NEW
+                </span>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
                 >
-                  <span class="font-medium">{{ row.label }}</span>
-                  <span class="text-muted-foreground">
-                    {{ row.units }} units | {{
-                      row.revenue | currency: 'USD' : 'symbol' : '1.2-2'
-                    }}
-                  </span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 0 0-7.07-7.07L12 4" />
+                    <path d="M14 11a5 5 0 0 0-7.07 0L3.39 14.54a5 5 0 1 0 7.07 7.07L12 20" />
+                  </svg>
+                  Deep Dive Sales &amp; Traffic
+                </button>
+              </div>
+            </div>
+
+            <div class="rounded-lg bg-muted/30 p-4">
+              <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-muted-foreground whitespace-nowrap">View data for:</span>
+                <details class="relative" [open]="salesVariationOpen">
+                  <summary
+                    class="inline-flex min-w-[220px] cursor-pointer items-center justify-between rounded-md border border-border px-3 py-2 text-sm"
+                    (click)="$event.preventDefault(); salesVariationOpen = !salesVariationOpen"
+                  >
+                    <span class="truncate">{{ selectedSalesVariationLabel }}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <div class="absolute left-0 mt-2 w-full rounded-lg border border-border bg-card p-1 shadow-lg">
+                    <button
+                      *ngFor="let option of salesVariationOptions"
+                      type="button"
+                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                      (click)="setSalesVariation(option.id)"
+                    >
+                      <span>{{ option.name }}</span>
+                      <span *ngIf="selectedSalesVariation === option.id">✓</span>
+                    </button>
+                  </div>
+                </details>
+              </div>
+              <p *ngIf="selectedSalesVariation !== 'all'" class="mt-2 text-xs text-muted-foreground">
+                Showing sales data for:
+                <span class="font-medium text-foreground">{{ selectedSalesVariationLabel }}</span>
+              </p>
+            </div>
+
+            <div class="rounded-lg bg-muted/30 p-4">
+              <div class="mb-4 border-b border-border pb-3">
+                <span class="text-sm font-medium border-b-2 border-primary pb-3">Information</span>
+              </div>
+              <div class="grid gap-6 lg:grid-cols-4">
+                <div class="space-y-4">
+                  <div>
+                    <p class="text-xs text-muted-foreground">View sales data for:</p>
+                    <div class="mt-1 flex items-center gap-1">
+                      <button
+                        type="button"
+                        class="h-7 rounded-md px-3 text-xs"
+                        [ngClass]="salesViewMode === 'sku' ? 'bg-primary text-primary-foreground' : 'border border-border text-muted-foreground'"
+                        (click)="setSalesViewMode('sku')"
+                      >
+                        SKU
+                      </button>
+                      <button
+                        type="button"
+                        class="h-7 rounded-md px-3 text-xs"
+                        [ngClass]="salesViewMode === 'asin' ? 'bg-primary text-primary-foreground' : 'border border-border text-muted-foreground'"
+                        (click)="setSalesViewMode('asin')"
+                      >
+                        ASIN
+                      </button>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <p class="text-xs text-muted-foreground">Sales rank</p>
+                      <p class="text-sm font-medium">-</p>
+                    </div>
+                    <div>
+                      <p class="text-xs text-muted-foreground">Category</p>
+                      <p class="text-sm font-medium">-</p>
+                    </div>
+                  </div>
                 </div>
+
+                <div *ngFor="let period of salesPeriodSummaries" class="space-y-3">
+                  <h4 class="text-sm font-medium text-muted-foreground">{{ period.label }}</h4>
+                  <div class="space-y-2 text-xs">
+                    <div class="flex justify-between">
+                      <span class="text-muted-foreground">Units ordered</span>
+                      <span class="text-sm font-medium">{{ period.units }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-muted-foreground">Avg units per order</span>
+                      <span class="text-sm font-medium">{{ period.avgUnits }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-muted-foreground">Avg selling price</span>
+                      <span class="text-sm font-medium">{{ period.avgPrice }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-lg bg-muted/30 p-4">
+              <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-1">
+                  <button
+                    type="button"
+                    class="h-7 rounded-md px-3 text-xs"
+                    [ngClass]="salesChartMode === 'sales' ? 'bg-primary text-primary-foreground' : 'border border-border text-muted-foreground'"
+                    (click)="setSalesChartMode('sales')"
+                  >
+                    Sales
+                  </button>
+                  <button
+                    type="button"
+                    class="h-7 rounded-md px-3 text-xs"
+                    [ngClass]="salesChartMode === 'units' ? 'bg-primary text-primary-foreground' : 'border border-border text-muted-foreground'"
+                    (click)="setSalesChartMode('units')"
+                  >
+                    Units
+                  </button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-muted-foreground">Data shown</span>
+                  <details class="relative" [open]="salesPeriodOpen">
+                    <summary
+                      class="inline-flex w-[160px] cursor-pointer items-center justify-between rounded-md border border-border px-3 py-2 text-xs"
+                      (click)="$event.preventDefault(); salesPeriodOpen = !salesPeriodOpen"
+                    >
+                      {{ salesDataPeriodLabel }}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </summary>
+                    <div class="absolute right-0 mt-2 w-44 rounded-lg border border-border bg-card p-1 shadow-lg">
+                      <button
+                        *ngFor="let option of salesPeriodOptions"
+                        type="button"
+                        class="flex w-full items-center justify-between rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                        (click)="setSalesDataPeriod(option.value)"
+                      >
+                        <span>{{ option.label }}</span>
+                        <span *ngIf="salesDataPeriod === option.value">✓</span>
+                      </button>
+                    </div>
+                  </details>
+                  <div *ngIf="salesDataPeriod === 'custom'" class="flex items-center gap-2">
+                    <input
+                      type="date"
+                      class="h-8 rounded-md border border-border bg-background px-2 text-xs"
+                      [(ngModel)]="salesCustomStartDate"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                    <span class="text-xs text-muted-foreground">to</span>
+                    <input
+                      type="date"
+                      class="h-8 rounded-md border border-border bg-background px-2 text-xs"
+                      [(ngModel)]="salesCustomEndDate"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="relative h-[250px]">
+                <div class="absolute left-0 top-0 bottom-0 flex w-12 flex-col justify-between py-2 text-xs text-muted-foreground">
+                  <span>$10.0k</span>
+                  <span>$7.5k</span>
+                  <span>$5.0k</span>
+                  <span>$2.5k</span>
+                  <span>$0</span>
+                </div>
+                <div class="ml-14 h-full border-l border-b border-border relative">
+                  <svg class="h-full w-full" viewBox="0 0 400 200" preserveAspectRatio="none">
+                    <path
+                      d="M0,10 Q20,20 40,40 T80,60 T120,80 T160,150 T200,160 T240,165 T280,160 T320,170 T360,175 T400,180"
+                      fill="none"
+                      stroke="hsl(var(--primary))"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <div class="absolute bottom-0 left-0 right-0 flex justify-between px-2 text-xs text-muted-foreground translate-y-5">
+                    <span *ngFor="let label of salesChartLabels">{{ label }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 flex flex-wrap items-center gap-8 border-t border-border pt-4">
+                <label *ngFor="let comparison of salesComparisonOptions" class="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    [checked]="salesComparisonSelections[comparison.id]"
+                    (change)="toggleSalesComparison(comparison.id)"
+                  />
+                  <span class="flex flex-col">
+                    <span class="text-xs text-muted-foreground">
+                      {{ comparison.label }} —
+                    </span>
+                    <span
+                      class="text-sm font-semibold"
+                      [ngClass]="comparison.highlight ? 'text-primary' : 'text-muted-foreground'"
+                    >
+                      {{ comparison.revenue }}
+                    </span>
+                    <span class="text-xs text-muted-foreground">{{ comparison.units }}</span>
+                  </span>
+                </label>
               </div>
             </div>
           </div>
@@ -2147,6 +2690,65 @@ export class ProductEditPageComponent {
   createOfferOpen = false;
   createOfferProductIds: string[] = [];
 
+  private identifiersInitialized = false;
+  private contentInitialized = false;
+  identifierLists: Record<IdentifierKey, string[]> = {
+    skus: [''],
+    upcs: [''],
+    asins: [''],
+    fnskus: [''],
+    gtins: [''],
+    eans: [''],
+    isbns: [''],
+  };
+
+  salesLastUpdated = '1/18/2026 2:44 PM';
+  salesVariationOpen = false;
+  selectedSalesVariation = 'all';
+  salesViewMode: 'sku' | 'asin' = 'sku';
+  salesChartMode: 'sales' | 'units' = 'sales';
+  salesPeriodOpen = false;
+  salesDataPeriod = '30';
+  salesCustomStartDate = '';
+  salesCustomEndDate = '';
+
+  readonly salesPeriodSummaries = [
+    { label: 'Last 7 days', units: 37, avgUnits: 1.03, avgPrice: '$45.99' },
+    { label: 'Last 30 days', units: 942, avgUnits: 1.02, avgPrice: '$37.85' },
+    { label: 'Last 90 days', units: 3811, avgUnits: 1.03, avgPrice: '$38.87' },
+  ];
+
+  readonly salesPeriodOptions = [
+    { value: '7', label: 'Last 7 days' },
+    { value: '14', label: 'Last 14 days' },
+    { value: '30', label: 'Last 30 days' },
+    { value: '60', label: 'Last 60 days' },
+    { value: '90', label: 'Last 90 days' },
+    { value: 'q1-2026', label: 'Q1 2026' },
+    { value: 'q4-2025', label: 'Q4 2025' },
+    { value: 'q3-2025', label: 'Q3 2025' },
+    { value: 'q2-2025', label: 'Q2 2025' },
+    { value: 'q1-2025', label: 'Q1 2025' },
+    { value: '2026', label: 'Year 2026' },
+    { value: '2025', label: 'Year 2025' },
+    { value: '2024', label: 'Year 2024' },
+    { value: 'custom', label: 'Custom Range' },
+  ];
+
+  readonly salesChartLabels = ['12/21', '12/24', '12/27', '12/30', '1/2', '1/5', '1/8', '1/11', '1/14', '1/17'];
+
+  readonly salesComparisonOptions = [
+    { id: 'last30', label: 'Last 30 days', revenue: '$35,657.96', units: '942 units', highlight: true },
+    { id: 'last31_60', label: 'Last 31-60 days', revenue: '$98,033.84', units: '2,477 units' },
+    { id: 'sameLastYear', label: 'Same 30 days last year', revenue: '$131.85', units: '3 units' },
+  ];
+
+  salesComparisonSelections: Record<string, boolean> = {
+    last30: true,
+    last31_60: false,
+    sameLastYear: false,
+  };
+
   brandOptions = [
     'HyperX',
     'Logitech',
@@ -2263,7 +2865,11 @@ export class ProductEditPageComponent {
     },
   ];
 
-  readonly bulletPoints = [
+  productTitle = '';
+  productDescription = '';
+  aplusContent = '';
+
+  bulletPoints = [
     'Premium build with durable materials.',
     'Compatible with leading marketplace standards.',
     'Includes accessories for quick setup.',
@@ -2334,11 +2940,11 @@ export class ProductEditPageComponent {
     },
   ];
 
-  readonly extraAttributes: AttributeRow[] = [
-    { name: 'Batteries Included', value: 'No', type: 'Boolean' },
-    { name: 'Department', value: 'Unisex adult', type: 'Text' },
-    { name: 'Material', value: 'Zinc alloy', type: 'Text' },
-    { name: 'Item Package Quantity', value: '1', type: 'Number' },
+  extraAttributes: AttributeRow[] = [
+    { name: 'Batteries Included', value: 'No', type: 'text' },
+    { name: 'Department', value: 'Unisex adult', type: 'text' },
+    { name: 'Material', value: 'Zinc alloy', type: 'text' },
+    { name: 'Item Package Quantity', value: '1', type: 'number' },
   ];
 
   readonly inventoryLocations: InventoryLocation[] = [
@@ -2394,6 +3000,142 @@ export class ProductEditPageComponent {
 
   selectTab(tab: TabId): void {
     this.activeTab = tab;
+  }
+
+  initIdentifierLists(product: Product): boolean {
+    if (!this.identifiersInitialized) {
+      this.identifierLists = {
+        skus: [product.vendorSku || ''],
+        upcs: [product.gtin || ''],
+        asins: [product.asin || ''],
+        fnskus: [product.fnsku || ''],
+        gtins: [product.gtin || ''],
+        eans: [product.ean || ''],
+        isbns: [product.isbn || ''],
+      };
+      this.identifiersInitialized = true;
+    }
+    return true;
+  }
+
+  initContentFields(product: Product): boolean {
+    if (!this.contentInitialized) {
+      this.productTitle = product.name;
+      this.productDescription = 'High-quality product description placeholder for marketplace listings.';
+      this.contentInitialized = true;
+    }
+    return true;
+  }
+
+  addIdentifier(key: IdentifierKey): void {
+    this.identifierLists = {
+      ...this.identifierLists,
+      [key]: [...this.identifierLists[key], ''],
+    };
+  }
+
+  removeIdentifier(key: IdentifierKey, index: number): void {
+    const next = [...this.identifierLists[key]];
+    if (next.length <= 1) {
+      next[0] = '';
+    } else {
+      next.splice(index, 1);
+    }
+    this.identifierLists = {
+      ...this.identifierLists,
+      [key]: next,
+    };
+  }
+
+  identifierCount(key: IdentifierKey): number {
+    return this.identifierLists[key].filter((value) => value.trim()).length;
+  }
+
+  identifierTotalCount(): number {
+    return (Object.keys(this.identifierLists) as IdentifierKey[]).reduce(
+      (total, key) => total + this.identifierCount(key),
+      0
+    );
+  }
+
+  addBulletPoint(): void {
+    this.bulletPoints = [...this.bulletPoints, ''];
+  }
+
+  updateBulletPoint(index: number, value: string): void {
+    const next = [...this.bulletPoints];
+    next[index] = value;
+    this.bulletPoints = next;
+  }
+
+  removeBulletPoint(index: number): void {
+    if (this.bulletPoints.length <= 1) {
+      this.bulletPoints = [''];
+      return;
+    }
+    this.bulletPoints = this.bulletPoints.filter((_, i) => i !== index);
+  }
+
+  addExtraAttribute(): void {
+    this.extraAttributes = [
+      ...this.extraAttributes,
+      { name: '', value: '', type: 'text' },
+    ];
+  }
+
+  updateExtraAttribute(index: number, field: 'name' | 'value' | 'type', value: string): void {
+    const next = [...this.extraAttributes];
+    next[index] = { ...next[index], [field]: value };
+    this.extraAttributes = next;
+  }
+
+  removeExtraAttribute(index: number): void {
+    this.extraAttributes = this.extraAttributes.filter((_, i) => i !== index);
+  }
+
+  get selectedSalesVariationLabel(): string {
+    if (this.selectedSalesVariation === 'all') {
+      return 'All variations';
+    }
+    const match = this.salesVariationOptions.find((item) => item.id === this.selectedSalesVariation);
+    return match?.name ?? 'All variations';
+  }
+
+  get salesDataPeriodLabel(): string {
+    return this.salesPeriodOptions.find((option) => option.value === this.salesDataPeriod)?.label ?? 'Last 30 days';
+  }
+
+  get salesVariationOptions(): Array<{ id: string; name: string }> {
+    const variations = this.variationRows.map((row, index) => ({
+      id: `var-${index}`,
+      name: row.name,
+    }));
+    return [{ id: 'all', name: 'All variations' }, ...variations];
+  }
+
+  setSalesVariation(id: string): void {
+    this.selectedSalesVariation = id;
+    this.salesVariationOpen = false;
+  }
+
+  setSalesViewMode(mode: 'sku' | 'asin'): void {
+    this.salesViewMode = mode;
+  }
+
+  setSalesChartMode(mode: 'sales' | 'units'): void {
+    this.salesChartMode = mode;
+  }
+
+  setSalesDataPeriod(value: string): void {
+    this.salesDataPeriod = value;
+    this.salesPeriodOpen = false;
+  }
+
+  toggleSalesComparison(id: string): void {
+    this.salesComparisonSelections = {
+      ...this.salesComparisonSelections,
+      [id]: !this.salesComparisonSelections[id],
+    };
   }
 
   setOfferRange(option: string): void {
