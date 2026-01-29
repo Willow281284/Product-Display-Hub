@@ -254,6 +254,16 @@ All colors MUST be HSL.
   transform: translateY(-50%);
 }
 
+/* Resize handle for table columns */
+th .cursor-col-resize {
+  width: 10px;
+  z-index: 20;
+}
+
+th .cursor-col-resize:hover {
+  background: hsl(var(--muted));
+}
+
 @layer utilities {
   .dropdown-panel {
     top: 100%;
