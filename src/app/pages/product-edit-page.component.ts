@@ -163,11 +163,13 @@ interface SalesRow {
         </header>
 
         <div class="px-6">
-          <div class="mt-4 flex flex-wrap gap-2 border-b border-border pb-4">
+          <div class="mt-3 inline-flex h-10 items-center justify-start rounded-md bg-muted p-1 text-muted-foreground">
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'overview'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'overview'"
+              [class.text-foreground]="activeTab === 'overview'"
+              [class.shadow-sm]="activeTab === 'overview'"
               (click)="selectTab('overview')"
             >
               <svg
@@ -191,8 +193,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'pricing'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'pricing'"
+              [class.text-foreground]="activeTab === 'pricing'"
+              [class.shadow-sm]="activeTab === 'pricing'"
               (click)="selectTab('pricing')"
             >
               <svg
@@ -214,8 +218,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'identifiers'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'identifiers'"
+              [class.text-foreground]="activeTab === 'identifiers'"
+              [class.shadow-sm]="activeTab === 'identifiers'"
               (click)="selectTab('identifiers')"
             >
               <svg
@@ -238,8 +244,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'images'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'images'"
+              [class.text-foreground]="activeTab === 'images'"
+              [class.shadow-sm]="activeTab === 'images'"
               (click)="selectTab('images')"
             >
               <svg
@@ -260,8 +268,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'marketplaces'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'marketplaces'"
+              [class.text-foreground]="activeTab === 'marketplaces'"
+              [class.shadow-sm]="activeTab === 'marketplaces'"
               (click)="selectTab('marketplaces')"
             >
               <svg
@@ -282,8 +292,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'content'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'content'"
+              [class.text-foreground]="activeTab === 'content'"
+              [class.shadow-sm]="activeTab === 'content'"
               (click)="selectTab('content')"
             >
               <svg
@@ -306,8 +318,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'options'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'options'"
+              [class.text-foreground]="activeTab === 'options'"
+              [class.shadow-sm]="activeTab === 'options'"
               (click)="selectTab('options')"
             >
               <svg
@@ -332,8 +346,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'extra'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'extra'"
+              [class.text-foreground]="activeTab === 'extra'"
+              [class.shadow-sm]="activeTab === 'extra'"
               (click)="selectTab('extra')"
             >
               <svg
@@ -355,8 +371,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'tags'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'tags'"
+              [class.text-foreground]="activeTab === 'tags'"
+              [class.shadow-sm]="activeTab === 'tags'"
               (click)="selectTab('tags')"
             >
               <svg
@@ -378,8 +396,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'sales'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'sales'"
+              [class.text-foreground]="activeTab === 'sales'"
+              [class.shadow-sm]="activeTab === 'sales'"
               (click)="selectTab('sales')"
             >
               <svg
@@ -399,8 +419,10 @@ interface SalesRow {
             </button>
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium"
-              [class.bg-muted]="activeTab === 'offers'"
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
+              [class.bg-background]="activeTab === 'offers'"
+              [class.text-foreground]="activeTab === 'offers'"
+              [class.shadow-sm]="activeTab === 'offers'"
               (click)="selectTab('offers')"
             >
               <svg
