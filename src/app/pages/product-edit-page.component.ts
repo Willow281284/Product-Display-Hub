@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 
 import { marketplacePlatforms, mockProducts } from '@/data/mockProducts';
@@ -64,7 +64,7 @@ interface SalesRow {
 @Component({
   selector: 'app-product-edit-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, CreateOfferDialogComponent],
+  imports: [CommonModule, FormsModule, RouterLink, CreateOfferDialogComponent],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
       <ng-container *ngIf="product$ | async as product">
@@ -1732,34 +1732,18 @@ interface SalesRow {
                     </button>
                   </div>
                 </details>
-                <details class="relative" [open]="offerStatusFilterOpen">
-                  <summary
-                    class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground"
-                    (click)="$event.preventDefault(); offerStatusFilterOpen = !offerStatusFilterOpen"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                      <path d="M3 3v18h18" />
-                      <path d="M7 15v-4" />
-                      <path d="M12 15V8" />
-                      <path d="M17 15v-6" />
-                    </svg>
-                    {{ offerStatusFilter }}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </summary>
-                  <div class="absolute right-0 mt-2 w-40 rounded-lg border border-border bg-card p-1 shadow-lg">
-                    <button
-                      *ngFor="let option of offerStatusFilters"
-                      type="button"
-                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
-                      (click)="setOfferStatusFilter(option)"
-                    >
-                      <span>{{ option }}</span>
-                      <span *ngIf="offerStatusFilter === option">✓</span>
-                    </button>
-                  </div>
-                </details>
+                <a
+                  routerLink="/offer-analytics"
+                  class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 3v18h18" />
+                    <path d="M7 15v-4" />
+                    <path d="M12 15V8" />
+                    <path d="M17 15v-6" />
+                  </svg>
+                  All Offers
+                </a>
                 <button
                   type="button"
                   class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500/90"
