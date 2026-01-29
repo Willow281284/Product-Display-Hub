@@ -541,21 +541,39 @@ interface SalesRow {
                     <h4 class="text-sm font-semibold">Marketplace Status</h4>
                   </div>
                   <ng-container *ngIf="marketplaceSummary(product) as summary">
-                    <div class="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                    <div class="mt-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                       <span class="flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                        <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-emerald-500/40 text-emerald-500">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                            <path d="M5 12l4 4L19 7" />
+                          </svg>
+                        </span>
                         {{ summary.live }} Live
                       </span>
                       <span class="flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+                        <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-400/40 text-slate-400">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                            <path d="M6 6l12 12" />
+                            <path d="M18 6l-12 12" />
+                          </svg>
+                        </span>
                         {{ summary.inactive }} Inactive
                       </span>
                       <span class="flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-rose-500"></span>
+                        <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-rose-500/40 text-rose-500">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                            <path d="M6 6l12 12" />
+                            <path d="M18 6l-12 12" />
+                          </svg>
+                        </span>
                         {{ summary.error }} Error
                       </span>
                       <span class="flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-slate-300"></span>
+                        <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-300 text-slate-300">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                            <path d="M12 6v12" />
+                          </svg>
+                        </span>
                         {{ summary.notListed }} Not Listed
                       </span>
                     </div>
@@ -565,7 +583,13 @@ interface SalesRow {
                         class="flex items-center gap-2 rounded-full border px-2 py-1 text-[11px]"
                         [ngClass]="marketplaceBadgeClass(row.status)"
                       >
-                        <span class="capitalize">{{ row.platform }}</span>
+                        <span
+                          class="inline-flex items-center justify-center rounded-md px-1.5 py-0.5 text-[9px] font-semibold"
+                          [ngClass]="platformBadgeClass(row.platform)"
+                        >
+                          {{ platformBadgeLabel(row.platform) }}
+                        </span>
+                        <span class="font-semibold">{{ platformLabel(row.platform) }}</span>
                         <span [ngClass]="marketplaceTextClass(row.status)">
                           • {{ statusLabel(row.status) }}
                         </span>
@@ -592,15 +616,9 @@ interface SalesRow {
                   </div>
                   <div class="rounded-lg bg-muted/30 p-4">
                     <p class="text-xs text-muted-foreground">Profit Margin</p>
-                    <div class="mt-2 flex items-baseline gap-1">
-                      <input
-                        type="number"
-                        class="w-full border-b border-dashed border-muted-foreground/40 bg-transparent text-lg font-semibold text-emerald-600 focus:outline-none"
-                        [(ngModel)]="product.grossProfitPercent"
-                        [ngModelOptions]="{ standalone: true }"
-                      />
-                      <span class="text-sm text-emerald-600">%</span>
-                    </div>
+                    <p class="mt-2 text-lg font-semibold text-emerald-600">
+                      {{ product.grossProfitPercent | number: '1.0-2' }}%
+                    </p>
                   </div>
                   <div class="rounded-lg bg-muted/30 p-4">
                     <p class="text-xs text-muted-foreground">In Stock</p>
@@ -627,15 +645,28 @@ interface SalesRow {
                     <h4 class="text-sm font-semibold text-muted-foreground">
                       Revenue &amp; Profit Summary
                     </h4>
-                    <button
-                      type="button"
-                      class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                    >
-                      Last 30 days
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                        <path d="M6 9l6 6 6-6" />
-                      </svg>
-                    </button>
+                    <details class="relative" [open]="revenueRangeOpen">
+                      <summary
+                        class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                        (click)="$event.preventDefault(); revenueRangeOpen = !revenueRangeOpen"
+                      >
+                        {{ revenueRange }}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                          <path d="M6 9l6 6 6-6" />
+                        </svg>
+                      </summary>
+                      <div class="absolute right-0 mt-2 w-40 rounded-lg border border-border bg-card p-1 shadow-lg">
+                        <button
+                          *ngFor="let option of revenueRanges"
+                          type="button"
+                          class="flex w-full items-center justify-between rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                          (click)="setRevenueRange(option)"
+                        >
+                          <span>{{ option }}</span>
+                          <span *ngIf="revenueRange === option">✓</span>
+                        </button>
+                      </div>
+                    </details>
                   </div>
                   <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     <div class="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3">
@@ -658,7 +689,7 @@ interface SalesRow {
                     <div class="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
                       <p class="text-xs font-semibold text-amber-500">Days of Stock</p>
                       <p class="text-lg font-semibold text-amber-500">
-                        {{ product.stockDays | number: '1.0-0' }}
+                        {{ stockDaysValue(product) | number: '1.0-0' }}
                       </p>
                       <p class="text-xs text-muted-foreground">at current velocity</p>
                     </div>
@@ -1492,6 +1523,17 @@ export class ProductEditPageComponent {
 
   activeTab: TabId = 'overview';
 
+  revenueRangeOpen = false;
+  revenueRange = 'Last 30 days';
+  readonly revenueRanges = [
+    'Last 7 days',
+    'Last 14 days',
+    'Last 30 days',
+    'Last 60 days',
+    'Last 90 days',
+    'Last 365 days',
+  ];
+
   readonly topOffers: OfferRow[] = [
     {
       name: 'Holiday price boost',
@@ -1627,8 +1669,49 @@ export class ProductEditPageComponent {
 
   readonly mediaSlots = [1, 2, 3, 4];
 
+  readonly platformLabels: Record<string, string> = {
+    amazon: 'Amazon',
+    walmart: 'Walmart',
+    ebay: 'eBay',
+    newegg: 'Newegg',
+    bestbuy: 'Bestbuy',
+    target: 'Target',
+    etsy: 'Etsy',
+    shopify: 'Shopify',
+    temu: 'Temu',
+    macys: "Macy's",
+    costco: 'Costco',
+    homedepot: 'Home Depot',
+    lowes: "Lowe's",
+    wayfair: 'Wayfair',
+    overstock: 'Overstock',
+  };
+
+  readonly platformBadgeLabels: Record<string, string> = {
+    amazon: 'amazon',
+    walmart: 'WMT',
+    ebay: 'ebay',
+    newegg: 'NE',
+    bestbuy: 'BBY',
+    target: 'TGT',
+    etsy: 'ETSY',
+    shopify: 'SHOP',
+    temu: 'TEMU',
+    macys: 'MACY',
+    costco: 'COST',
+    homedepot: 'HD',
+    lowes: 'LOW',
+    wayfair: 'WAY',
+    overstock: 'OVR',
+  };
+
   selectTab(tab: TabId): void {
     this.activeTab = tab;
+  }
+
+  setRevenueRange(option: string): void {
+    this.revenueRange = option;
+    this.revenueRangeOpen = false;
   }
 
   marketplaceSummary(product: Product): {
@@ -1656,6 +1739,33 @@ export class ProductEditPageComponent {
       error: all.filter((item) => item.status === 'error').length,
       notListed: all.filter((item) => item.status === 'not_listed').length,
     };
+  }
+
+  platformLabel(platform: string): string {
+    return this.platformLabels[platform] ?? platform.charAt(0).toUpperCase() + platform.slice(1);
+  }
+
+  platformBadgeLabel(platform: string): string {
+    return this.platformBadgeLabels[platform] ?? platform.slice(0, 3).toUpperCase();
+  }
+
+  platformBadgeClass(platform: string): string {
+    switch (platform) {
+      case 'amazon':
+        return 'bg-orange-500/20 text-orange-600';
+      case 'walmart':
+        return 'bg-blue-500/20 text-blue-500';
+      case 'ebay':
+        return 'bg-emerald-500/20 text-emerald-600';
+      case 'newegg':
+        return 'bg-amber-500/20 text-amber-600';
+      case 'bestbuy':
+        return 'bg-indigo-500/20 text-indigo-500';
+      case 'target':
+        return 'bg-rose-500/20 text-rose-600';
+      default:
+        return 'bg-slate-500/20 text-slate-500';
+    }
   }
 
   marketplaceBadgeClass(status: MarketplaceStatus['status']): string {
@@ -1688,7 +1798,7 @@ export class ProductEditPageComponent {
 
   statusLabel(status: MarketplaceStatus['status']): string {
     if (status === 'not_listed') {
-      return 'Not listed';
+      return 'Not Listed';
     }
     return status.charAt(0).toUpperCase() + status.slice(1);
   }
@@ -1708,7 +1818,16 @@ export class ProductEditPageComponent {
   }
 
   restockLeadDays(product: Product): number {
-    return Math.max(0, product.stockDays - 7);
+    return Math.max(0, this.stockDaysValue(product) - 7);
+  }
+
+  stockDaysValue(product: Product): number {
+    const stockQty = Number.isFinite(product.stockQty) ? product.stockQty : 0;
+    const velocity = Number.isFinite(product.velocity) ? product.velocity : 0;
+    if (velocity <= 0) {
+      return Math.max(0, stockQty);
+    }
+    return Math.max(0, Math.round(stockQty / velocity));
   }
 
   restockLabel(status: Product['restockStatus']): string {
