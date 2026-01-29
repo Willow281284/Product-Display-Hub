@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
 
@@ -62,7 +63,7 @@ interface SalesRow {
 @Component({
   selector: 'app-product-edit-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
       <ng-container *ngIf="product$ | async as product">
@@ -492,58 +493,55 @@ interface SalesRow {
                     <h4 class="text-sm font-semibold">Active Offers</h4>
                     <button
                       type="button"
-                      class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                      class="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"
                       (click)="selectTab('offers')"
                     >
-                      Manage offers
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                      </svg>
+                      Manage Offers
                     </button>
                   </div>
                   <div class="mt-3 grid grid-cols-3 gap-3">
-                    <div class="rounded-lg bg-background p-2 text-center">
-                      <p class="text-lg font-semibold text-primary">3</p>
+                    <div class="rounded-lg bg-background/60 p-3 text-center">
+                      <p class="text-lg font-semibold text-emerald-500">1</p>
                       <p class="text-xs text-muted-foreground">Active</p>
                     </div>
-                    <div class="rounded-lg bg-background p-2 text-center">
-                      <p class="text-lg font-semibold">7</p>
+                    <div class="rounded-lg bg-background/60 p-3 text-center">
+                      <p class="text-lg font-semibold">1</p>
                       <p class="text-xs text-muted-foreground">Total</p>
                     </div>
-                    <div class="rounded-lg bg-background p-2 text-center">
-                      <p class="text-lg font-semibold text-emerald-600">$24,980</p>
+                    <div class="rounded-lg bg-background/60 p-3 text-center">
+                      <p class="text-lg font-semibold text-emerald-500">$1,124</p>
                       <p class="text-xs text-muted-foreground">Revenue</p>
                     </div>
                   </div>
                   <div class="mt-4 space-y-2">
-                    <p class="text-xs font-semibold text-muted-foreground">Top offers</p>
-                    <div
-                      *ngFor="let offer of topOffers"
-                      class="flex items-center justify-between rounded-lg bg-background px-3 py-2 text-xs"
-                    >
+                    <p class="text-xs font-semibold text-muted-foreground">Top Offers</p>
+                    <div class="flex items-center justify-between rounded-lg bg-background px-3 py-2 text-xs">
                       <div class="flex items-center gap-2">
-                        <span class="font-medium">{{ offer.name }}</span>
-                        <span
-                          class="rounded-full border border-border px-2 py-0.5 text-[10px]"
-                        >
-                          {{ offer.status }}
+                        <span class="font-semibold">Summer Sale</span>
+                        <span class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-600">
+                          Active
                         </span>
                       </div>
-                      <span class="text-muted-foreground">{{ offer.discount }}</span>
+                      <span class="text-muted-foreground">20% Off</span>
                     </div>
                   </div>
                 </div>
 
                 <div class="rounded-lg bg-muted/30 p-4">
-                  <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4 text-muted-foreground" stroke-width="2">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 3v18" />
+                      <path d="M3 12h18" />
+                    </svg>
                     <h4 class="text-sm font-semibold">Marketplace Status</h4>
-                    <button
-                      type="button"
-                      class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                      (click)="selectTab('marketplaces')"
-                    >
-                      Manage listings
-                    </button>
                   </div>
                   <ng-container *ngIf="marketplaceSummary(product) as summary">
-                    <div class="mt-3 flex flex-wrap items-center gap-3 text-sm">
+                    <div class="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                       <span class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                         {{ summary.live }} Live
@@ -552,19 +550,19 @@ interface SalesRow {
                         <span class="h-2 w-2 rounded-full bg-slate-400"></span>
                         {{ summary.inactive }} Inactive
                       </span>
-                      <span class="flex items-center gap-2" *ngIf="summary.error > 0">
+                      <span class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-rose-500"></span>
                         {{ summary.error }} Error
                       </span>
-                      <span class="flex items-center gap-2" *ngIf="summary.notListed > 0">
+                      <span class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-slate-300"></span>
-                        {{ summary.notListed }} Not listed
+                        {{ summary.notListed }} Not Listed
                       </span>
                     </div>
-                    <div class="mt-3 flex flex-wrap gap-2">
+                    <div class="mt-4 flex flex-wrap gap-2">
                       <div
                         *ngFor="let row of summary.preview"
-                        class="flex items-center gap-2 rounded-md border px-2 py-1 text-xs"
+                        class="flex items-center gap-2 rounded-full border px-2 py-1 text-[11px]"
                         [ngClass]="marketplaceBadgeClass(row.status)"
                       >
                         <span class="capitalize">{{ row.platform }}</span>
@@ -572,6 +570,9 @@ interface SalesRow {
                           • {{ statusLabel(row.status) }}
                         </span>
                       </div>
+                      <span class="rounded-full border border-border px-2 py-1 text-[11px] text-muted-foreground">
+                        +{{ summary.all.length - summary.preview.length }} more
+                      </span>
                     </div>
                   </ng-container>
                 </div>
@@ -582,25 +583,42 @@ interface SalesRow {
                 <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <div class="rounded-lg bg-muted/30 p-4">
                     <p class="text-xs text-muted-foreground">Sale Price</p>
-                    <p class="text-xl font-semibold">
-                      {{ product.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
-                    </p>
+                    <input
+                      type="number"
+                      class="mt-2 w-full border-b border-dashed border-muted-foreground/40 bg-transparent text-lg font-semibold focus:outline-none"
+                      [(ngModel)]="product.salePrice"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
                   </div>
                   <div class="rounded-lg bg-muted/30 p-4">
                     <p class="text-xs text-muted-foreground">Profit Margin</p>
-                    <p class="text-xl font-semibold text-emerald-600">
-                      {{ product.grossProfitPercent | number: '1.0-0' }}%
-                    </p>
+                    <div class="mt-2 flex items-baseline gap-1">
+                      <input
+                        type="number"
+                        class="w-full border-b border-dashed border-muted-foreground/40 bg-transparent text-lg font-semibold text-emerald-600 focus:outline-none"
+                        [(ngModel)]="product.grossProfitPercent"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                      <span class="text-sm text-emerald-600">%</span>
+                    </div>
                   </div>
                   <div class="rounded-lg bg-muted/30 p-4">
                     <p class="text-xs text-muted-foreground">In Stock</p>
-                    <p class="text-xl font-semibold">{{ product.stockQty }}</p>
+                    <input
+                      type="number"
+                      class="mt-2 w-full border-b border-dashed border-muted-foreground/40 bg-transparent text-lg font-semibold focus:outline-none"
+                      [(ngModel)]="product.stockQty"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
                   </div>
                   <div class="rounded-lg bg-muted/30 p-4">
                     <p class="text-xs text-muted-foreground">Shipping Cost</p>
-                    <p class="text-xl font-semibold">
-                      {{ product.shippingCost | currency: 'USD' : 'symbol' : '1.2-2' }}
-                    </p>
+                    <input
+                      type="number"
+                      class="mt-2 w-full border-b border-dashed border-muted-foreground/40 bg-transparent text-lg font-semibold focus:outline-none"
+                      [(ngModel)]="product.shippingCost"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
                   </div>
                 </div>
 
@@ -611,32 +629,35 @@ interface SalesRow {
                     </h4>
                     <button
                       type="button"
-                      class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                      class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
                     >
                       Last 30 days
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
                     </button>
                   </div>
                   <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     <div class="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3">
-                      <p class="text-xs font-semibold text-emerald-700">Total Revenue</p>
-                      <p class="text-lg font-semibold text-emerald-700">$38,640.40</p>
+                      <p class="text-xs font-semibold text-emerald-600">Total Revenue</p>
+                      <p class="text-lg font-semibold text-emerald-500">$35,657.96</p>
                       <p class="text-xs text-muted-foreground">942 units sold</p>
                     </div>
                     <div class="rounded-lg border border-blue-500/30 bg-blue-500/10 p-3">
-                      <p class="text-xs font-semibold text-blue-700">Gross Profit</p>
-                      <p class="text-lg font-semibold text-blue-700">$12,940.12</p>
+                      <p class="text-xs font-semibold text-blue-500">Gross Profit</p>
+                      <p class="text-lg font-semibold text-blue-500">$469.20</p>
                       <p class="text-xs text-muted-foreground">
-                        {{ product.grossProfitPercent | number: '1.0-0' }}% margin
+                        {{ product.grossProfitPercent | number: '1.0-2' }}% margin
                       </p>
                     </div>
                     <div class="rounded-lg border border-purple-500/30 bg-purple-500/10 p-3">
-                      <p class="text-xs font-semibold text-purple-700">Avg Daily Sales</p>
-                      <p class="text-lg font-semibold text-purple-700">31.4</p>
+                      <p class="text-xs font-semibold text-purple-500">Avg Daily Sales</p>
+                      <p class="text-lg font-semibold text-purple-500">31.4</p>
                       <p class="text-xs text-muted-foreground">units/day</p>
                     </div>
                     <div class="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
-                      <p class="text-xs font-semibold text-amber-700">Days of Stock</p>
-                      <p class="text-lg font-semibold text-amber-700">
+                      <p class="text-xs font-semibold text-amber-500">Days of Stock</p>
+                      <p class="text-lg font-semibold text-amber-500">
                         {{ product.stockDays | number: '1.0-0' }}
                       </p>
                       <p class="text-xs text-muted-foreground">at current velocity</p>
@@ -646,34 +667,123 @@ interface SalesRow {
 
                 <div class="rounded-lg bg-muted/30 p-4 space-y-4">
                   <div class="flex items-center justify-between">
-                    <h4 class="text-sm font-semibold">Sales Forecast</h4>
-                    <span class="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
-                      AI powered
-                    </span>
+                    <div class="flex items-center gap-2">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4 text-emerald-500" stroke-width="2">
+                        <path d="M3 12h18" />
+                        <path d="m6 9 3 3-3 3" />
+                      </svg>
+                      <h4 class="text-sm font-semibold">Sales Forecast</h4>
+                      <span class="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
+                        AI Powered
+                      </span>
+                    </div>
                   </div>
-                  <div class="grid gap-4 md:grid-cols-3">
-                    <div class="rounded-lg bg-background p-3">
+                  <div class="grid gap-6 md:grid-cols-3 text-xs">
+                    <div>
                       <p class="text-xs text-muted-foreground">Next 30 Days</p>
-                      <p class="text-lg font-semibold">$38,450</p>
-                      <p class="text-xs text-muted-foreground">1,020 units</p>
+                      <div class="mt-3 grid gap-2">
+                        <div class="flex items-center justify-between">
+                          <span>Projected Sales</span>
+                          <span class="font-semibold text-emerald-400">$38,450</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span>Projected Units</span>
+                          <span class="font-semibold">1,020</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span>Projected Profit</span>
+                          <span class="font-semibold text-emerald-400">$8,659</span>
+                        </div>
+                      </div>
                     </div>
-                    <div class="rounded-lg bg-background p-3">
+                    <div>
                       <p class="text-xs text-muted-foreground">Next 60 Days</p>
-                      <p class="text-lg font-semibold">$78,200</p>
-                      <p class="text-xs text-muted-foreground">2,080 units</p>
+                      <div class="mt-3 grid gap-2">
+                        <div class="flex items-center justify-between">
+                          <span>Projected Sales</span>
+                          <span class="font-semibold text-emerald-400">$78,200</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span>Projected Units</span>
+                          <span class="font-semibold">2,080</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span>Projected Profit</span>
+                          <span class="font-semibold text-emerald-400">$17,596</span>
+                        </div>
+                      </div>
                     </div>
-                    <div class="rounded-lg bg-background p-3">
+                    <div>
                       <p class="text-xs text-muted-foreground">Next 90 Days</p>
-                      <p class="text-lg font-semibold">$115,800</p>
-                      <p class="text-xs text-muted-foreground">3,075 units</p>
+                      <div class="mt-3 grid gap-2">
+                        <div class="flex items-center justify-between">
+                          <span>Projected Sales</span>
+                          <span class="font-semibold text-emerald-400">$115,800</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span>Projected Units</span>
+                          <span class="font-semibold">3,075</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span>Projected Profit</span>
+                          <span class="font-semibold text-emerald-400">$26,055</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm">
-                    <p class="font-semibold text-amber-700">Restock Recommendation</p>
-                    <p class="text-xs text-muted-foreground">
-                      Order {{ product.suggestedRestockQty }} units in the next
-                      {{ restockLeadDays(product) | number: '1.0-0' }} days.
+                  <div class="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-2 text-amber-700">
+                        <span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-amber-500/40">!</span>
+                        <span class="font-semibold">Restock Recommendation</span>
+                      </div>
+                      <button class="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-[10px] text-amber-700">
+                        Order in {{ restockLeadDays(product) | number: '1.0-0' }} days
+                      </button>
+                    </div>
+                    <p class="mt-2 text-xs text-muted-foreground">
+                      Based on current velocity of {{ product.velocity }} units/day, recommend ordering
+                      <span class="font-semibold text-foreground"> {{ product.suggestedRestockQty }} units</span>
+                      to maintain 45 days of stock.
                     </p>
+                  </div>
+                </div>
+
+                <div class="rounded-lg bg-muted/30 p-4">
+                  <div class="flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4 text-muted-foreground" stroke-width="2">
+                      <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                      <path d="M3 7v10l9 4 9-4V7" />
+                    </svg>
+                    <h4 class="text-sm font-semibold">Forecast by Variation</h4>
+                  </div>
+                  <div class="mt-3 overflow-hidden rounded-lg border border-border">
+                    <table class="w-full text-xs">
+                      <thead class="bg-background/60 text-muted-foreground">
+                        <tr>
+                          <th class="px-3 py-2 text-left">Variation</th>
+                          <th class="px-3 py-2 text-right">30d Sales</th>
+                          <th class="px-3 py-2 text-right">30d Profit</th>
+                          <th class="px-3 py-2 text-right">Velocity</th>
+                          <th class="px-3 py-2 text-right">Stock Days</th>
+                          <th class="px-3 py-2 text-right">Restock</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let row of forecastByVariation" class="border-t border-border">
+                          <td class="px-3 py-2 font-medium">{{ row.variation }}</td>
+                          <td class="px-3 py-2 text-right text-emerald-400">{{ row.sales }}</td>
+                          <td class="px-3 py-2 text-right text-blue-400">{{ row.profit }}</td>
+                          <td class="px-3 py-2 text-right">{{ row.velocity }}</td>
+                          <td class="px-3 py-2 text-right text-rose-400">{{ row.stockDays }}</td>
+                          <td class="px-3 py-2 text-right">
+                            <span class="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] text-white">
+                              {{ row.restock }}
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -1465,6 +1575,33 @@ export class ProductEditPageComponent {
       sku: 'NVY-M-1122',
       stock: 21,
       priceDelta: '+$1.50',
+    },
+  ];
+
+  readonly forecastByVariation = [
+    {
+      variation: '#03-bell',
+      sales: '$5396',
+      profit: '$1187',
+      velocity: '12.0/day',
+      stockDays: '0',
+      restock: 'Urgent',
+    },
+    {
+      variation: 'Born to Ride',
+      sales: '$2249',
+      profit: '$495',
+      velocity: '5.0/day',
+      stockDays: '0',
+      restock: 'Urgent',
+    },
+    {
+      variation: 'No Excuses',
+      sales: '$6296',
+      profit: '$1385',
+      velocity: '14.0/day',
+      stockDays: '0',
+      restock: 'Urgent',
     },
   ];
 
