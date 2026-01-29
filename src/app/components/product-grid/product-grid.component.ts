@@ -6699,8 +6699,7 @@ export class ProductGridComponent implements OnInit {
   }
 
   columnWidth(columnId: string): number {
-    const width = this.columnWidths[columnId] ?? 120;
-    return Math.max(80, width);
+    return this.columnWidths[columnId] ?? 120;
   }
 
   startResize(event: MouseEvent, columnId: string): void {
@@ -6713,7 +6712,7 @@ export class ProductGridComponent implements OnInit {
     const handleMouseMove = (moveEvent: MouseEvent) => {
       if (!this.resizingColumnId) return;
       const diff = moveEvent.clientX - this.resizeStartX;
-      const nextWidth = Math.max(80, this.resizeStartWidth + diff);
+      const nextWidth = Math.max(20, this.resizeStartWidth + diff);
       this.columnWidths = {
         ...this.columnWidths,
         [this.resizingColumnId]: nextWidth,
