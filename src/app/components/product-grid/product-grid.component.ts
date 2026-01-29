@@ -6024,10 +6024,7 @@ export class ProductGridComponent implements OnInit {
   }
 
   openProductDialog(product: Product): void {
-    this.selectedProduct = product;
-    this.productDraft = { ...product };
-    this.productDialogTab = 'overview';
-    this.productDialogOpen = true;
+    void this.router.navigate(['/product', product.id]);
   }
 
   closeProductDialog(): void {
