@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 type ExtraAttribute = { name: string; value: string; type?: 'text' | 'number' };
+type DimensionKey = 'height' | 'width' | 'length';
+type DimensionWithWeightKey = DimensionKey | 'weight';
 
 export interface VariationSettingsRow {
   id: string;
@@ -354,7 +356,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                         (ngModelChange)="updateWeightQty(variation, qtyIdx, 'weight', $event)"
                       />
                     </div>
-                    <div class="space-y-1" *ngFor="let dim of ['height','width','length']">
+                    <div class="space-y-1" *ngFor="let dim of dimensionKeys">
                       <label class="text-xs font-medium uppercase text-muted-foreground">{{ dim }}</label>
                       <input
                         type="number"
@@ -527,14 +529,16 @@ export class VariationSettingsEditorComponent {
     { key: 'multiGtins', label: 'GTIN', placeholder: 'Enter GTIN' },
   ];
 
-  readonly baseDimensionFields = [
+  readonly dimensionKeys: DimensionKey[] = ['height', 'width', 'length'];
+
+  readonly baseDimensionFields: Array<{ label: string; key: DimensionWithWeightKey; unit: string }> = [
     { label: 'Weight', key: 'weight', unit: 'lb' },
     { label: 'Height', key: 'height', unit: 'in' },
     { label: 'Width', key: 'width', unit: 'in' },
     { label: 'Length', key: 'length', unit: 'in' },
-  ] as const;
+  ];
 
-  readonly inventoryFields = [
+  readonly inventoryFields: Array<{ label: string; key: keyof VariationSettingsRow; highlight?: boolean }> = [
     { label: 'Inv Qty Adj', key: 'invQtyAdjustment' },
     { label: 'Purchase Qty', key: 'purchaseQty' },
     { label: 'Sold Qty', key: 'soldQty' },
@@ -544,25 +548,36 @@ export class VariationSettingsEditorComponent {
     { label: 'Reserve Qty', key: 'reserveQty' },
     { label: 'Damage Qty', key: 'damageQty' },
     { label: 'On Hand Qty', key: 'onHandQty' },
-  ] as const;
+  ];
 
-  readonly priceFieldsTop = [
+  readonly priceFieldsTop: Array<{
+    label: string;
+    key: keyof VariationSettingsRow;
+    prefix?: string;
+    highlight?: boolean;
+  }> = [
     { label: 'Purchase Price', key: 'purchasePrice', prefix: '$' },
     { label: 'Inbound Freight', key: 'inboundFreight' },
     { label: 'Extra Duty', key: 'extraDuty' },
     { label: 'Landed Cost', key: 'landedCost', prefix: '$', highlight: true },
     { label: 'FVF', key: 'fvf', prefix: '$' },
     { label: 'TAC', key: 'tac', prefix: '$' },
-  ] as const;
+  ];
 
-  readonly priceFieldsBottom = [
+  readonly priceFieldsBottom: Array<{
+    label: string;
+    key: keyof VariationSettingsRow;
+    prefix?: string;
+    span?: number;
+    badge?: boolean;
+  }> = [
     { label: 'Sale Price', key: 'salePrice', prefix: '$' },
     { label: 'MSRP', key: 'msrp', prefix: '$' },
     { label: 'Competitor Price', key: 'competitorPrice', span: 2, prefix: '$' },
     { label: 'Profit Margin(%)', key: 'profitMargin', badge: true },
     { label: 'Min $ (BuyBox)', key: 'minBuyBox', prefix: '$' },
     { label: 'Max $ (BuyBox)', key: 'maxBuyBox', prefix: '$' },
-  ] as const;
+  ];
 
   trackByVariation(_: number, variation: VariationSettingsRow): string {
     return variation.id;
@@ -659,7 +674,7 @@ export class VariationSettingsEditorComponent {
   updateDimensionQty(
     variation: VariationSettingsRow,
     index: number,
-    key: 'height' | 'width' | 'length',
+    key: DimensionKey,
     value: string
   ): void {
     const next = [...(variation.dimensionsPerQty || [])];
@@ -668,12 +683,12 @@ export class VariationSettingsEditorComponent {
     variation.dimensionsPerQty = next;
   }
 
-  getDimensionQty(variation: VariationSettingsRow, index: number, key: 'height' | 'width' | 'length'): number {
+  getDimensionQty(variation: VariationSettingsRow, index: number, key: DimensionKey): number {
     return variation.dimensionsPerQty?.[index]?.[key] ?? 0;
   }
 
   updateNumberField(variation: VariationSettingsRow, key: keyof VariationSettingsRow, value: string): void {
-    (variation as Record<string, number>)[key as string] = this.toNumber(value);
+    (variation as unknown as Record<string, number>)[key as string] = this.toNumber(value);
   }
 
   addVariationAttribute(variation: VariationSettingsRow): void {
