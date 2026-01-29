@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 type ExtraAttribute = { name: string; value: string; type?: 'text' | 'number' };
 type DimensionKey = 'height' | 'width' | 'length';
 type DimensionWithWeightKey = DimensionKey | 'weight';
+type IdentifierIcon = 'hash' | 'barcode' | 'package' | 'truck' | 'globe';
 
 export interface VariationSettingsRow {
   id: string;
@@ -69,12 +70,12 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
       <div class="flex-1 overflow-y-auto">
         <div *ngFor="let variation of variations; trackBy: trackByVariation">
           <div
-            class="border-b transition-colors"
-            [ngClass]="isExpanded(variation.id) ? 'bg-muted/50' : 'hover:bg-muted/30'"
+            class="border-b border-slate-800 transition-colors"
+            [ngClass]="isExpanded(variation.id) ? 'bg-slate-950/90' : 'bg-slate-950/70 hover:bg-slate-950/90'"
           >
             <button
               type="button"
-              class="flex w-full items-center gap-4 px-4 py-3 text-left"
+              class="flex w-full items-center gap-4 px-4 py-3 text-left text-slate-100"
               (click)="toggleVariation(variation.id)"
             >
               <span class="shrink-0">
@@ -87,36 +88,39 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
               </span>
 
               <div class="min-w-[200px] flex-shrink-0">
-                <p class="text-base font-semibold leading-tight">{{ variation.name }}</p>
-                <p class="mt-0.5 font-mono text-sm text-muted-foreground">{{ variation.sku }}</p>
+                <p class="text-base font-semibold leading-tight text-slate-100">{{ variation.name }}</p>
+                <p class="mt-0.5 font-mono text-sm text-slate-400">{{ variation.sku }}</p>
               </div>
 
               <div class="grid flex-1 grid-cols-6 gap-6 text-center">
                 <div>
-                  <p class="text-xs font-medium uppercase text-muted-foreground">UPC</p>
-                  <p class="truncate font-mono text-sm">{{ variation.upc || '—' }}</p>
+                  <p class="text-xs font-medium uppercase text-slate-400">UPC</p>
+                  <p class="truncate font-mono text-sm text-slate-100">{{ variation.upc || '—' }}</p>
                 </div>
                 <div>
-                  <p class="text-xs font-medium uppercase text-muted-foreground">ASIN</p>
-                  <p class="truncate font-mono text-sm text-primary">{{ variation.asin || '—' }}</p>
+                  <p class="text-xs font-medium uppercase text-slate-400">ASIN</p>
+                  <p class="truncate font-mono text-sm text-emerald-400">{{ variation.asin || '—' }}</p>
                 </div>
                 <div>
-                  <p class="text-xs font-medium uppercase text-muted-foreground">FNSKU</p>
-                  <p class="truncate font-mono text-sm">{{ variation.fnsku || '—' }}</p>
+                  <p class="text-xs font-medium uppercase text-slate-400">FNSKU</p>
+                  <p class="truncate font-mono text-sm text-slate-100">{{ variation.fnsku || '—' }}</p>
                 </div>
                 <div>
-                  <p class="text-xs font-medium uppercase text-muted-foreground">Available</p>
-                  <p class="text-sm font-bold" [ngClass]="(variation.availableStock || 0) > 0 ? 'text-emerald-600' : 'text-muted-foreground'">
+                  <p class="text-xs font-medium uppercase text-slate-400">Available</p>
+                  <p
+                    class="text-sm font-bold"
+                    [ngClass]="(variation.availableStock || 0) > 0 ? 'text-emerald-400' : 'text-slate-400'"
+                  >
                     {{ variation.availableStock ?? 0 }}
                   </p>
                 </div>
                 <div>
-                  <p class="text-xs font-medium uppercase text-muted-foreground">Allocated</p>
-                  <p class="text-sm font-semibold">{{ variation.quantityAllocated ?? 0 }}</p>
+                  <p class="text-xs font-medium uppercase text-slate-400">Allocated</p>
+                  <p class="text-sm font-semibold text-slate-100">{{ variation.quantityAllocated ?? 0 }}</p>
                 </div>
                 <div>
-                  <p class="text-xs font-medium uppercase text-muted-foreground">On Hand</p>
-                  <p class="text-sm font-semibold">{{ variation.onHandQty ?? 0 }}</p>
+                  <p class="text-xs font-medium uppercase text-slate-400">On Hand</p>
+                  <p class="text-sm font-semibold text-slate-100">{{ variation.onHandQty ?? 0 }}</p>
                 </div>
               </div>
 
@@ -124,8 +128,9 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                 <div class="relative">
                   <button
                     type="button"
-                    class="flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted"
+                    class="variation-image-trigger flex items-center gap-1 rounded-md border border-slate-700 bg-slate-900/60 px-2 py-1 text-xs text-slate-200 hover:bg-slate-800"
                     (click)="toggleImagePanel($event, variation.id)"
+                    data-tooltip="Images"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                       <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -133,26 +138,26 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                       <path d="m21 15-5-5L5 21" />
                     </svg>
                     Images
-                    <span *ngIf="(variation.images || []).length" class="ml-0.5 rounded-full bg-muted px-1 text-[10px]">
+                    <span *ngIf="(variation.images || []).length" class="ml-0.5 rounded-full bg-slate-800 px-1 text-[10px] text-slate-100">
                       {{ (variation.images || []).length }}
                     </span>
                   </button>
                   <div
                     *ngIf="imagePanelId === variation.id"
-                    class="absolute right-0 z-20 mt-2 w-96 rounded-lg border border-border bg-card p-4 shadow-lg"
+                    class="variation-image-panel absolute right-0 z-20 mt-2 w-96 rounded-lg border border-slate-800 bg-slate-950 p-4 shadow-lg"
                   >
                     <div class="mb-3 text-sm font-semibold">Images for {{ variation.name }}</div>
                     <div class="flex gap-2">
                       <input
                         type="text"
-                        class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        class="flex-1 rounded-md border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500"
                         placeholder="Enter image URL"
                         [(ngModel)]="imageDrafts[variation.id]"
                         [ngModelOptions]="{ standalone: true }"
                       />
                       <button
                         type="button"
-                        class="rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground"
+                        class="rounded-md bg-emerald-500 px-3 py-2 text-xs font-semibold text-slate-950"
                         [disabled]="!imageDrafts[variation.id]"
                         (click)="addVariationImage(variation)"
                       >
@@ -189,30 +194,65 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                       </div>
                     </div>
                     <ng-template #noImages>
-                      <div class="mt-3 rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
+                      <div class="mt-3 rounded-lg border border-dashed border-slate-800 p-4 text-center text-xs text-slate-400">
                         No images added
                       </div>
                     </ng-template>
                   </div>
                 </div>
-                <button type="button" class="h-7 w-7 rounded-md border border-border text-muted-foreground hover:bg-muted">
+                <button
+                  type="button"
+                  class="h-7 w-7 rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800"
+                  data-tooltip="Upload images"
+                >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M12 5v14" />
-                    <path d="M5 12h14" />
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
                   </svg>
                 </button>
-                <button type="button" class="h-7 w-7 rounded-md border border-border text-muted-foreground hover:bg-muted">
+                <button
+                  type="button"
+                  class="h-7 w-7 rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800"
+                  data-tooltip="Sync with marketplace"
+                >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M3 12a9 9 0 0 1 9-9" />
-                    <path d="M3 12a9 9 0 0 0 9 9" />
-                    <path d="M21 12a9 9 0 0 1-9 9" />
-                    <path d="M21 12a9 9 0 0 0-9-9" />
+                    <polyline points="23 4 23 10 17 10" />
+                    <polyline points="1 20 1 14 7 14" />
+                    <path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10" />
+                    <path d="M20.49 15a9 9 0 0 1-14.13 3.36L1 14" />
                   </svg>
                 </button>
-                <button type="button" class="h-7 w-7 rounded-md border border-border text-muted-foreground hover:bg-muted">
+                <button
+                  type="button"
+                  class="h-7 w-7 rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800"
+                  data-tooltip="Edit variation"
+                >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                     <path d="M12 20h9" />
                     <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="h-7 w-7 rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800"
+                  data-tooltip="Preview"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="h-7 w-7 rounded-md border border-slate-700 text-rose-400 hover:bg-slate-800"
+                  data-tooltip="Delete"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                    <path d="M3 6h18" />
+                    <path d="M8 6v14" />
+                    <path d="M16 6v14" />
+                    <path d="M5 6l1-2h12l1 2" />
                   </svg>
                 </button>
               </div>
@@ -220,8 +260,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
           </div>
 
           <div *ngIf="isExpanded(variation.id)" class="space-y-5 border-t bg-muted/20 px-5 pb-5 pt-3">
-            <div class="rounded-lg border border-border bg-card">
-              <div class="flex items-center justify-between bg-slate-800 px-4 py-2 text-sm font-semibold text-white">
+            <div class="rounded-lg border border-slate-800 bg-slate-950 text-slate-100">
+              <div class="flex items-center justify-between bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-100">
                 <div class="flex items-center gap-2">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
                     <path d="M3 5v14" />
@@ -231,17 +271,68 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                     <path d="M21 5v14" />
                   </svg>
                   IDENTIFIERS - {{ variation.name }}
+                  <span
+                    class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-600 text-[10px] text-slate-300"
+                    data-tooltip="Product identifiers used across marketplaces. SKU, UPC, ASIN, FNSKU, and GTIN support multiple values for products sold under different codes."
+                  >
+                    ?
+                  </span>
                 </div>
-                <span class="rounded-full bg-white/20 px-2 py-0.5 text-xs">Multiple values supported</span>
+                <span class="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-200">Multiple values supported</span>
               </div>
               <div class="grid grid-cols-5 gap-4 p-4">
                 <div *ngFor="let field of identifierFields" class="space-y-2">
-                  <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                  <div class="flex items-center justify-between text-[11px] font-medium uppercase text-slate-400">
+                    <span class="flex items-center gap-1.5">
+                      <ng-container [ngSwitch]="field.icon">
+                        <svg *ngSwitchCase="'hash'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                          <line x1="4" y1="9" x2="20" y2="9" />
+                          <line x1="4" y1="15" x2="20" y2="15" />
+                          <line x1="10" y1="3" x2="8" y2="21" />
+                          <line x1="16" y1="3" x2="14" y2="21" />
+                        </svg>
+                        <svg *ngSwitchCase="'barcode'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                          <line x1="4" y1="6" x2="4" y2="18" />
+                          <line x1="7" y1="6" x2="7" y2="18" />
+                          <line x1="10" y1="6" x2="10" y2="18" />
+                          <line x1="13" y1="6" x2="13" y2="18" />
+                          <line x1="16" y1="6" x2="16" y2="18" />
+                          <line x1="19" y1="6" x2="19" y2="18" />
+                        </svg>
+                        <svg *ngSwitchCase="'package'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.73Z" />
+                          <path d="M3.27 6.96 12 12.01l8.73-5.05" />
+                          <path d="M12 22V12" />
+                        </svg>
+                        <svg *ngSwitchCase="'truck'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                          <path d="M10 17h4V5H2v12h3" />
+                          <path d="M16 17h3l3-3v-4h-5z" />
+                          <circle cx="5" cy="17" r="2" />
+                          <circle cx="17" cy="17" r="2" />
+                        </svg>
+                        <svg *ngSwitchCase="'globe'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M2 12h20" />
+                          <path d="M12 2a15 15 0 0 1 0 20" />
+                          <path d="M12 2a15 15 0 0 0 0 20" />
+                        </svg>
+                      </ng-container>
+                      {{ field.label }}
+                    </span>
+                    <button
+                      type="button"
+                      class="rounded-full border border-slate-700 px-1.5 text-[10px] text-slate-300 hover:text-slate-100"
+                      (click)="addMultiValue(variation, field.key)"
+                      data-tooltip="Add value"
+                    >
+                      +
+                    </button>
+                  </div>
                   <div class="space-y-1.5">
-                    <div *ngFor="let value of getMultiValues(variation, field.key); let idx = index" class="flex items-center gap-1">
+                    <div *ngFor="let value of getMultiValues(variation, field.key); let idx = index" class="flex items-center gap-1.5">
                       <input
                         type="text"
-                        class="h-8 flex-1 rounded-md border border-border bg-background px-2 text-sm"
+                        class="h-8 flex-1 rounded-md border border-slate-700 bg-slate-950/70 px-2 text-sm text-slate-100 placeholder:text-slate-500"
                         [placeholder]="field.placeholder"
                         [ngModel]="value"
                         [ngModelOptions]="{ standalone: true }"
@@ -249,51 +340,74 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                       />
                       <button
                         type="button"
-                        class="h-8 w-8 rounded-md border border-border text-muted-foreground"
+                        class="h-8 w-8 rounded-md border border-slate-700 text-slate-300 hover:text-slate-100"
+                        (click)="copyIdentifier(value, field.key, idx)"
+                        [disabled]="!value"
+                        data-tooltip="Copy"
+                      >
+                        <svg *ngIf="isCopied(field.key, idx)" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5 text-emerald-400" stroke-width="2">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <svg *ngIf="!isCopied(field.key, idx)" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        class="h-8 w-8 rounded-md border border-slate-700 text-slate-300 hover:text-rose-400"
                         (click)="removeMultiValue(variation, field.key, idx)"
                         [disabled]="getMultiValues(variation, field.key).length <= 1"
+                        data-tooltip="Remove"
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                          <path d="M3 6h18" />
-                          <path d="M8 6v14" />
-                          <path d="M16 6v14" />
+                          <line x1="5" y1="5" x2="19" y2="19" />
+                          <line x1="19" y1="5" x2="5" y2="19" />
                         </svg>
                       </button>
                     </div>
-                    <button
-                      type="button"
-                      class="text-xs text-muted-foreground hover:text-foreground"
-                      (click)="addMultiValue(variation, field.key)"
-                    >
-                      + Add
-                    </button>
                   </div>
                 </div>
               </div>
-              <div class="grid grid-cols-4 gap-4 border-t border-border p-4">
+              <div class="grid grid-cols-4 gap-4 border-t border-slate-800 p-4">
                 <div class="space-y-1">
-                  <label class="text-xs font-medium uppercase text-muted-foreground">Barcode</label>
+                  <div class="flex items-center gap-1">
+                    <label class="text-xs font-medium uppercase text-slate-400">Barcode</label>
+                    <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" data-tooltip="Barcode value">
+                      ?
+                    </span>
+                  </div>
                   <input
                     type="text"
-                    class="h-8 rounded-md border border-border bg-background px-2 text-sm"
+                    class="h-8 rounded-md border border-slate-700 bg-slate-950/70 px-2 text-sm text-slate-100 placeholder:text-slate-500"
                     [(ngModel)]="variation.barcode"
                     [ngModelOptions]="{ standalone: true }"
                   />
                 </div>
                 <div class="space-y-1">
-                  <label class="text-xs font-medium uppercase text-muted-foreground">Harmcode</label>
+                  <div class="flex items-center gap-1">
+                    <label class="text-xs font-medium uppercase text-slate-400">Harmcode</label>
+                    <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" data-tooltip="Harmonized code">
+                      ?
+                    </span>
+                  </div>
                   <input
                     type="text"
-                    class="h-8 rounded-md border border-border bg-background px-2 text-sm"
+                    class="h-8 rounded-md border border-slate-700 bg-slate-950/70 px-2 text-sm text-slate-100 placeholder:text-slate-500"
                     [(ngModel)]="variation.harmcode"
                     [ngModelOptions]="{ standalone: true }"
                   />
                 </div>
                 <div class="space-y-1">
-                  <label class="text-xs font-medium uppercase text-muted-foreground">Vendor SKU</label>
+                  <div class="flex items-center gap-1">
+                    <label class="text-xs font-medium uppercase text-slate-400">Vendor SKU</label>
+                    <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" data-tooltip="Vendor SKU reference">
+                      ?
+                    </span>
+                  </div>
                   <input
                     type="text"
-                    class="h-8 rounded-md border border-border bg-background px-2 text-sm"
+                    class="h-8 rounded-md border border-slate-700 bg-slate-950/70 px-2 text-sm text-slate-100 placeholder:text-slate-500"
                     [(ngModel)]="variation.vendorSku"
                     [ngModelOptions]="{ standalone: true }"
                   />
@@ -309,6 +423,12 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                     <path d="M5 12h14" />
                   </svg>
                   WEIGHT / DIMENSION
+                  <span
+                    class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
+                    data-tooltip="Enter shipping weight and package dimensions. Use Add Qty for bundled quantities."
+                  >
+                    ?
+                  </span>
                 </div>
                 <button
                   type="button"
@@ -323,7 +443,15 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   <label class="text-xs font-medium uppercase text-muted-foreground">1 Qty (Base)</label>
                   <div class="grid grid-cols-4 gap-3">
                     <div *ngFor="let field of baseDimensionFields" class="space-y-1">
-                      <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                      <div class="flex items-center gap-1">
+                        <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                        <span
+                          class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                          [attr.data-tooltip]="field.tooltip"
+                        >
+                          ?
+                        </span>
+                      </div>
                       <div class="relative">
                         <input
                           type="number"
@@ -347,7 +475,15 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   </div>
                   <div class="grid grid-cols-4 gap-3">
                     <div class="space-y-1">
-                      <label class="text-xs font-medium uppercase text-muted-foreground">Weight</label>
+                      <div class="flex items-center gap-1">
+                        <label class="text-xs font-medium uppercase text-muted-foreground">Weight</label>
+                        <span
+                          class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                          [attr.data-tooltip]="qtyFieldTooltip('weight', entry.qty)"
+                        >
+                          ?
+                        </span>
+                      </div>
                       <input
                         type="number"
                         class="h-9 rounded-md border border-border bg-background px-2 text-sm"
@@ -357,7 +493,15 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                       />
                     </div>
                     <div class="space-y-1" *ngFor="let dim of dimensionKeys">
-                      <label class="text-xs font-medium uppercase text-muted-foreground">{{ dim }}</label>
+                      <div class="flex items-center gap-1">
+                        <label class="text-xs font-medium uppercase text-muted-foreground">{{ dim | titlecase }}</label>
+                        <span
+                          class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                          [attr.data-tooltip]="qtyFieldTooltip(dim, entry.qty)"
+                        >
+                          ?
+                        </span>
+                      </div>
                       <input
                         type="number"
                         class="h-9 rounded-md border border-border bg-background px-2 text-sm"
@@ -379,10 +523,24 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   <path d="M3 17h18" />
                 </svg>
                 INVENTORY
+                <span
+                  class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
+                  data-tooltip="Track stock levels across all channels."
+                >
+                  ?
+                </span>
               </div>
               <div class="grid grid-cols-9 gap-3 p-4">
                 <div *ngFor="let field of inventoryFields" class="space-y-1">
-                  <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                  <div class="flex items-center gap-1">
+                    <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                    <span
+                      class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                      [attr.data-tooltip]="field.tooltip"
+                    >
+                      ?
+                    </span>
+                  </div>
                   <input
                     type="number"
                     class="h-9 rounded-md border border-border bg-background px-2 text-sm"
@@ -402,11 +560,25 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H14a3.5 3.5 0 1 1 0 7H6" />
                 </svg>
                 PRICE
+                <span
+                  class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
+                  data-tooltip="Manage pricing, costs, and profit margins."
+                >
+                  ?
+                </span>
               </div>
               <div class="space-y-3 p-4">
                 <div class="grid grid-cols-8 gap-3">
                   <div *ngFor="let field of priceFieldsTop" class="space-y-1">
-                    <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                    <div class="flex items-center gap-1">
+                      <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                      <span
+                        class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                        [attr.data-tooltip]="field.tooltip"
+                      >
+                        ?
+                      </span>
+                    </div>
                     <div class="relative">
                       <span *ngIf="field.prefix" class="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">{{ field.prefix }}</span>
                       <input
@@ -422,7 +594,15 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                 </div>
                 <div class="grid grid-cols-8 gap-3">
                   <div *ngFor="let field of priceFieldsBottom" class="space-y-1" [ngClass]="field.span === 2 ? 'col-span-2' : ''">
-                    <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                    <div class="flex items-center gap-1">
+                      <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
+                      <span
+                        class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                        [attr.data-tooltip]="field.tooltip"
+                      >
+                        ?
+                      </span>
+                    </div>
                     <ng-container *ngIf="field.badge; else priceInput">
                       <div class="flex h-9 items-center justify-center rounded-md border border-border text-sm font-bold"
                         [ngClass]="(variation.profitMargin || 0) > 0 ? 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30' : 'bg-rose-500/20 text-rose-500 border-rose-500/30'"
@@ -457,6 +637,12 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                     <circle cx="7" cy="7" r="3" />
                   </svg>
                   EXTRA PRODUCT ATTRIBUTES
+                  <span
+                    class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
+                    data-tooltip="Custom attributes specific to this variation."
+                  >
+                    ?
+                  </span>
                 </div>
                 <button type="button" class="h-6 rounded-md bg-white/10 px-2 text-xs text-white" (click)="addVariationAttribute(variation)">
                   + Add
@@ -520,34 +706,76 @@ export class VariationSettingsEditorComponent {
   private expandedIds = new Set<string>();
   imagePanelId: string | null = null;
   imageDrafts: Record<string, string> = {};
+  copiedCell: { key: MultiKey; index: number } | null = null;
+  private copyTimeout?: ReturnType<typeof setTimeout>;
 
-  readonly identifierFields: Array<{ key: MultiKey; label: string; placeholder: string }> = [
-    { key: 'multiSkus', label: 'SKU', placeholder: 'Enter SKU' },
-    { key: 'multiUpcs', label: 'UPC', placeholder: 'Enter UPC' },
-    { key: 'multiAsins', label: 'ASIN', placeholder: 'Enter ASIN' },
-    { key: 'multiFnskus', label: 'FNSKU', placeholder: 'Enter FNSKU' },
-    { key: 'multiGtins', label: 'GTIN', placeholder: 'Enter GTIN' },
+  readonly identifierFields: Array<{
+    key: MultiKey;
+    label: string;
+    placeholder: string;
+    icon: IdentifierIcon;
+  }> = [
+    { key: 'multiSkus', label: 'SKU', placeholder: 'Enter SKU', icon: 'hash' },
+    { key: 'multiUpcs', label: 'UPC', placeholder: 'Enter UPC', icon: 'barcode' },
+    { key: 'multiAsins', label: 'ASIN', placeholder: 'Enter ASIN', icon: 'package' },
+    { key: 'multiFnskus', label: 'FNSKU', placeholder: 'Enter FNSKU', icon: 'truck' },
+    { key: 'multiGtins', label: 'GTIN', placeholder: 'Enter GTIN', icon: 'globe' },
   ];
 
   readonly dimensionKeys: DimensionKey[] = ['height', 'width', 'length'];
 
-  readonly baseDimensionFields: Array<{ label: string; key: DimensionWithWeightKey; unit: string }> = [
-    { label: 'Weight', key: 'weight', unit: 'lb' },
-    { label: 'Height', key: 'height', unit: 'in' },
-    { label: 'Width', key: 'width', unit: 'in' },
-    { label: 'Length', key: 'length', unit: 'in' },
+  readonly baseDimensionFields: Array<{
+    label: string;
+    key: DimensionWithWeightKey;
+    unit: string;
+    tooltip: string;
+  }> = [
+    { label: 'Weight', key: 'weight', unit: 'lb', tooltip: 'Shipping weight in pounds' },
+    { label: 'Height', key: 'height', unit: 'in', tooltip: 'Package height in inches' },
+    { label: 'Width', key: 'width', unit: 'in', tooltip: 'Package width in inches' },
+    { label: 'Length', key: 'length', unit: 'in', tooltip: 'Package length in inches' },
   ];
 
-  readonly inventoryFields: Array<{ label: string; key: keyof VariationSettingsRow; highlight?: boolean }> = [
-    { label: 'Inv Qty Adj', key: 'invQtyAdjustment' },
-    { label: 'Purchase Qty', key: 'purchaseQty' },
-    { label: 'Sold Qty', key: 'soldQty' },
-    { label: 'Return Rcv Qty', key: 'returnReceiveQty' },
-    { label: 'Available Stock', key: 'availableStock', highlight: true },
-    { label: 'Qty Allocated', key: 'quantityAllocated' },
-    { label: 'Reserve Qty', key: 'reserveQty' },
-    { label: 'Damage Qty', key: 'damageQty' },
-    { label: 'On Hand Qty', key: 'onHandQty' },
+  readonly inventoryFields: Array<{
+    label: string;
+    key: keyof VariationSettingsRow;
+    highlight?: boolean;
+    tooltip: string;
+  }> = [
+    {
+      label: 'Inv Qty Adj',
+      key: 'invQtyAdjustment',
+      tooltip: 'Manual inventory quantity adjustment to correct stock discrepancies',
+    },
+    { label: 'Purchase Qty', key: 'purchaseQty', tooltip: 'Total quantity purchased from suppliers' },
+    { label: 'Sold Qty', key: 'soldQty', tooltip: 'Total quantity sold across all channels' },
+    {
+      label: 'Return Rcv Qty',
+      key: 'returnReceiveQty',
+      tooltip: 'Quantity of items returned by customers and received back',
+    },
+    {
+      label: 'Available Stock',
+      key: 'availableStock',
+      highlight: true,
+      tooltip: 'Stock currently available for sale (On Hand - Allocated - Reserved)',
+    },
+    {
+      label: 'Qty Allocated',
+      key: 'quantityAllocated',
+      tooltip: 'Quantity allocated to pending orders awaiting shipment',
+    },
+    {
+      label: 'Reserve Qty',
+      key: 'reserveQty',
+      tooltip: 'Quantity held in reserve for specific purposes (promotions, B2B orders)',
+    },
+    { label: 'Damage Qty', key: 'damageQty', tooltip: 'Quantity of damaged items not available for sale' },
+    {
+      label: 'On Hand Qty',
+      key: 'onHandQty',
+      tooltip: 'Total physical inventory in warehouse (Available + Allocated + Reserved + Damaged)',
+    },
   ];
 
   readonly priceFieldsTop: Array<{
@@ -555,13 +783,20 @@ export class VariationSettingsEditorComponent {
     key: keyof VariationSettingsRow;
     prefix?: string;
     highlight?: boolean;
+    tooltip: string;
   }> = [
-    { label: 'Purchase Price', key: 'purchasePrice', prefix: '$' },
-    { label: 'Inbound Freight', key: 'inboundFreight' },
-    { label: 'Extra Duty', key: 'extraDuty' },
-    { label: 'Landed Cost', key: 'landedCost', prefix: '$', highlight: true },
-    { label: 'FVF', key: 'fvf', prefix: '$' },
-    { label: 'TAC', key: 'tac', prefix: '$' },
+    { label: 'Purchase Price', key: 'purchasePrice', prefix: '$', tooltip: 'Cost paid to supplier per unit' },
+    { label: 'Inbound Freight', key: 'inboundFreight', tooltip: 'Shipping cost to receive inventory' },
+    { label: 'Extra Duty', key: 'extraDuty', tooltip: 'Import duties and customs fees' },
+    {
+      label: 'Landed Cost',
+      key: 'landedCost',
+      prefix: '$',
+      highlight: true,
+      tooltip: 'Total cost including purchase, freight, and duties',
+    },
+    { label: 'FVF', key: 'fvf', prefix: '$', tooltip: 'Final Value Fee - marketplace selling fee percentage' },
+    { label: 'TAC', key: 'tac', prefix: '$', tooltip: 'Transaction Advisory Cost - payment processing fee' },
   ];
 
   readonly priceFieldsBottom: Array<{
@@ -570,13 +805,25 @@ export class VariationSettingsEditorComponent {
     prefix?: string;
     span?: number;
     badge?: boolean;
+    tooltip: string;
   }> = [
-    { label: 'Sale Price', key: 'salePrice', prefix: '$' },
-    { label: 'MSRP', key: 'msrp', prefix: '$' },
-    { label: 'Competitor Price', key: 'competitorPrice', span: 2, prefix: '$' },
-    { label: 'Profit Margin(%)', key: 'profitMargin', badge: true },
-    { label: 'Min $ (BuyBox)', key: 'minBuyBox', prefix: '$' },
-    { label: 'Max $ (BuyBox)', key: 'maxBuyBox', prefix: '$' },
+    { label: 'Sale Price', key: 'salePrice', prefix: '$', tooltip: 'Current selling price on marketplace' },
+    { label: 'MSRP', key: 'msrp', prefix: '$', tooltip: 'Manufacturer Suggested Retail Price' },
+    {
+      label: 'Competitor Price',
+      key: 'competitorPrice',
+      span: 2,
+      prefix: '$',
+      tooltip: 'Lowest competitor price for comparison',
+    },
+    {
+      label: 'Profit Margin(%)',
+      key: 'profitMargin',
+      badge: true,
+      tooltip: 'Calculated profit percentage after all costs and fees',
+    },
+    { label: 'Min $ (BuyBox)', key: 'minBuyBox', prefix: '$', tooltip: 'Minimum price threshold to win BuyBox' },
+    { label: 'Max $ (BuyBox)', key: 'maxBuyBox', prefix: '$', tooltip: 'Maximum price ceiling for BuyBox eligibility' },
   ];
 
   trackByVariation(_: number, variation: VariationSettingsRow): string {
@@ -598,6 +845,17 @@ export class VariationSettingsEditorComponent {
   toggleImagePanel(event: MouseEvent, id: string): void {
     event.stopPropagation();
     this.imagePanelId = this.imagePanelId === id ? null : id;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.imagePanelId) return;
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+    if (target.closest('.variation-image-panel') || target.closest('.variation-image-trigger')) {
+      return;
+    }
+    this.imagePanelId = null;
   }
 
   addVariationImage(variation: VariationSettingsRow): void {
@@ -630,6 +888,28 @@ export class VariationSettingsEditorComponent {
 
   addMultiValue(variation: VariationSettingsRow, key: MultiKey): void {
     variation[key] = [...this.getMultiValues(variation, key), ''];
+  }
+
+  copyIdentifier(value: string, key: MultiKey, index: number): void {
+    if (!value) return;
+    navigator.clipboard?.writeText(value).then(
+      () => {
+        this.copiedCell = { key, index };
+        if (this.copyTimeout) {
+          clearTimeout(this.copyTimeout);
+        }
+        this.copyTimeout = setTimeout(() => {
+          this.copiedCell = null;
+        }, 1500);
+      },
+      () => {
+        this.copiedCell = null;
+      }
+    );
+  }
+
+  isCopied(key: MultiKey, index: number): boolean {
+    return this.copiedCell?.key === key && this.copiedCell?.index === index;
   }
 
   updateMultiValue(variation: VariationSettingsRow, key: MultiKey, index: number, value: string): void {
@@ -689,6 +969,13 @@ export class VariationSettingsEditorComponent {
 
   updateNumberField(variation: VariationSettingsRow, key: keyof VariationSettingsRow, value: string): void {
     (variation as unknown as Record<string, number>)[key as string] = this.toNumber(value);
+  }
+
+  qtyFieldTooltip(field: DimensionKey | 'weight', qty: number): string {
+    if (field === 'weight') {
+      return `Combined shipping weight for ${qty} units`;
+    }
+    return `Package ${field} in inches for ${qty} units`;
   }
 
   addVariationAttribute(variation: VariationSettingsRow): void {
