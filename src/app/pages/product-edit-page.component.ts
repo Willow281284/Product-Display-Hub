@@ -166,7 +166,8 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
         </header>
 
         <div class="px-6">
-          <div class="mt-3 inline-flex h-10 items-center justify-start rounded-md bg-muted p-1 text-muted-foreground">
+          <div class="mt-3 overflow-x-auto">
+            <div class="inline-flex h-10 min-w-max items-center justify-start rounded-md bg-muted p-1 text-muted-foreground">
             <button
               type="button"
               class="inline-flex items-center gap-2 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground"
@@ -445,6 +446,7 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
               </svg>
               Offers
             </button>
+            </div>
           </div>
         </div>
 
