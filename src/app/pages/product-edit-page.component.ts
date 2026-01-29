@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
@@ -473,22 +473,216 @@ interface SalesRow {
                 </h3>
                 <div class="rounded-lg bg-muted/30 p-4 space-y-4">
                   <div class="grid gap-4 sm:grid-cols-2">
-                    <label class="grid gap-1 text-xs text-muted-foreground">
-                      Brand
-                      <input
-                        type="text"
-                        class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                        [value]="product.brand"
-                      />
-                    </label>
-                    <label class="grid gap-1 text-xs text-muted-foreground">
-                      Vendor
-                      <input
-                        type="text"
-                        class="rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-                        [value]="product.vendorName"
-                      />
-                    </label>
+                    <div>
+                      <label class="text-sm text-muted-foreground">Brand</label>
+                      <div class="relative mt-1" (click)="$event.stopPropagation()">
+                        <button
+                          type="button"
+                          class="flex w-full items-center justify-between rounded-md border border-border bg-background px-3 py-2 text-sm"
+                          (click)="toggleBrandDropdown($event)"
+                        >
+                          <span class="truncate text-left">
+                            {{ product.brand || 'Select brand...' }}
+                          </span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-4 w-4 text-muted-foreground"
+                          >
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </button>
+                        <div
+                          *ngIf="brandDropdownOpen"
+                          class="absolute z-50 mt-2 w-full rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
+                        >
+                          <div class="mb-2 flex items-center gap-2 rounded-md border border-border bg-background px-2 py-1.5 text-xs">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="h-3.5 w-3.5 text-muted-foreground"
+                            >
+                              <circle cx="11" cy="11" r="8"></circle>
+                              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input
+                              type="text"
+                              class="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                              placeholder="Search brand..."
+                              [(ngModel)]="brandSearch"
+                              (click)="$event.stopPropagation()"
+                            />
+                          </div>
+                          <div class="max-h-48 overflow-auto">
+                            <button
+                              *ngFor="let brand of filteredBrands"
+                              type="button"
+                              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
+                              [class.bg-primary]="brand === product.brand"
+                              [class.text-primary-foreground]="brand === product.brand"
+                              (click)="selectBrand(product, brand)"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="h-4 w-4"
+                              >
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                              <span class="truncate">{{ brand }}</span>
+                            </button>
+                            <div
+                              *ngIf="filteredBrands.length === 0"
+                              class="px-2 py-2 text-xs text-muted-foreground"
+                            >
+                              No brands found.
+                            </div>
+                          </div>
+                          <div class="mt-2 border-t border-border pt-2">
+                            <button
+                              type="button"
+                              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-primary hover:bg-muted"
+                              (click)="openAddBrandModal($event)"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="h-4 w-4"
+                              >
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                              </svg>
+                              Add New Brand
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="text-sm text-muted-foreground">Vendor</label>
+                      <div class="relative mt-1" (click)="$event.stopPropagation()">
+                        <button
+                          type="button"
+                          class="flex w-full items-center justify-between rounded-md border border-border bg-background px-3 py-2 text-sm"
+                          (click)="toggleVendorDropdown($event)"
+                        >
+                          <span class="truncate text-left">
+                            {{ product.vendorName || 'Select vendor...' }}
+                          </span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-4 w-4 text-muted-foreground"
+                          >
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </button>
+                        <div
+                          *ngIf="vendorDropdownOpen"
+                          class="absolute z-50 mt-2 w-full rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur"
+                        >
+                          <div class="mb-2 flex items-center gap-2 rounded-md border border-border bg-background px-2 py-1.5 text-xs">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="h-3.5 w-3.5 text-muted-foreground"
+                            >
+                              <circle cx="11" cy="11" r="8"></circle>
+                              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input
+                              type="text"
+                              class="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                              placeholder="Search vendor..."
+                              [(ngModel)]="vendorSearch"
+                              (click)="$event.stopPropagation()"
+                            />
+                          </div>
+                          <div class="max-h-48 overflow-auto">
+                            <button
+                              *ngFor="let vendor of filteredVendors"
+                              type="button"
+                              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
+                              [class.bg-primary]="vendor === product.vendorName"
+                              [class.text-primary-foreground]="vendor === product.vendorName"
+                              (click)="selectVendor(product, vendor)"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="h-4 w-4"
+                              >
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                              <span class="truncate">{{ vendor }}</span>
+                            </button>
+                            <div
+                              *ngIf="filteredVendors.length === 0"
+                              class="px-2 py-2 text-xs text-muted-foreground"
+                            >
+                              No vendors found.
+                            </div>
+                          </div>
+                          <div class="mt-2 border-t border-border pt-2">
+                            <button
+                              type="button"
+                              class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-primary hover:bg-muted"
+                              (click)="openAddVendorModal($event)"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="h-4 w-4"
+                              >
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                              </svg>
+                              Add New Vendor
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <label class="grid gap-1 text-xs text-muted-foreground">
                     SKU
@@ -1511,37 +1705,64 @@ interface SalesRow {
                     </button>
                   </div>
                 </details>
-                <button
-                  type="button"
-                  class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M7 7h10v10H7z" />
-                    <path d="M5 11h2M17 11h2M11 5v2M11 17v2" />
-                  </svg>
-                  All Marketplaces
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                    <path d="M3 3v18h18" />
-                    <path d="M7 15v-4" />
-                    <path d="M12 15V8" />
-                    <path d="M17 15v-6" />
-                  </svg>
-                  All Offers
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </button>
+                <details class="relative" [open]="offerMarketplaceFilterOpen">
+                  <summary
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground"
+                    (click)="$event.preventDefault(); offerMarketplaceFilterOpen = !offerMarketplaceFilterOpen"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M7 7h10v10H7z" />
+                      <path d="M5 11h2M17 11h2M11 5v2M11 17v2" />
+                    </svg>
+                    {{ offerMarketplaceFilter }}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <div class="absolute right-0 mt-2 w-44 rounded-lg border border-border bg-card p-1 shadow-lg">
+                    <button
+                      *ngFor="let option of offerMarketplaceFilters"
+                      type="button"
+                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                      (click)="setOfferMarketplaceFilter(option)"
+                    >
+                      <span>{{ option }}</span>
+                      <span *ngIf="offerMarketplaceFilter === option">✓</span>
+                    </button>
+                  </div>
+                </details>
+                <details class="relative" [open]="offerStatusFilterOpen">
+                  <summary
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground"
+                    (click)="$event.preventDefault(); offerStatusFilterOpen = !offerStatusFilterOpen"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                      <path d="M3 3v18h18" />
+                      <path d="M7 15v-4" />
+                      <path d="M12 15V8" />
+                      <path d="M17 15v-6" />
+                    </svg>
+                    {{ offerStatusFilter }}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <div class="absolute right-0 mt-2 w-40 rounded-lg border border-border bg-card p-1 shadow-lg">
+                    <button
+                      *ngFor="let option of offerStatusFilters"
+                      type="button"
+                      class="flex w-full items-center justify-between rounded-md px-3 py-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                      (click)="setOfferStatusFilter(option)"
+                    >
+                      <span>{{ option }}</span>
+                      <span *ngIf="offerStatusFilter === option">✓</span>
+                    </button>
+                  </div>
+                </details>
                 <button
                   type="button"
                   class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500/90"
+                  (click)="openAddOfferModal()"
                 >
                   <span class="text-sm">+</span>
                   Add to Offer
@@ -1690,7 +1911,7 @@ interface SalesRow {
                   <p class="text-xs font-semibold text-muted-foreground">Marketplace Performance</p>
                   <div class="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                     <div
-                      *ngFor="let marketplace of offerMarketplaceOptions"
+                      *ngFor="let marketplace of filteredOfferMarketplaces"
                       class="rounded-lg border border-border/60 bg-background/40 p-3 text-xs text-muted-foreground"
                     >
                       <div class="flex items-center justify-between">
@@ -1715,6 +1936,252 @@ interface SalesRow {
             </div>
           </div>
         </div>
+
+        <div
+          *ngIf="showAddVendorModal"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+          (click)="closeAddVendorModal()"
+        >
+          <div
+            class="w-full max-w-lg rounded-xl bg-card p-5 shadow-xl animate-in zoom-in-95"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="flex items-center justify-between border-b border-border pb-4">
+              <h3 class="text-lg font-semibold">Add New Vendor</h3>
+              <button
+                type="button"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                (click)="closeAddVendorModal()"
+                aria-label="Close"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="mt-5 grid gap-5">
+              <label class="grid gap-2 text-sm font-medium text-foreground">
+                Vendor
+                <input
+                  type="text"
+                  class="h-11 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground"
+                  placeholder="Enter vendor..."
+                  [(ngModel)]="newVendorName"
+                />
+              </label>
+              <label class="grid gap-2 text-sm font-medium text-foreground">
+                Vendor Details
+                <textarea
+                  rows="4"
+                  class="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
+                  placeholder="Enter vendor details..."
+                  [(ngModel)]="newVendorDetails"
+                ></textarea>
+              </label>
+            </div>
+            <div class="mt-6 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+                (click)="closeAddVendorModal()"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                [disabled]="!newVendorName.trim()"
+                (click)="addVendor(product)"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="showAddBrandModal"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+          (click)="closeAddBrandModal()"
+        >
+          <div
+            class="w-full max-w-lg rounded-xl bg-card p-5 shadow-xl animate-in zoom-in-95"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="flex items-center justify-between border-b border-border pb-4">
+              <h3 class="text-lg font-semibold">Add New Brand</h3>
+              <button
+                type="button"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                (click)="closeAddBrandModal()"
+                aria-label="Close"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="mt-5 grid gap-5">
+              <label class="grid gap-2 text-sm font-medium text-foreground">
+                Brand
+                <input
+                  type="text"
+                  class="h-11 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground"
+                  placeholder="Enter brand..."
+                  [(ngModel)]="newBrandName"
+                />
+              </label>
+              <label class="grid gap-2 text-sm font-medium text-foreground">
+                Brand Details
+                <textarea
+                  rows="4"
+                  class="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
+                  placeholder="Enter brand details..."
+                  [(ngModel)]="newBrandDetails"
+                ></textarea>
+              </label>
+            </div>
+            <div class="mt-6 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+                (click)="closeAddBrandModal()"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                [disabled]="!newBrandName.trim()"
+                (click)="addBrand(product)"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="addOfferOpen"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
+          (click)="closeAddOfferModal()"
+        >
+          <div
+            class="w-full max-w-xl rounded-xl bg-card p-5 shadow-xl animate-in zoom-in-95"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="flex items-center justify-between border-b border-border pb-4">
+              <div>
+                <h3 class="text-lg font-semibold">Add to Offer</h3>
+                <p class="text-xs text-muted-foreground">Select an offer to include this product.</p>
+              </div>
+              <button
+                type="button"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
+                (click)="closeAddOfferModal()"
+                aria-label="Close"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="mt-5 space-y-3">
+              <button
+                *ngFor="let offer of offerRows"
+                type="button"
+                class="flex w-full items-center justify-between rounded-lg border border-border px-4 py-3 text-left text-sm hover:bg-muted"
+                [class.border-emerald-500]="selectedOfferName === offer.name"
+                (click)="selectOffer(offer.name)"
+              >
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-semibold">{{ offer.name }}</span>
+                    <span class="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
+                      {{ offer.status }}
+                    </span>
+                  </div>
+                  <p class="text-xs text-muted-foreground">{{ offer.discount }} • {{ offer.duration }}</p>
+                </div>
+                <span
+                  class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border text-[10px]"
+                  [class.bg-emerald-500]="selectedOfferName === offer.name"
+                  [class.text-white]="selectedOfferName === offer.name"
+                >
+                  ✓
+                </span>
+              </button>
+              <button
+                type="button"
+                class="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-border px-4 py-3 text-sm text-muted-foreground hover:bg-muted"
+                (click)="showToast('Create offer', 'Open create offer flow from Product Grid.')"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="M12 5v14"></path>
+                </svg>
+                Create new offer
+              </button>
+            </div>
+            <div class="mt-6 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+                (click)="closeAddOfferModal()"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500/90 disabled:opacity-50"
+                [disabled]="!selectedOfferName"
+                (click)="confirmAddOffer()"
+              >
+                Add to Offer
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
           <div
             *ngFor="let toast of toastMessages"
@@ -1761,6 +2228,62 @@ export class ProductEditPageComponent {
     'Last 90 days',
     'Last 365 days',
   ];
+
+  offerMarketplaceFilterOpen = false;
+  offerMarketplaceFilter = 'All Marketplaces';
+  readonly offerMarketplaceFilters = [
+    'All Marketplaces',
+    'Amazon',
+    'Walmart',
+    'eBay',
+    'Target',
+    'Etsy',
+    'Shopify',
+    'Best Buy',
+    'Wayfair',
+    'Newegg',
+    'Home Depot',
+  ];
+
+  offerStatusFilterOpen = false;
+  offerStatusFilter = 'All Offers';
+  readonly offerStatusFilters = ['All Offers', 'Active', 'Scheduled', 'Paused'];
+
+  addOfferOpen = false;
+  selectedOfferName = '';
+
+  brandOptions = [
+    'HyperX',
+    'Logitech',
+    'Razer',
+    'Corsair',
+    'SteelSeries',
+    'Sony',
+    'Microsoft',
+    'Samsung',
+    'Apple',
+    'Dell',
+  ];
+
+  vendorOptions = [
+    'GameStop Distribution',
+    'Tech Direct',
+    'Global Supplies',
+    'Prime Wholesale',
+    'Direct Import Co',
+  ];
+
+  vendorDropdownOpen = false;
+  vendorSearch = '';
+  showAddVendorModal = false;
+  newVendorName = '';
+  newVendorDetails = '';
+
+  brandDropdownOpen = false;
+  brandSearch = '';
+  showAddBrandModal = false;
+  newBrandName = '';
+  newBrandDetails = '';
 
   readonly offerStats = {
     activeOffers: 1,
@@ -1983,11 +2506,144 @@ export class ProductEditPageComponent {
     this.offerRangeOpen = false;
   }
 
+  setOfferMarketplaceFilter(option: string): void {
+    this.offerMarketplaceFilter = option;
+    this.offerMarketplaceFilterOpen = false;
+  }
+
+  setOfferStatusFilter(option: string): void {
+    this.offerStatusFilter = option;
+    this.offerStatusFilterOpen = false;
+  }
+
+  openAddOfferModal(): void {
+    this.selectedOfferName = this.offerRows[0]?.name ?? '';
+    this.addOfferOpen = true;
+  }
+
+  closeAddOfferModal(): void {
+    this.addOfferOpen = false;
+  }
+
+  selectOffer(name: string): void {
+    this.selectedOfferName = name;
+  }
+
+  confirmAddOffer(): void {
+    if (!this.selectedOfferName) return;
+    this.showToast('Added to offer', `Added to ${this.selectedOfferName}.`);
+    this.closeAddOfferModal();
+  }
+
   toggleOfferMarketplace(id: string): void {
     this.offerMarketplaceStates = {
       ...this.offerMarketplaceStates,
       [id]: !this.offerMarketplaceStates[id],
     };
+  }
+
+  get filteredOfferMarketplaces(): Array<{ id: string; label: string }> {
+    if (this.offerMarketplaceFilter === 'All Marketplaces') {
+      return this.offerMarketplaceOptions;
+    }
+    const target = this.offerMarketplaceFilter.toLowerCase();
+    return this.offerMarketplaceOptions.filter(
+      (marketplace) => marketplace.label.toLowerCase() === target
+    );
+  }
+
+  get filteredBrands(): string[] {
+    const query = this.brandSearch.trim().toLowerCase();
+    if (!query) return this.brandOptions;
+    return this.brandOptions.filter((brand) => brand.toLowerCase().includes(query));
+  }
+
+  get filteredVendors(): string[] {
+    const query = this.vendorSearch.trim().toLowerCase();
+    if (!query) return this.vendorOptions;
+    return this.vendorOptions.filter((vendor) => vendor.toLowerCase().includes(query));
+  }
+
+  toggleBrandDropdown(event: MouseEvent): void {
+    event.stopPropagation();
+    this.brandDropdownOpen = !this.brandDropdownOpen;
+    if (this.brandDropdownOpen) {
+      this.brandSearch = '';
+    }
+  }
+
+  selectBrand(product: Product, brand: string): void {
+    product.brand = brand;
+    this.brandDropdownOpen = false;
+    this.brandSearch = '';
+  }
+
+  openAddBrandModal(event?: MouseEvent): void {
+    event?.stopPropagation();
+    this.brandDropdownOpen = false;
+    this.showAddBrandModal = true;
+    this.newBrandName = this.brandSearch.trim();
+    this.newBrandDetails = '';
+  }
+
+  closeAddBrandModal(): void {
+    this.showAddBrandModal = false;
+    this.newBrandName = '';
+    this.newBrandDetails = '';
+  }
+
+  addBrand(product: Product): void {
+    const name = this.newBrandName.trim();
+    if (!name) return;
+    if (!this.brandOptions.includes(name)) {
+      this.brandOptions = [...this.brandOptions, name];
+    }
+    product.brand = name;
+    this.closeAddBrandModal();
+  }
+
+  toggleVendorDropdown(event: MouseEvent): void {
+    event.stopPropagation();
+    this.vendorDropdownOpen = !this.vendorDropdownOpen;
+    if (this.vendorDropdownOpen) {
+      this.vendorSearch = '';
+    }
+  }
+
+  selectVendor(product: Product, vendor: string): void {
+    product.vendorName = vendor;
+    this.vendorDropdownOpen = false;
+    this.vendorSearch = '';
+  }
+
+  openAddVendorModal(event?: MouseEvent): void {
+    event?.stopPropagation();
+    this.vendorDropdownOpen = false;
+    this.showAddVendorModal = true;
+    this.newVendorName = this.vendorSearch.trim();
+    this.newVendorDetails = '';
+  }
+
+  closeAddVendorModal(): void {
+    this.showAddVendorModal = false;
+    this.newVendorName = '';
+    this.newVendorDetails = '';
+  }
+
+  addVendor(product: Product): void {
+    const name = this.newVendorName.trim();
+    if (!name) return;
+    if (!this.vendorOptions.includes(name)) {
+      this.vendorOptions = [...this.vendorOptions, name];
+    }
+    product.vendorName = name;
+    this.closeAddVendorModal();
+  }
+
+  @HostListener('document:click')
+  closeBrandVendorDropdowns(): void {
+    this.vendorDropdownOpen = false;
+    this.brandDropdownOpen = false;
   }
 
   goBack(): void {
