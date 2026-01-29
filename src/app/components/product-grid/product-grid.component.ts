@@ -325,10 +325,13 @@ type ManualTab = (typeof manualTabOptions)[number];
 interface MarketplaceRow {
   platform: string;
   status: MarketplaceStatus['status'];
-  price: number;
-  stock: number;
-  priceSync: boolean;
-  inventorySync: boolean;
+  soldQty: number;
+  revenue: number;
+  msrpPrice: number;
+  currentSalePrice: number;
+  priceAutoSync: boolean;
+  currentStock: number;
+  inventoryAutoSync: boolean;
 }
 
 interface ColumnConfig {
@@ -2329,76 +2332,478 @@ interface ColumnPreferences {
               </div>
             </div>
             <div class="ml-auto flex items-center gap-2">
-              <span class="rounded-full bg-emerald-500/20 px-2.5 py-1 text-xs text-emerald-400">
+              <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-400">
                 {{ marketplaceRowCount('live') }} Live
               </span>
-              <span class="rounded-full bg-slate-600/60 px-2.5 py-1 text-xs text-slate-200">
+              <span
+                *ngIf="marketplaceRowCount('inactive') > 0"
+                class="rounded-full bg-slate-600/60 px-3 py-1 text-xs text-slate-200"
+              >
                 {{ marketplaceRowCount('inactive') }} Inactive
               </span>
-              <span class="rounded-full border border-slate-500 px-2.5 py-1 text-xs text-slate-300">
+              <span
+                *ngIf="marketplaceRowCount('not_listed') > 0"
+                class="rounded-full border border-slate-500 border-dashed px-3 py-1 text-xs text-slate-300"
+              >
                 {{ marketplaceRowCount('not_listed') }} Not Listed
               </span>
               <button
                 type="button"
-                class="rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-200 hover:bg-slate-700"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-600 text-slate-200 hover:bg-slate-700"
                 (click)="closeMarketplaceDialog()"
               >
-                Close
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M6 6l12 12" />
+                  <path d="M18 6l-12 12" />
+                </svg>
               </button>
             </div>
           </div>
 
-          <div class="flex-1 overflow-y-auto">
-            <div class="px-6 py-4">
-              <div class="grid gap-2">
-                <div class="grid grid-cols-[140px_110px_1fr_1fr_90px_90px] gap-2 px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
-                  <span>Marketplace</span>
-                  <span>Status</span>
-                  <span>Sale Price</span>
-                  <span>Stock</span>
-                  <span>Price Sync</span>
-                  <span>Inv Sync</span>
-                </div>
-                <div
-                  *ngFor="let row of marketplaceRows"
-                  class="grid items-center gap-2 rounded-md border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:grid-cols-[140px_110px_1fr_1fr_90px_90px]"
+          <div class="flex-1 flex flex-col min-h-0">
+            <div class="px-6 border-b border-slate-700 flex-shrink-0">
+              <div class="flex items-center gap-6">
+                <button
+                  type="button"
+                  class="flex items-center gap-2 border-b-2 px-0 pb-3 pt-3 text-sm text-slate-400 transition"
+                  [ngClass]="marketplaceDialogTab === 'listings' ? 'border-emerald-500 text-emerald-400' : 'border-transparent'"
+                  (click)="marketplaceDialogTab = 'listings'"
                 >
-                  <span class="capitalize font-semibold text-slate-100">{{ row.platform }}</span>
-                  <select
-                    class="rounded-md border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-100"
-                    [(ngModel)]="row.status"
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <path d="M3 3h18v4H3z" />
+                    <path d="M3 7h18v14H3z" />
+                  </svg>
+                  Listings
+                  <span class="rounded-md bg-slate-700 px-2 py-0.5 text-[10px] text-slate-300">
+                    {{ marketplaceRowCount('live') + marketplaceRowCount('inactive') }}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  class="flex items-center gap-2 border-b-2 px-0 pb-3 pt-3 text-sm text-slate-400 transition"
+                  [ngClass]="marketplaceDialogTab === 'offers' ? 'border-purple-500 text-purple-400' : 'border-transparent'"
+                  (click)="marketplaceDialogTab = 'offers'"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                    <path d="M20.59 13.41 12 22 3 13.41a2 2 0 0 1 0-2.82L12 2l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                    <circle cx="7" cy="7" r="1.5"></circle>
+                  </svg>
+                  Offers
+                  <span
+                    *ngIf="marketplaceDialogOffers().length > 0"
+                    class="rounded-md bg-purple-500/20 px-2 py-0.5 text-[10px] text-purple-400"
                   >
-                    <option value="live">Live</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="error">Error</option>
-                    <option value="not_listed">Not listed</option>
-                  </select>
-                  <input
-                    type="number"
-                    class="rounded-md border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-100"
-                    [(ngModel)]="row.price"
-                    placeholder="Sale price"
-                  />
-                  <input
-                    type="number"
-                    class="rounded-md border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-100"
-                    [(ngModel)]="row.stock"
-                    placeholder="Stock"
-                  />
-                  <label class="flex items-center gap-1 text-xs text-slate-200">
-                    <input type="checkbox" [(ngModel)]="row.priceSync" />
-                    Sync
-                  </label>
-                  <label class="flex items-center gap-1 text-xs text-slate-200">
-                    <input type="checkbox" [(ngModel)]="row.inventorySync" />
-                    Sync
-                  </label>
+                    {{ marketplaceDialogOffers().length }}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex-1 min-h-0">
+              <div *ngIf="marketplaceDialogTab === 'listings'" class="flex flex-col min-h-0">
+                <div class="flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+                  <div class="bg-slate-800 border-b border-slate-700 sticky top-0 z-10">
+                    <div class="grid grid-cols-[200px_60px_80px_80px_60px_90px_70px_60px_70px_100px] gap-2 px-4 pr-6 py-3">
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400" data-tooltip="Platform where product is listed">
+                        Marketplace
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Total units sold on this marketplace">
+                        Sold
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Total revenue from this marketplace">
+                        Revenue
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Manufacturer's Suggested Retail Price">
+                        MSRP
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Discount percentage from MSRP">
+                        Discount
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Current selling price">
+                        Sale Price
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Auto-sync price changes">
+                        Price Sync
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Current stock level">
+                        Stock
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Auto-sync inventory">
+                        Inv Sync
+                      </div>
+                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Unlink or remove from marketplace">
+                        Actions
+                      </div>
+                    </div>
+                  </div>
+                  <div class="divide-y divide-slate-700/50">
+                    <div
+                      *ngFor="let row of marketplaceRows"
+                      class="grid grid-cols-[200px_60px_80px_80px_60px_90px_70px_60px_70px_100px] gap-2 px-4 pr-6 py-3 items-center hover:bg-slate-800/50 transition-colors"
+                      [ngClass]="row.status === 'not_listed' ? 'opacity-60' : ''"
+                    >
+                      <div class="flex items-center gap-3">
+                        <input
+                          *ngIf="marketplaceCanPublish(row.status)"
+                          type="checkbox"
+                          class="h-4 w-4 accent-emerald-500"
+                          [checked]="marketplaceSelectedForPublish.includes(row.platform)"
+                          (change)="toggleMarketplaceSelection(row.platform)"
+                        />
+                        <span
+                          class="inline-flex h-8 w-8 items-center justify-center rounded-md text-[10px] font-semibold uppercase"
+                          [ngClass]="marketplaceBadgeClass(row.platform)"
+                        >
+                          {{ marketplaceBadgeText(row.platform) }}
+                        </span>
+                        <span class="rounded-full px-2.5 py-0.5 text-[10px] font-semibold" [ngClass]="marketplaceStatusBadgeClass(row.status)">
+                          {{ marketplaceStatusLabel(row.status) }}
+                        </span>
+                      </div>
+
+                      <ng-container *ngIf="row.status === 'not_listed'; else listedRow">
+                        <div class="text-center text-slate-600">—</div>
+                        <div class="text-center text-slate-600">—</div>
+                        <div class="text-center text-slate-600">—</div>
+                        <div class="text-center text-slate-600">—</div>
+                        <div class="text-center text-slate-600">—</div>
+                        <div class="text-center text-slate-600">—</div>
+                        <div class="text-center text-slate-600">—</div>
+                        <div class="text-center text-slate-600">—</div>
+                        <div class="text-center">
+                          <button
+                            type="button"
+                            class="inline-flex items-center gap-1.5 rounded-md border border-slate-600 px-2 py-1 text-xs text-slate-300 hover:bg-slate-700"
+                            (click)="marketplaceDirectPublish(row.platform)"
+                            [disabled]="marketplaceIsPublishing"
+                          >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                              <polyline points="17 8 12 3 7 8" />
+                              <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                            Publish
+                          </button>
+                        </div>
+                      </ng-container>
+
+                      <ng-template #listedRow>
+                        <div class="text-center">
+                          <span class="text-lg font-bold text-white">{{ row.soldQty }}</span>
+                          <p class="text-[10px] text-slate-500">units</p>
+                        </div>
+                        <div class="text-center">
+                          <span class="text-sm font-semibold text-emerald-400">{{ formatCurrency(row.revenue) }}</span>
+                        </div>
+                        <div class="text-center">
+                          <div class="relative inline-flex items-center">
+                            <span class="absolute left-2 text-slate-400 text-sm">$</span>
+                            <input
+                              type="number"
+                              class="w-20 h-8 text-center pl-5 bg-slate-800 border border-slate-600 text-white font-semibold rounded-md"
+                              [ngModel]="row.msrpPrice"
+                              [ngModelOptions]="{ standalone: true }"
+                              (ngModelChange)="updateMarketplaceMsrp(row.platform, $event)"
+                            />
+                          </div>
+                        </div>
+                        <div class="text-center">
+                          <div class="relative inline-flex items-center">
+                            <input
+                              type="number"
+                              class="w-14 h-8 text-center bg-slate-800 border border-amber-500/50 text-amber-400 font-semibold rounded-md"
+                              [ngModel]="marketplaceDiscountPercent(row)"
+                              [ngModelOptions]="{ standalone: true }"
+                              (ngModelChange)="updateMarketplaceDiscount(row.platform, $event)"
+                            />
+                            <span class="absolute right-2 text-amber-400 text-sm">%</span>
+                          </div>
+                        </div>
+                        <div class="text-center">
+                          <div class="relative inline-flex items-center">
+                            <span class="absolute left-2 text-slate-400 text-sm">$</span>
+                            <input
+                              type="number"
+                              class="w-20 h-8 text-center pl-5 bg-slate-800 border border-emerald-500/50 text-white font-semibold rounded-md"
+                              [ngModel]="row.currentSalePrice"
+                              [ngModelOptions]="{ standalone: true }"
+                              (ngModelChange)="updateMarketplaceSalePrice(row.platform, $event)"
+                            />
+                          </div>
+                        </div>
+                        <div class="flex justify-center">
+                          <button
+                            type="button"
+                            class="relative inline-flex h-6 w-11 items-center rounded-full border border-slate-700 transition"
+                            [ngClass]="row.priceAutoSync ? 'bg-emerald-500/20' : 'bg-slate-800'"
+                            (click)="toggleMarketplacePriceSync(row.platform)"
+                          >
+                            <span
+                              class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                              [ngClass]="row.priceAutoSync ? 'translate-x-5' : 'translate-x-1'"
+                            ></span>
+                          </button>
+                        </div>
+                        <div class="text-center">
+                          <input
+                            type="number"
+                            class="w-14 h-8 text-center bg-slate-800 border border-slate-600 text-white font-semibold rounded-md mx-auto"
+                            [ngModel]="row.currentStock"
+                            [ngModelOptions]="{ standalone: true }"
+                            (ngModelChange)="updateMarketplaceStock(row.platform, $event)"
+                          />
+                        </div>
+                        <div class="flex justify-center">
+                          <button
+                            type="button"
+                            class="relative inline-flex h-6 w-11 items-center rounded-full border border-slate-700 transition"
+                            [ngClass]="row.inventoryAutoSync ? 'bg-emerald-500/20' : 'bg-slate-800'"
+                            (click)="toggleMarketplaceInventorySync(row.platform)"
+                          >
+                            <span
+                              class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                              [ngClass]="row.inventoryAutoSync ? 'translate-x-5' : 'translate-x-1'"
+                            ></span>
+                          </button>
+                        </div>
+                        <div class="flex items-center justify-center gap-1">
+                          <button
+                            *ngIf="row.status === 'inactive' || row.status === 'error'"
+                            type="button"
+                            class="inline-flex items-center h-8 px-2 text-xs text-emerald-400 hover:text-emerald-300 hover:bg-slate-700 rounded-md"
+                            (click)="marketplaceDirectPublish(row.platform)"
+                            [disabled]="marketplaceIsPublishing"
+                          >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5 mr-1" stroke-width="2">
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                              <polyline points="17 8 12 3 7 8" />
+                              <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                            Publish
+                          </button>
+                          <button type="button" class="h-8 w-8 rounded-md text-slate-400 hover:text-amber-400 hover:bg-slate-700">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                              <path d="m18 6-12 12" />
+                              <path d="m6 6 12 12" />
+                              <path d="M16 6h2v2" />
+                              <path d="M6 16v2h2" />
+                            </svg>
+                          </button>
+                          <button type="button" class="h-8 w-8 rounded-md text-slate-400 hover:text-rose-400 hover:bg-slate-700">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                              <path d="M3 6h18" />
+                              <path d="M8 6v14" />
+                              <path d="M16 6v14" />
+                              <path d="M5 6l1-2h12l1 2" />
+                            </svg>
+                          </button>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="px-6 py-4 bg-slate-800 border-t border-slate-700 flex-shrink-0">
+                  <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-sm font-semibold text-white">Publish / Re-publish Products</h4>
+                    <span
+                      *ngIf="marketplaceSelectedForPublish.length > 0"
+                      class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-400 border border-emerald-500/30"
+                    >
+                      {{ marketplaceSelectedForPublish.length }} selected
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-2 rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-300 hover:bg-slate-700 disabled:opacity-50"
+                      (click)="marketplaceBulkPublish('manual')"
+                      [disabled]="marketplaceSelectedForPublish.length === 0 || marketplaceIsPublishing"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                      </svg>
+                      Publish {{ marketplaceSelectedForPublish.length > 0 ? '(' + marketplaceSelectedForPublish.length + ')' : '' }}
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-2 rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-300 hover:bg-slate-700 disabled:opacity-50"
+                      (click)="marketplaceBulkPublish('upc')"
+                      [disabled]="marketplaceSelectedForPublish.length === 0 || marketplaceIsPublishing"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                        <path d="M4 5v14" />
+                        <path d="M8 5v14" />
+                        <path d="M12 5v14" />
+                        <path d="M16 5v14" />
+                        <path d="M20 5v14" />
+                      </svg>
+                      UPC {{ marketplaceSelectedForPublish.length > 0 ? '(' + marketplaceSelectedForPublish.length + ')' : '' }}
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-2 rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-300 hover:bg-slate-700 disabled:opacity-50"
+                      (click)="marketplaceBulkPublish('ai')"
+                      [disabled]="marketplaceSelectedForPublish.length === 0 || marketplaceIsPublishing"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                        <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+                      </svg>
+                      AI Publish {{ marketplaceSelectedForPublish.length > 0 ? '(' + marketplaceSelectedForPublish.length + ')' : '' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="marketplaceDialogTab === 'offers'" class="flex-1 overflow-y-auto">
+                <div class="p-6 space-y-4">
+                  <ng-container *ngIf="marketplaceDialogOffers().length === 0; else offerList">
+                    <div class="flex flex-col items-center justify-center h-full min-h-[300px] text-center">
+                      <div class="p-4 rounded-full bg-slate-800 mb-4">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-8 w-8 text-slate-500" stroke-width="2">
+                          <path d="M20.59 13.41 12 22 3 13.41a2 2 0 0 1 0-2.82L12 2l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                          <circle cx="7" cy="7" r="1.5"></circle>
+                        </svg>
+                      </div>
+                      <h3 class="text-lg font-semibold text-white mb-2">No active offers</h3>
+                      <p class="text-slate-400 text-sm max-w-md mb-4">
+                        Create promotions like discounts, free shipping, or BOGO deals to boost sales on your marketplaces.
+                      </p>
+                      <button
+                        type="button"
+                        class="inline-flex items-center gap-2 rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-700"
+                        (click)="openOfferDialog([marketplaceDialogProduct.id], true, false)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M12 5v14" />
+                          <path d="M5 12h14" />
+                        </svg>
+                        Create Offer
+                      </button>
+                    </div>
+                  </ng-container>
+                  <ng-template #offerList>
+                    <div class="space-y-3">
+                      <div
+                        *ngFor="let offer of marketplaceDialogOffers()"
+                        class="bg-slate-800 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition-colors"
+                      >
+                        <div class="flex items-start justify-between gap-4">
+                          <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                              <h4 class="font-semibold text-white">{{ offer.name }}</h4>
+                              <span class="text-xs px-2 py-0.5 rounded-full" [ngClass]="offerStatusClass(offer)">
+                                {{ marketplaceOfferStatusLabel(offer) }}
+                              </span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                              <div class="flex items-center gap-1.5 text-slate-400">
+                                <ng-container [ngSwitch]="offer.type">
+                                  <svg *ngSwitchCase="'free_shipping'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                                    <path d="M10 17h4V5H2v12h3" />
+                                    <path d="M16 17h3l3-3v-4h-5z" />
+                                    <circle cx="5" cy="17" r="2" />
+                                    <circle cx="17" cy="17" r="2" />
+                                  </svg>
+                                  <svg *ngSwitchCase="'percent_discount'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                                    <line x1="19" y1="5" x2="5" y2="19" />
+                                    <circle cx="6.5" cy="6.5" r="2.5" />
+                                    <circle cx="17.5" cy="17.5" r="2.5" />
+                                  </svg>
+                                  <svg *ngSwitchCase="'quantity_discount'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                                    <path d="M3 3h18v4H3z" />
+                                    <path d="M3 7h18v14H3z" />
+                                  </svg>
+                                  <svg *ngSwitchCase="'bulk_purchase'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                                    <path d="M3 7l9-4 9 4-9 4-9-4z" />
+                                    <path d="M3 7v10l9 4 9-4V7" />
+                                  </svg>
+                                  <svg *ngSwitchCase="'bogo_half'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                                    <path d="M20 12v8H4v-8" />
+                                    <path d="M12 12v8" />
+                                    <path d="M4 7h16v5H4z" />
+                                    <path d="M12 7V4" />
+                                  </svg>
+                                  <svg *ngSwitchCase="'bogo_free'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                                    <path d="M20 12v8H4v-8" />
+                                    <path d="M12 12v8" />
+                                    <path d="M4 7h16v5H4z" />
+                                    <path d="M12 7V4" />
+                                  </svg>
+                                  <svg *ngSwitchCase="'fixed_discount'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                                    <path d="M12 1v22" />
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
+                                  </svg>
+                                </ng-container>
+                                <span>{{ offerTypeLabels[offer.type] }}</span>
+                              </div>
+                              <span class="text-emerald-400 font-medium">
+                                {{ formatOfferDiscount(offer) }}
+                              </span>
+                              <div class="flex items-center gap-1.5 text-slate-500">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                                  <circle cx="12" cy="12" r="10" />
+                                  <path d="M12 6v6l4 2" />
+                                </svg>
+                                <span>{{ offerDaysLabel(offer) }}</span>
+                              </div>
+                            </div>
+                            <div *ngIf="offer.marketplaces.length > 0" class="flex items-center gap-2 mt-3">
+                              <span class="text-xs text-slate-500">Active on:</span>
+                              <div class="flex items-center gap-1">
+                                <span
+                                  *ngFor="let mp of offer.marketplaces | slice:0:5"
+                                  class="inline-flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-semibold uppercase"
+                                  [ngClass]="marketplaceBadgeClass(mp)"
+                                >
+                                  {{ marketplaceBadgeText(mp) }}
+                                </span>
+                                <span *ngIf="offer.marketplaces.length > 5" class="text-xs text-slate-500">
+                                  +{{ offer.marketplaces.length - 5 }}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <button
+                              type="button"
+                              class="text-slate-400 hover:text-white hover:bg-slate-700 rounded-md px-2 py-1 text-xs"
+                              (click)="openMarketplaceEditOffer(offer)"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              class="h-8 w-8 rounded-md text-slate-400 hover:text-rose-400 hover:bg-slate-700"
+                              (click)="deleteMarketplaceOffer(offer)"
+                            >
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                                <path d="M3 6h18" />
+                                <path d="M8 6v14" />
+                                <path d="M16 6v14" />
+                                <path d="M5 6l1-2h12l1 2" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        class="w-full gap-2 border border-dashed border-slate-600 text-slate-400 hover:text-white hover:bg-slate-800 rounded-md px-3 py-2 text-sm"
+                        (click)="openOfferDialog([marketplaceDialogProduct.id], true, false)"
+                      >
+                        + Add Another Offer
+                      </button>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center justify-end gap-2 border-t border-slate-700 bg-slate-900 px-6 py-4">
+          <div class="px-6 py-4 bg-slate-900 border-t border-slate-700 flex justify-end gap-3 flex-shrink-0">
             <button
               type="button"
               class="rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-200 hover:bg-slate-700"
@@ -2411,7 +2816,237 @@ interface ColumnPreferences {
               class="rounded-md bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
               (click)="saveMarketplaceDialog()"
             >
-              Save changes
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="marketplaceEditOfferOpen && marketplaceEditingOffer"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-in fade-in"
+        (click)="closeMarketplaceEditOffer()"
+      >
+        <div
+          class="flex w-full max-w-3xl flex-col overflow-hidden rounded-xl bg-slate-900 text-slate-100 shadow-xl animate-in zoom-in-95 max-h-[90vh]"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="flex items-center justify-between border-b border-slate-700 px-6 py-4">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                </svg>
+              </span>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-lg font-semibold">Edit Offer</h3>
+                  <span
+                    class="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                    [ngClass]="marketplaceEditIsActive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-700 text-slate-300'"
+                  >
+                    {{ marketplaceEditIsActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-400">Update offer details and marketplaces.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800"
+              (click)="closeMarketplaceEditOffer()"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                <path d="M6 6l12 12" />
+                <path d="M18 6l-12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto px-6 py-5">
+            <div class="space-y-5">
+              <div class="rounded-lg border border-slate-700 bg-slate-800/50 p-4 flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-semibold">Offer Status</p>
+                  <p class="text-xs text-slate-400">This offer is currently {{ marketplaceEditIsActive ? 'active' : 'inactive' }}</p>
+                </div>
+                <button
+                  type="button"
+                  class="relative inline-flex h-6 w-11 items-center rounded-full border border-slate-700 transition"
+                  [ngClass]="marketplaceEditIsActive ? 'bg-emerald-500/20' : 'bg-slate-700'"
+                  (click)="marketplaceEditIsActive = !marketplaceEditIsActive"
+                >
+                  <span
+                    class="inline-block h-4 w-4 transform rounded-full bg-white transition"
+                    [ngClass]="marketplaceEditIsActive ? 'translate-x-5' : 'translate-x-1'"
+                  ></span>
+                </button>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-2">
+                <label class="space-y-1">
+                  <span class="text-xs text-slate-300">Offer Name</span>
+                  <input
+                    type="text"
+                    class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-slate-100"
+                    [(ngModel)]="marketplaceEditName"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </label>
+                <label class="space-y-1">
+                  <span class="text-xs text-slate-300">Offer Scope</span>
+                  <select
+                    class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 px-2 text-sm text-slate-100"
+                    [(ngModel)]="marketplaceEditScope"
+                    [ngModelOptions]="{ standalone: true }"
+                  >
+                    <option value="product">Product</option>
+                    <option value="marketplace">Marketplace</option>
+                  </select>
+                </label>
+              </div>
+
+              <label class="space-y-1">
+                <span class="text-xs text-slate-300">Description</span>
+                <textarea
+                  rows="3"
+                  class="w-full rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-100"
+                  [(ngModel)]="marketplaceEditDescription"
+                  [ngModelOptions]="{ standalone: true }"
+                ></textarea>
+              </label>
+
+              <div class="space-y-2">
+                <span class="text-xs text-slate-300">Offer Type</span>
+                <div class="grid gap-2 sm:grid-cols-3">
+                  <button
+                    *ngFor="let type of offerTypes"
+                    type="button"
+                    class="flex items-center gap-2 rounded-md border px-3 py-2 text-xs"
+                    [ngClass]="marketplaceEditType === type ? 'border-purple-500 bg-purple-500/10 text-purple-200' : 'border-slate-700 text-slate-300'"
+                    (click)="marketplaceEditType = type"
+                  >
+                    {{ offerTypeLabels[type] }}
+                  </button>
+                </div>
+              </div>
+
+              <div class="rounded-lg border border-slate-700 bg-slate-800/50 p-4 space-y-3">
+                <div *ngIf="marketplaceEditType === 'fixed_discount'" class="flex items-center gap-2 text-xs">
+                  <span class="text-slate-400">Discount</span>
+                  <input
+                    type="number"
+                    class="h-8 w-24 rounded-md border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100"
+                    [(ngModel)]="marketplaceEditDiscountAmount"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </div>
+                <div *ngIf="marketplaceEditType !== 'fixed_discount' && marketplaceEditType !== 'free_shipping'" class="flex items-center gap-2 text-xs">
+                  <span class="text-slate-400">% Discount</span>
+                  <input
+                    type="number"
+                    class="h-8 w-24 rounded-md border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100"
+                    [(ngModel)]="marketplaceEditDiscountPercent"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </div>
+                <div *ngIf="marketplaceEditType === 'quantity_discount' || marketplaceEditType === 'bulk_purchase'" class="flex items-center gap-2 text-xs">
+                  <span class="text-slate-400">Min Qty</span>
+                  <input
+                    type="number"
+                    class="h-8 w-24 rounded-md border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100"
+                    [(ngModel)]="marketplaceEditMinQty"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </div>
+                <div *ngIf="marketplaceEditType === 'bogo_half' || marketplaceEditType === 'bogo_free'" class="flex items-center gap-2 text-xs">
+                  <span class="text-slate-400">Buy</span>
+                  <input
+                    type="number"
+                    class="h-8 w-16 rounded-md border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100"
+                    [(ngModel)]="marketplaceEditBuyQty"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                  <span class="text-slate-400">Get</span>
+                  <input
+                    type="number"
+                    class="h-8 w-16 rounded-md border border-slate-700 bg-slate-900 px-2 text-xs text-slate-100"
+                    [(ngModel)]="marketplaceEditGetQty"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </div>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-2">
+                <label class="space-y-1">
+                  <span class="text-xs text-slate-300">Start Date</span>
+                  <input
+                    type="date"
+                    class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-slate-100"
+                    [(ngModel)]="marketplaceEditStartDate"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </label>
+                <label class="space-y-1">
+                  <span class="text-xs text-slate-300">End Date</span>
+                  <input
+                    type="date"
+                    class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-slate-100"
+                    [(ngModel)]="marketplaceEditEndDate"
+                    [ngModelOptions]="{ standalone: true }"
+                  />
+                </label>
+              </div>
+
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-slate-300">Marketplaces</span>
+                  <button
+                    type="button"
+                    class="text-xs text-slate-400 hover:text-slate-200"
+                    (click)="marketplaceEditMarketplaces = []"
+                  >
+                    Clear
+                  </button>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                  <label
+                    *ngFor="let platform of marketplaces"
+                    class="flex items-center gap-2 rounded-md border border-slate-700 px-2 py-1 text-[11px] text-slate-300"
+                  >
+                    <input
+                      type="checkbox"
+                      class="h-3.5 w-3.5"
+                      [checked]="marketplaceEditMarketplaces.includes(platform)"
+                      (change)="toggleMarketplaceEditMarketplace(platform)"
+                    />
+                    <span class="flex h-5 w-5 items-center justify-center rounded-md text-[9px] font-semibold uppercase"
+                      [ngClass]="marketplaceBadgeClass(platform)"
+                    >
+                      {{ marketplaceBadgeText(platform) }}
+                    </span>
+                    <span class="truncate">{{ marketplaceName(platform) }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 border-t border-slate-700 bg-slate-900 px-6 py-4">
+            <button
+              type="button"
+              class="rounded-md border border-slate-600 px-3 py-1 text-xs text-slate-200 hover:bg-slate-700"
+              (click)="closeMarketplaceEditOffer()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="rounded-md bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600"
+              (click)="saveMarketplaceEditOffer()"
+            >
+              Save Changes
             </button>
           </div>
         </div>
@@ -5283,6 +5918,25 @@ export class ProductGridComponent implements OnInit {
   marketplaceDialogOpen = false;
   marketplaceDialogProduct: Product | null = null;
   marketplaceRows: MarketplaceRow[] = [];
+  marketplaceDialogTab: 'listings' | 'offers' = 'listings';
+  marketplaceSelectedForPublish: string[] = [];
+  marketplaceIsPublishing = false;
+
+  marketplaceEditOfferOpen = false;
+  marketplaceEditingOffer: Offer | null = null;
+  marketplaceEditName = '';
+  marketplaceEditDescription = '';
+  marketplaceEditType: Offer['type'] = 'percent_discount';
+  marketplaceEditScope: OfferScope = 'product';
+  marketplaceEditDiscountPercent = '10';
+  marketplaceEditDiscountAmount = '5';
+  marketplaceEditMinQty = '2';
+  marketplaceEditBuyQty = '1';
+  marketplaceEditGetQty = '1';
+  marketplaceEditStartDate = '';
+  marketplaceEditEndDate = '';
+  marketplaceEditMarketplaces: string[] = [];
+  marketplaceEditIsActive = true;
 
   offerDialogOpen = false;
   offerDialogProductIds: string[] = [];
@@ -6182,15 +6836,25 @@ export class ProductGridComponent implements OnInit {
     );
     this.marketplaceRows = this.marketplaces.map((platform) => {
       const current = existing.get(platform);
+      const status = current?.status ?? 'not_listed';
+      const baseMsrp = product.salePrice * 1.2;
+      const soldQty = status === 'not_listed' ? 0 : Math.max(1, Math.floor(Math.random() * 50));
+      const currentSalePrice = status === 'not_listed' ? 0 : product.salePrice;
+      const revenue = soldQty * (currentSalePrice || product.salePrice);
       return {
         platform,
-        status: current?.status ?? 'not_listed',
-        price: current?.status ? product.salePrice : 0,
-        stock: current?.status ? product.stockQty : 0,
-        priceSync: current?.status === 'live',
-        inventorySync: current?.status === 'live',
+        status,
+        soldQty,
+        revenue,
+        msrpPrice: baseMsrp,
+        currentSalePrice,
+        priceAutoSync: status === 'live',
+        currentStock: status === 'live' ? product.stockQty : 0,
+        inventoryAutoSync: status === 'live',
       };
     });
+    this.marketplaceDialogTab = 'listings';
+    this.marketplaceSelectedForPublish = [];
     this.marketplaceDialogOpen = true;
   }
 
@@ -6198,6 +6862,8 @@ export class ProductGridComponent implements OnInit {
     this.marketplaceDialogOpen = false;
     this.marketplaceDialogProduct = null;
     this.marketplaceRows = [];
+    this.marketplaceSelectedForPublish = [];
+    this.marketplaceDialogTab = 'listings';
   }
 
   saveMarketplaceDialog(): void {
@@ -6486,6 +7152,232 @@ export class ProductGridComponent implements OnInit {
 
   marketplaceRowCount(status: MarketplaceStatus['status']): number {
     return this.marketplaceRows.filter((row) => row.status === status).length;
+  }
+
+  marketplaceDialogOffers(): Offer[] {
+    if (!this.marketplaceDialogProduct) return [];
+    return this.offersForProduct(this.marketplaceDialogProduct.id);
+  }
+
+  marketplaceOfferStatusLabel(offer: Offer): string {
+    const status = getOfferStatus(offer);
+    return offerStatusConfig[status].label;
+  }
+
+  offerDaysLabel(offer: Offer): string {
+    const status = getOfferStatus(offer);
+    if (status === 'active' || status === 'ending_soon') {
+      return `${getOfferDaysRemaining(offer)} days left`;
+    }
+    if (status === 'scheduled') {
+      return `Starts ${offer.startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    }
+    return 'Expired';
+  }
+
+  marketplaceStatusLabel(status: MarketplaceStatus['status']): string {
+    switch (status) {
+      case 'live':
+        return 'Live';
+      case 'inactive':
+        return 'Inactive';
+      case 'error':
+        return 'Error';
+      default:
+        return 'Not Listed';
+    }
+  }
+
+  marketplaceStatusBadgeClass(status: MarketplaceStatus['status']): string {
+    switch (status) {
+      case 'live':
+        return 'bg-emerald-500/20 text-emerald-400';
+      case 'inactive':
+        return 'bg-slate-600/60 text-slate-200';
+      case 'error':
+        return 'bg-rose-500/20 text-rose-300';
+      default:
+        return 'border border-slate-500 text-slate-300 border-dashed';
+    }
+  }
+
+  marketplaceCanPublish(status: MarketplaceStatus['status']): boolean {
+    return status !== 'live';
+  }
+
+  toggleMarketplaceSelection(platform: string): void {
+    const row = this.marketplaceRows.find((item) => item.platform === platform);
+    if (!row || !this.marketplaceCanPublish(row.status)) return;
+    if (this.marketplaceSelectedForPublish.includes(platform)) {
+      this.marketplaceSelectedForPublish = this.marketplaceSelectedForPublish.filter(
+        (item) => item !== platform
+      );
+      return;
+    }
+    this.marketplaceSelectedForPublish = [
+      ...this.marketplaceSelectedForPublish,
+      platform,
+    ];
+  }
+
+  marketplaceDirectPublish(platform: string): void {
+    this.marketplaceIsPublishing = true;
+    this.marketplaceRows = this.marketplaceRows.map((row) =>
+      row.platform === platform
+        ? {
+            ...row,
+            status: 'inactive',
+            currentSalePrice: row.currentSalePrice || this.marketplaceDialogProduct?.salePrice || 0,
+            currentStock: row.currentStock || this.marketplaceDialogProduct?.stockQty || 0,
+          }
+        : row
+    );
+    this.marketplaceIsPublishing = false;
+    this.showToast('Published', `Marketplace ${platform} is now inactive`);
+  }
+
+  marketplaceBulkPublish(method: 'manual' | 'upc' | 'ai'): void {
+    if (this.marketplaceSelectedForPublish.length === 0) {
+      this.showToast('No marketplaces selected', 'Select marketplaces to publish');
+      return;
+    }
+    const selected = new Set(this.marketplaceSelectedForPublish);
+    this.marketplaceIsPublishing = true;
+    this.marketplaceRows = this.marketplaceRows.map((row) =>
+      selected.has(row.platform)
+        ? {
+            ...row,
+            status: 'inactive',
+            currentSalePrice: row.currentSalePrice || this.marketplaceDialogProduct?.salePrice || 0,
+            currentStock: row.currentStock || this.marketplaceDialogProduct?.stockQty || 0,
+          }
+        : row
+    );
+    const count = this.marketplaceSelectedForPublish.length;
+    this.marketplaceSelectedForPublish = [];
+    this.marketplaceIsPublishing = false;
+    const methodLabels: Record<typeof method, string> = { manual: 'Manual', upc: 'UPC', ai: 'AI' };
+    this.showToast('Published', `${count} marketplace(s) via ${methodLabels[method]}`);
+  }
+
+  updateMarketplaceMsrp(platform: string, value: string): void {
+    const amount = this.toNumber(value, 0);
+    this.marketplaceRows = this.marketplaceRows.map((row) =>
+      row.platform === platform ? { ...row, msrpPrice: amount } : row
+    );
+  }
+
+  marketplaceDiscountPercent(row: MarketplaceRow): number {
+    if (!row.msrpPrice) return 0;
+    if (!row.currentSalePrice) return 0;
+    return Math.max(0, Math.round((1 - row.currentSalePrice / row.msrpPrice) * 100));
+  }
+
+  updateMarketplaceDiscount(platform: string, value: string): void {
+    const discount = this.toNumber(value, 0);
+    this.marketplaceRows = this.marketplaceRows.map((row) => {
+      if (row.platform !== platform) return row;
+      const salePrice = row.msrpPrice ? row.msrpPrice * (1 - discount / 100) : row.currentSalePrice;
+      return { ...row, currentSalePrice: Number.isFinite(salePrice) ? salePrice : row.currentSalePrice };
+    });
+  }
+
+  updateMarketplaceSalePrice(platform: string, value: string): void {
+    const amount = this.toNumber(value, 0);
+    this.marketplaceRows = this.marketplaceRows.map((row) =>
+      row.platform === platform ? { ...row, currentSalePrice: amount } : row
+    );
+  }
+
+  updateMarketplaceStock(platform: string, value: string): void {
+    const stock = Math.max(0, Math.floor(this.toNumber(value, 0)));
+    this.marketplaceRows = this.marketplaceRows.map((row) =>
+      row.platform === platform ? { ...row, currentStock: stock } : row
+    );
+  }
+
+  toggleMarketplacePriceSync(platform: string): void {
+    this.marketplaceRows = this.marketplaceRows.map((row) =>
+      row.platform === platform ? { ...row, priceAutoSync: !row.priceAutoSync } : row
+    );
+  }
+
+  toggleMarketplaceInventorySync(platform: string): void {
+    this.marketplaceRows = this.marketplaceRows.map((row) =>
+      row.platform === platform ? { ...row, inventoryAutoSync: !row.inventoryAutoSync } : row
+    );
+  }
+
+  openMarketplaceEditOffer(offer: Offer): void {
+    this.marketplaceEditingOffer = offer;
+    this.marketplaceEditName = offer.name;
+    this.marketplaceEditDescription = offer.description || '';
+    this.marketplaceEditType = offer.type;
+    this.marketplaceEditScope = offer.scope;
+    this.marketplaceEditDiscountPercent = String(offer.discountPercent ?? 10);
+    this.marketplaceEditDiscountAmount = String(offer.discountAmount ?? 5);
+    this.marketplaceEditMinQty = String(offer.condition?.minQty ?? 2);
+    this.marketplaceEditBuyQty = String(offer.condition?.buyQty ?? 1);
+    this.marketplaceEditGetQty = String(offer.condition?.getQty ?? 1);
+    this.marketplaceEditStartDate = this.toDateInput(offer.startDate);
+    this.marketplaceEditEndDate = this.toDateInput(offer.endDate);
+    this.marketplaceEditMarketplaces = [...offer.marketplaces];
+    this.marketplaceEditIsActive = offer.isActive;
+    this.marketplaceEditOfferOpen = true;
+  }
+
+  closeMarketplaceEditOffer(): void {
+    this.marketplaceEditOfferOpen = false;
+    this.marketplaceEditingOffer = null;
+  }
+
+  toggleMarketplaceEditMarketplace(platform: string): void {
+    if (this.marketplaceEditMarketplaces.includes(platform)) {
+      this.marketplaceEditMarketplaces = this.marketplaceEditMarketplaces.filter(
+        (item) => item !== platform
+      );
+      return;
+    }
+    this.marketplaceEditMarketplaces = [...this.marketplaceEditMarketplaces, platform];
+  }
+
+  saveMarketplaceEditOffer(): void {
+    if (!this.marketplaceEditingOffer) return;
+    const updates: Partial<Offer> = {
+      name: this.marketplaceEditName,
+      description: this.marketplaceEditDescription,
+      type: this.marketplaceEditType,
+      scope: this.marketplaceEditScope,
+      discountPercent: ['percent_discount', 'quantity_discount', 'bulk_purchase'].includes(
+        this.marketplaceEditType
+      )
+        ? this.toNumber(this.marketplaceEditDiscountPercent, 0)
+        : undefined,
+      discountAmount: this.marketplaceEditType === 'fixed_discount'
+        ? this.toNumber(this.marketplaceEditDiscountAmount, 0)
+        : undefined,
+      condition:
+        this.marketplaceEditType === 'quantity_discount' || this.marketplaceEditType === 'bulk_purchase'
+          ? { minQty: this.toNumber(this.marketplaceEditMinQty, 1) }
+          : this.marketplaceEditType === 'bogo_half' || this.marketplaceEditType === 'bogo_free'
+            ? {
+                buyQty: this.toNumber(this.marketplaceEditBuyQty, 1),
+                getQty: this.toNumber(this.marketplaceEditGetQty, 1),
+              }
+            : undefined,
+      startDate: new Date(this.marketplaceEditStartDate),
+      endDate: new Date(this.marketplaceEditEndDate),
+      marketplaces: [...this.marketplaceEditMarketplaces],
+      isActive: this.marketplaceEditIsActive,
+    };
+    this.offerService.updateOffer(this.marketplaceEditingOffer.id, updates);
+    this.showToast('Offer updated', this.marketplaceEditName);
+    this.closeMarketplaceEditOffer();
+  }
+
+  deleteMarketplaceOffer(offer: Offer): void {
+    this.offerService.deleteOffer(offer.id);
+    this.showToast('Offer deleted', offer.name);
   }
 
   offersForProduct(productId: string): Offer[] {
