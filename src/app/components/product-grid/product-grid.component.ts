@@ -4889,18 +4889,58 @@ interface ColumnPreferences {
                 >
                   <button
                     type="button"
-                    class="text-left"
+                    class="w-full text-left"
                     (click)="$event.stopPropagation(); openMarketplaceDialog(product)"
                   >
-                    <div class="text-sm font-medium">
-                      {{
-                        product.marketplaces.length > 0
-                          ? product.marketplaces.length + ' active'
-                          : 'Not listed'
-                      }}
-                    </div>
-                    <div class="text-xs text-muted-foreground">
-                      {{ marketplaceSummary(product) }}
+                    <div class="flex flex-col gap-2">
+                      <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <ng-container *ngIf="product.marketplaces.length > 0; else notListedBadge">
+                          <span class="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-emerald-300">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                            {{ marketplaceLiveCount(product) }}/{{ product.marketplaces.length }}
+                          </span>
+                          <span
+                            *ngIf="marketplaceErrorCount(product) > 0"
+                            class="inline-flex items-center gap-1 rounded-full border border-rose-500/30 bg-rose-500/10 px-2 py-0.5 text-rose-300"
+                          >
+                            <span class="h-1.5 w-1.5 rounded-full bg-rose-400"></span>
+                            {{ marketplaceErrorCount(product) }}
+                          </span>
+                          <span
+                            *ngIf="marketplaceInactiveCount(product) > 0"
+                            class="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-amber-300"
+                          >
+                            <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+                            {{ marketplaceInactiveCount(product) }}
+                          </span>
+                        </ng-container>
+                        <ng-template #notListedBadge>
+                          <span class="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900 px-2 py-0.5 text-slate-300">
+                            Not Listed
+                          </span>
+                        </ng-template>
+                      </div>
+
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        <ng-container *ngFor="let market of marketplaceBadges(product)">
+                          <span
+                            class="relative inline-flex items-center justify-center rounded-md px-2 py-1 text-[10px] font-semibold uppercase"
+                            [ngClass]="marketplaceBadgeClass(market.platform)"
+                          >
+                            {{ marketplaceBadgeText(market.platform) }}
+                            <span
+                              class="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border border-slate-900"
+                              [ngClass]="marketplaceStatusDotClass(market.status)"
+                            ></span>
+                          </span>
+                        </ng-container>
+                        <span
+                          *ngIf="marketplaceOverflowCount(product) > 0"
+                          class="inline-flex items-center rounded-md bg-slate-800 px-1.5 py-1 text-[10px] text-slate-200"
+                        >
+                          +{{ marketplaceOverflowCount(product) }}
+                        </span>
+                      </div>
                     </div>
                   </button>
                 </td>
@@ -4909,13 +4949,77 @@ interface ColumnPreferences {
                   class="p-4 align-middle"
                   [style.width.px]="columnWidth('actions')"
                 >
-                  <button
-                    type="button"
-                    class="inline-flex items-center rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
-                    (click)="$event.stopPropagation(); openProductDialog(product)"
-                  >
-                    View
-                  </button>
+                  <div class="flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-md bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-slate-950 shadow-sm hover:bg-emerald-400"
+                      (click)="$event.stopPropagation(); openProductDialog(product)"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                      </svg>
+                      Update
+                    </button>
+                    <details
+                      class="relative"
+                      [attr.data-dropdown]="'actions-' + product.id"
+                      [open]="openDropdownId === 'actions-' + product.id"
+                    >
+                      <summary
+                        class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
+                        (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('actions-' + product.id)"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <circle cx="5" cy="12" r="1.5" />
+                          <circle cx="12" cy="12" r="1.5" />
+                          <circle cx="19" cy="12" r="1.5" />
+                        </svg>
+                      </summary>
+                      <div
+                        data-dropdown-panel
+                        class="absolute right-0 z-50 mt-2 w-44 rounded-lg border border-border bg-card/95 p-2 text-xs shadow-xl backdrop-blur"
+                      >
+                        <button
+                          type="button"
+                          class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-muted"
+                          (click)="$event.stopPropagation(); openProductDialog(product); toggleDropdown('actions-' + product.id)"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                            <path d="M14 3h7v7" />
+                            <path d="M10 14L21 3" />
+                            <path d="M21 14v7h-7" />
+                            <path d="M3 10V3h7" />
+                          </svg>
+                          View Details
+                        </button>
+                        <button
+                          type="button"
+                          class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-muted"
+                          (click)="$event.stopPropagation(); duplicateProduct(product); toggleDropdown('actions-' + product.id)"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                          </svg>
+                          Duplicate
+                        </button>
+                        <button
+                          type="button"
+                          class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-rose-400 hover:bg-muted"
+                          (click)="$event.stopPropagation(); deleteProduct(product); toggleDropdown('actions-' + product.id)"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                            <path d="M3 6h18" />
+                            <path d="M8 6v14" />
+                            <path d="M16 6v14" />
+                            <path d="M5 6l1-2h12l1 2" />
+                          </svg>
+                          Delete
+                        </button>
+                      </div>
+                    </details>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -5135,6 +5239,8 @@ export class ProductGridComponent implements OnInit {
     { id: 'marketplaces', label: 'Marketplaces', visible: true },
     { id: 'actions', label: 'Actions', visible: true },
   ];
+
+  readonly marketplaceBadgeLimit = 6;
 
   private readonly defaultColumnWidths: Record<string, number> = {
     image: 56,
@@ -6241,6 +6347,68 @@ export class ProductGridComponent implements OnInit {
 
   marketplaceBadgeClass(platform: string): string {
     return marketplaceBadgeClassMap[platform] ?? 'bg-muted text-muted-foreground';
+  }
+
+  marketplaceBadgeText(platform: string): string {
+    const map: Record<string, string> = {
+      amazon: 'AMZ',
+      walmart: 'WMT',
+      ebay: 'eBay',
+      newegg: 'NEG',
+      bestbuy: 'BBY',
+      target: 'TGT',
+      etsy: 'ETSY',
+      shopify: 'SHOP',
+      temu: 'TEMU',
+      macys: 'MACY',
+      costco: 'COS',
+      homedepot: 'HD',
+      lowes: 'LOW',
+      wayfair: 'WFR',
+      overstock: 'OVS',
+    };
+    return map[platform] ?? marketplaceBadgeMap[platform] ?? platform.toUpperCase();
+  }
+
+  marketplaceStatusDotClass(status: MarketplaceStatus['status']): string {
+    switch (status) {
+      case 'live':
+        return 'bg-emerald-400';
+      case 'error':
+        return 'bg-rose-400';
+      case 'inactive':
+        return 'bg-amber-400';
+      default:
+        return 'bg-slate-400';
+    }
+  }
+
+  marketplaceBadges(product: Product): MarketplaceStatus[] {
+    return product.marketplaces.slice(0, this.marketplaceBadgeLimit);
+  }
+
+  marketplaceOverflowCount(product: Product): number {
+    return Math.max(0, product.marketplaces.length - this.marketplaceBadgeLimit);
+  }
+
+  marketplaceLiveCount(product: Product): number {
+    return product.marketplaces.filter((market) => market.status === 'live').length;
+  }
+
+  marketplaceErrorCount(product: Product): number {
+    return product.marketplaces.filter((market) => market.status === 'error').length;
+  }
+
+  marketplaceInactiveCount(product: Product): number {
+    return product.marketplaces.filter((market) => market.status === 'inactive').length;
+  }
+
+  duplicateProduct(product: Product): void {
+    this.showToast('Product duplicated', `${product.name} copied`);
+  }
+
+  deleteProduct(product: Product): void {
+    this.showToast('Product deleted', `${product.name} removed`);
   }
 
   saveOfferDialog(): void {
