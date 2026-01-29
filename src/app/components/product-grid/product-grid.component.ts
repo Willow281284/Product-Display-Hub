@@ -2716,7 +2716,7 @@ interface ColumnPreferences {
                           <input
                             type="text"
                             class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs"
-                            [ngModel]="bulkListingEditedItems[item.key]?.sku || ''"
+                            [ngModel]="bulkListingEditedItems[item.key].sku || ''"
                             (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'sku', $event)"
                           />
                         </td>
@@ -2724,7 +2724,7 @@ interface ColumnPreferences {
                           <input
                             type="number"
                             class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs text-right"
-                            [ngModel]="bulkListingEditedItems[item.key]?.stockQty ?? ''"
+                            [ngModel]="bulkListingEditedItems[item.key].stockQty ?? ''"
                             (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'stockQty', parseNumberInput($event))"
                           />
                         </td>
@@ -2732,7 +2732,7 @@ interface ColumnPreferences {
                           <input
                             type="number"
                             class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs text-right"
-                            [ngModel]="bulkListingEditedItems[item.key]?.salePrice ?? ''"
+                            [ngModel]="bulkListingEditedItems[item.key].salePrice ?? ''"
                             (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'salePrice', parseNumberInput($event))"
                           />
                         </td>
@@ -2740,7 +2740,7 @@ interface ColumnPreferences {
                           <input
                             type="number"
                             class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs text-right"
-                            [ngModel]="bulkListingEditedItems[item.key]?.msrp ?? ''"
+                            [ngModel]="bulkListingEditedItems[item.key].msrp ?? ''"
                             (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'msrp', parseNumberInput($event))"
                           />
                         </td>
@@ -2748,14 +2748,14 @@ interface ColumnPreferences {
                           <input
                             type="number"
                             class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs text-right"
-                            [ngModel]="bulkListingEditedItems[item.key]?.shippingCost ?? ''"
+                            [ngModel]="bulkListingEditedItems[item.key].shippingCost ?? ''"
                             (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'shippingCost', parseNumberInput($event))"
                           />
                         </td>
                         <td class="px-2 py-1">
                           <select
                             class="h-7 w-full rounded-md border border-border bg-background px-2 text-xs"
-                            [ngModel]="bulkListingEditedItems[item.key]?.condition || 'New'"
+                            [ngModel]="bulkListingEditedItems[item.key].condition || 'New'"
                             (ngModelChange)="bulkListingUpdateItemField(item.product.id, item.marketplace, 'condition', $event)"
                           >
                             <option *ngFor="let condition of bulkConditionOptions" [value]="condition">
@@ -7311,6 +7311,9 @@ export class ProductGridComponent implements OnInit {
         | { version: number; widths: Record<string, number> };
       if (typeof parsed === 'object' && parsed !== null && 'widths' in parsed) {
         return parsed.version === this.columnWidthsVersion ? parsed.widths : null;
+      }
+      if (typeof parsed === 'object' && parsed !== null) {
+        return parsed as Record<string, number>;
       }
       return null;
     } catch (error) {
