@@ -61,13 +61,13 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="flex flex-col overflow-hidden rounded-lg border border-border bg-background" style="max-height: calc(95vh - 280px);">
+    <div class="flex flex-col overflow-hidden overflow-x-hidden rounded-lg border border-border bg-background" style="max-height: calc(95vh - 280px);">
       <div class="flex items-center justify-between bg-gradient-to-r from-teal-600 to-teal-500 px-5 py-3 text-white">
         <h3 class="text-sm font-semibold uppercase tracking-wide">Customize Settings Per Variation</h3>
         <span class="rounded-full bg-white/20 px-3 py-1 text-sm">{{ variations.length }} Variations</span>
       </div>
 
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 overflow-y-auto overflow-x-hidden">
         <div *ngFor="let variation of variations; trackBy: trackByVariation">
           <div
             class="border-b border-slate-800 transition-colors"
@@ -270,7 +270,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
             </button>
           </div>
 
-          <div *ngIf="isExpanded(variation.id)" class="space-y-5 border-t bg-muted/20 px-5 pb-5 pt-3">
+          <div *ngIf="isExpanded(variation.id)" class="space-y-5 border-t bg-muted/20 px-5 pb-5 pt-3 overflow-x-hidden">
             <div class="rounded-lg border border-slate-800 bg-slate-950 text-slate-100">
               <div class="flex items-center justify-between bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-100">
                 <div class="flex items-center gap-2">
