@@ -1239,6 +1239,10 @@ export class OfferAnalyticsPageComponent {
     return `${config.bgColor} ${config.color}`;
   }
 
+  formatOfferDiscount(offer: Offer): string {
+    return formatOfferDiscount(offer);
+  }
+
   alertRowClass(type: AlertType): string {
     switch (type) {
       case 'critical':
@@ -1297,6 +1301,20 @@ export class OfferAnalyticsPageComponent {
 
   marketplaceLabel(id: string): string {
     return this.marketplaceOptions.find((m) => m.id === id)?.label ?? id;
+  }
+
+  marketplaceCardClass(market: MarketplaceAnalytics, offer: Offer): string {
+    const isActive = this.isMarketplaceActive(offer, market.marketplace);
+    if (!isActive) {
+      return 'border-slate-500/30 bg-slate-500/5 opacity-60';
+    }
+    if (market.status === 'active') {
+      return 'border-emerald-500/50 bg-emerald-500/5';
+    }
+    if (market.status === 'inactive') {
+      return 'border-amber-500/50 bg-amber-500/5';
+    }
+    return 'border-slate-500/30 bg-slate-500/5';
   }
 
   formatCurrency(value: number): string {
