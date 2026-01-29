@@ -3415,7 +3415,7 @@ interface ColumnPreferences {
 
             <div class="flex-1 overflow-x-scroll overflow-y-auto px-4 pb-2 pt-0">
               <div class="relative mt-2 overflow-visible rounded-lg border border-border bg-background/40 shadow-sm">
-                <table class="w-full min-w-[1250px] text-sm">
+                <table class="w-full min-w-max table-fixed text-sm">
             <thead class="relative z-10 bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
               <tr>
                 <th
@@ -5020,6 +5020,7 @@ export class ProductGridComponent implements OnInit {
   private readonly filtersStorageKey = 'product-filters';
   private readonly columnsStorageKey = 'product-columns';
   private readonly columnWidthsStorageKey = 'product-column-widths';
+  private readonly columnWidthsVersion = 2;
   private readonly pageSizeStorageKey = 'product-page-size';
   private draggedColumnId: string | null = null;
 
@@ -5125,37 +5126,37 @@ export class ProductGridComponent implements OnInit {
   ];
 
   private readonly defaultColumnWidths: Record<string, number> = {
-    image: 80,
-    name: 320,
-    productType: 140,
-    tags: 220,
-    offers: 200,
-    sku: 140,
-    brand: 160,
-    productId: 160,
-    variationId: 160,
-    vendor: 200,
-    mpn: 160,
-    asin: 140,
-    fnsku: 140,
-    gtin: 140,
-    ean: 140,
-    isbn: 140,
-    landedCost: 140,
-    shippingCost: 140,
-    salePrice: 140,
-    purchaseQty: 120,
-    soldQty: 120,
-    stockQty: 120,
-    returnQty: 120,
-    profitMargin: 140,
-    profitAmount: 140,
-    velocity: 120,
-    stockDays: 120,
-    restockStatus: 160,
-    suggestedRestockQty: 150,
+    image: 56,
+    name: 280,
+    productType: 100,
+    tags: 150,
+    offers: 140,
+    sku: 130,
+    brand: 120,
+    productId: 90,
+    variationId: 140,
+    vendor: 130,
+    mpn: 110,
+    asin: 120,
+    fnsku: 120,
+    gtin: 130,
+    ean: 130,
+    isbn: 130,
+    landedCost: 100,
+    shippingCost: 90,
+    salePrice: 95,
+    purchaseQty: 90,
+    soldQty: 70,
+    stockQty: 80,
+    returnQty: 80,
+    profitMargin: 85,
+    profitAmount: 85,
+    velocity: 80,
+    stockDays: 90,
+    restockStatus: 120,
+    suggestedRestockQty: 100,
     marketplaces: 200,
-    actions: 120,
+    actions: 130,
   };
 
   private resizingColumnId: string | null = null;
@@ -6699,7 +6700,7 @@ export class ProductGridComponent implements OnInit {
   }
 
   columnWidth(columnId: string): number {
-    return this.columnWidths[columnId] ?? 120;
+    return this.columnWidths[columnId] ?? this.defaultColumnWidths[columnId] ?? 100;
   }
 
   startResize(event: MouseEvent, columnId: string): void {
@@ -7291,10 +7292,11 @@ export class ProductGridComponent implements OnInit {
 
   private saveColumnWidths(): void {
     try {
-      localStorage.setItem(
-        this.columnWidthsStorageKey,
-        JSON.stringify(this.columnWidths)
-      );
+      const payload = {
+        version: this.columnWidthsVersion,
+        widths: this.columnWidths,
+      };
+      localStorage.setItem(this.columnWidthsStorageKey, JSON.stringify(payload));
     } catch (error) {
       console.warn('Failed to save column widths', error);
     }
@@ -7303,7 +7305,14 @@ export class ProductGridComponent implements OnInit {
   private loadColumnWidths(): Record<string, number> | null {
     try {
       const stored = localStorage.getItem(this.columnWidthsStorageKey);
-      return stored ? (JSON.parse(stored) as Record<string, number>) : null;
+      if (!stored) return null;
+      const parsed = JSON.parse(stored) as
+        | Record<string, number>
+        | { version: number; widths: Record<string, number> };
+      if (typeof parsed === 'object' && parsed !== null && 'widths' in parsed) {
+        return parsed.version === this.columnWidthsVersion ? parsed.widths : null;
+      }
+      return null;
     } catch (error) {
       console.warn('Failed to load column widths', error);
       return null;
