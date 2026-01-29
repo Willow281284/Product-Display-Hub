@@ -7,6 +7,10 @@ import { map } from 'rxjs';
 import { marketplacePlatforms, mockProducts } from '@/data/mockProducts';
 import { MarketplaceStatus, Product } from '@/types/product';
 import { CreateOfferDialogComponent } from '@/app/components/create-offer-dialog/create-offer-dialog.component';
+import {
+  VariationSettingsEditorComponent,
+  VariationSettingsRow,
+} from '@/app/components/variation-settings-editor/variation-settings-editor.component';
 
 type TabId =
   | 'overview'
@@ -66,7 +70,13 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
 @Component({
   selector: 'app-product-edit-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CreateOfferDialogComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    CreateOfferDialogComponent,
+    VariationSettingsEditorComponent,
+  ],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
       <ng-container *ngIf="product$ | async as product">
@@ -1789,6 +1799,7 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
           </div>
 
           <div *ngIf="activeTab === 'options'" class="py-6 space-y-6">
+            <ng-container *ngIf="initVariationSettings(product)"></ng-container>
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-semibold flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette w-5 h-5 text-primary"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>  
@@ -1857,6 +1868,13 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                   </tbody>
                 </table>
               </div>
+            </div>
+            <div *ngIf="variationSettings.length > 0" class="space-y-3">
+              <h4 class="text-sm font-semibold">Variation Settings</h4>
+              <app-variation-settings-editor
+                [productName]="product.name"
+                [variations]="variationSettings"
+              ></app-variation-settings-editor>
             </div>
           </div>
 
@@ -2917,6 +2935,9 @@ export class ProductEditPageComponent {
     },
   ];
 
+  private variationSettingsInitialized = false;
+  variationSettings: VariationSettingsRow[] = [];
+
   readonly forecastByVariation = [
     {
       variation: '#03-bell',
@@ -3028,6 +3049,74 @@ export class ProductEditPageComponent {
       this.productDescription = 'High-quality product description placeholder for marketplace listings.';
       this.contentInitialized = true;
     }
+    return true;
+  }
+
+  initVariationSettings(product: Product): boolean {
+    if (this.variationSettingsInitialized) {
+      return true;
+    }
+    const basePrice = product.salePrice ?? 0;
+    this.variationSettings = this.variationRows.map((row, index) => {
+      const salePrice = basePrice + index * 1.5;
+      const purchasePrice = salePrice ? salePrice * 0.62 : 0;
+      const landedCost = salePrice ? salePrice * 0.72 : 0;
+      const profitMargin = salePrice ? ((salePrice - purchasePrice) / salePrice) * 100 : 0;
+      const upc = `UPC-${index + 1}-112${index}`;
+      const asin = `B00${8120 + index}`;
+      const fnsku = `FN-${row.sku}`;
+      const availableStock = row.stock;
+      return {
+        id: `var-${index + 1}`,
+        name: row.name,
+        sku: row.sku,
+        upc,
+        asin,
+        fnsku,
+        barcode: `BC-${index + 100}`,
+        harmcode: `HS-${index + 320}`,
+        vendorSku: `V-${row.sku}`,
+        multiSkus: [row.sku],
+        multiUpcs: [upc],
+        multiAsins: [asin],
+        multiFnskus: [fnsku],
+        multiGtins: [''],
+        weight: 1.2 + index * 0.3,
+        height: 4.5 + index,
+        width: 6.1 + index * 0.4,
+        length: 8.2 + index * 0.5,
+        weightPerQty: [],
+        dimensionsPerQty: [],
+        invQtyAdjustment: 0,
+        purchaseQty: availableStock + 80,
+        soldQty: 120 + index * 12,
+        returnReceiveQty: 3 + index,
+        availableStock,
+        quantityAllocated: Math.min(8, Math.floor(availableStock / 2)),
+        reserveQty: 4,
+        damageQty: 1,
+        onHandQty: availableStock + 12,
+        virtualStock: availableStock + 20,
+        purchasePrice,
+        inboundFreight: 1.2 + index * 0.4,
+        extraDuty: 0.6 + index * 0.2,
+        landedCost,
+        fvf: 2.4 + index * 0.3,
+        tac: 1.1 + index * 0.2,
+        salePrice,
+        msrp: salePrice + 12,
+        competitorPrice: salePrice - 1.5,
+        profitMargin,
+        minBuyBox: salePrice - 2,
+        maxBuyBox: salePrice + 4,
+        extraAttributes: [
+          { name: 'Material', value: 'Alloy', type: 'text' },
+          { name: 'Bundle', value: 'Standard', type: 'text' },
+        ],
+        images: [product.image || '/placeholder.svg'],
+      };
+    });
+    this.variationSettingsInitialized = true;
     return true;
   }
 
