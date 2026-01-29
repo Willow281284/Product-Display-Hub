@@ -4500,7 +4500,7 @@ interface ColumnPreferences {
                 </th>
                 <th
                   *ngIf="isColumnVisible('actions')"
-                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 w-[150px]"
                   [style.width.px]="columnWidth('actions')"
                   (dragover)="allowColumnDrop($event)"
                   (drop)="onColumnDrop('actions')"
@@ -4955,10 +4955,7 @@ interface ColumnPreferences {
                       class="inline-flex items-center gap-1.5 rounded-md bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-slate-950 shadow-sm hover:bg-emerald-400"
                       (click)="$event.stopPropagation(); openProductDialog(product)"
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                        <path d="M12 20h9" />
-                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-                      </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen w-3 h-3"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
                       Update
                     </button>
                     <details
@@ -4985,12 +4982,7 @@ interface ColumnPreferences {
                           class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-muted"
                           (click)="$event.stopPropagation(); openProductDialog(product); toggleDropdown('actions-' + product.id)"
                         >
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                            <path d="M14 3h7v7" />
-                            <path d="M10 14L21 3" />
-                            <path d="M21 14v7h-7" />
-                            <path d="M3 10V3h7" />
-                          </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link w-4 h-4 mr-2"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
                           View Details
                         </button>
                         <button
@@ -4998,10 +4990,7 @@ interface ColumnPreferences {
                           class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-muted"
                           (click)="$event.stopPropagation(); duplicateProduct(product); toggleDropdown('actions-' + product.id)"
                         >
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                            <rect x="9" y="9" width="13" height="13" rx="2" />
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                          </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy w-4 h-4 mr-2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
                           Duplicate
                         </button>
                         <button
@@ -5009,12 +4998,7 @@ interface ColumnPreferences {
                           class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-rose-400 hover:bg-muted"
                           (click)="$event.stopPropagation(); deleteProduct(product); toggleDropdown('actions-' + product.id)"
                         >
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
-                            <path d="M3 6h18" />
-                            <path d="M8 6v14" />
-                            <path d="M16 6v14" />
-                            <path d="M5 6l1-2h12l1 2" />
-                          </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 w-4 h-4 mr-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
                           Delete
                         </button>
                       </div>
