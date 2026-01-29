@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 
 import { marketplacePlatforms, mockProducts } from '@/data/mockProducts';
@@ -74,6 +74,7 @@ interface SalesRow {
                 type="button"
                 class="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted"
                 aria-label="Back to products"
+                (click)="goBack()"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -139,18 +140,21 @@ interface SalesRow {
               <button
                 type="button"
                 class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+                (click)="cancelEdit()"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
+                (click)="saveChanges()"
               >
                 Save Changes
               </button>
               <button
                 type="button"
                 class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+                (click)="saveAndList()"
               >
                 Save &amp; List
               </button>
@@ -1508,6 +1512,15 @@ interface SalesRow {
             </div>
           </div>
         </div>
+        <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+          <div
+            *ngFor="let toast of toastMessages"
+            class="min-w-[220px] rounded-lg border border-border bg-card px-4 py-3 text-sm text-foreground shadow-lg"
+          >
+            <p class="text-sm font-semibold">{{ toast.title }}</p>
+            <p class="text-xs text-muted-foreground">{{ toast.text }}</p>
+          </div>
+        </div>
       </ng-container>
     </section>
   `,
@@ -1515,6 +1528,7 @@ interface SalesRow {
 })
 export class ProductEditPageComponent {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   readonly product$ = this.route.paramMap.pipe(
     map((params) => params.get('productId')),
@@ -1533,6 +1547,9 @@ export class ProductEditPageComponent {
     'Last 90 days',
     'Last 365 days',
   ];
+
+  toastMessages: Array<{ id: number; title: string; text: string }> = [];
+  private toastId = 0;
 
   readonly topOffers: OfferRow[] = [
     {
@@ -1707,6 +1724,31 @@ export class ProductEditPageComponent {
 
   selectTab(tab: TabId): void {
     this.activeTab = tab;
+  }
+
+  goBack(): void {
+    void this.router.navigate(['/']);
+  }
+
+  cancelEdit(): void {
+    this.goBack();
+  }
+
+  saveChanges(): void {
+    this.showToast('Saved', 'Changes have been saved.');
+  }
+
+  saveAndList(): void {
+    this.showToast('Saved & listed', 'Product saved and listed to marketplaces.');
+    this.selectTab('marketplaces');
+  }
+
+  showToast(title: string, text: string): void {
+    const id = (this.toastId += 1);
+    this.toastMessages = [...this.toastMessages, { id, title, text }];
+    setTimeout(() => {
+      this.toastMessages = this.toastMessages.filter((toast) => toast.id !== id);
+    }, 2400);
   }
 
   setRevenueRange(option: string): void {
