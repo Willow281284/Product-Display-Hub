@@ -824,13 +824,29 @@ const CHART_COLORS = [
         (click)="closeEditOffer()"
       >
         <div
-          class="w-full max-w-2xl rounded-xl bg-card p-5 shadow-xl animate-in zoom-in-95"
+          class="flex w-full max-w-4xl flex-col overflow-hidden rounded-xl bg-card shadow-xl animate-in zoom-in-95 max-h-[90vh]"
           (click)="$event.stopPropagation()"
         >
-          <div class="flex items-center justify-between border-b border-border pb-4">
-            <div>
-              <h3 class="text-lg font-semibold">Edit Offer</h3>
-              <p class="text-xs text-muted-foreground">Update offer details and marketplaces.</p>
+          <div class="flex items-center justify-between border-b border-border px-6 py-4">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                </svg>
+              </span>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-lg font-semibold">Edit Offer</h3>
+                  <span
+                    class="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                    [ngClass]="editOfferIsActive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-muted text-muted-foreground'"
+                  >
+                    {{ editOfferIsActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+                <p class="text-xs text-muted-foreground">Update offer details and marketplaces.</p>
+              </div>
             </div>
             <button
               type="button"
@@ -843,89 +859,219 @@ const CHART_COLORS = [
               </svg>
             </button>
           </div>
-          <div class="mt-5 grid gap-4">
-            <div class="grid gap-4 sm:grid-cols-2">
+
+          <div class="flex-1 overflow-y-auto px-6 py-5">
+            <div class="space-y-5">
+              <div class="rounded-lg border border-border bg-muted/30 p-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-semibold">Offer Status</p>
+                    <p class="text-xs text-muted-foreground">This offer is currently {{ editOfferIsActive ? 'active' : 'inactive' }}</p>
+                  </div>
+                  <button
+                    type="button"
+                    class="relative inline-flex h-6 w-11 items-center rounded-full border border-border transition"
+                    [ngClass]="editOfferIsActive ? 'bg-emerald-500/20' : 'bg-muted'"
+                    (click)="editOfferIsActive = !editOfferIsActive"
+                  >
+                    <span
+                      class="inline-block h-4 w-4 transform rounded-full bg-foreground transition"
+                      [ngClass]="editOfferIsActive ? 'translate-x-5' : 'translate-x-1'"
+                    ></span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid gap-4 sm:grid-cols-2">
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Offer Name *
+                  <input
+                    type="text"
+                    class="h-10 rounded-md border border-border bg-background px-3 text-sm"
+                    placeholder="e.g., Summer Sale 20% Off"
+                    [(ngModel)]="editOfferName"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Offer Scope
+                  <select
+                    class="h-10 rounded-md border border-border bg-background px-3 text-sm"
+                    [(ngModel)]="editOfferScope"
+                  >
+                    <option value="product">By Product</option>
+                    <option value="marketplace">By Marketplace</option>
+                  </select>
+                </label>
+              </div>
+
               <label class="grid gap-1 text-xs text-muted-foreground">
-                Offer Name
-                <input
-                  type="text"
-                  class="h-10 rounded-md border border-border bg-background px-3 text-sm"
-                  [(ngModel)]="editOfferName"
-                />
+                Description (optional)
+                <textarea
+                  rows="2"
+                  class="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  [(ngModel)]="editOfferDescription"
+                ></textarea>
               </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Offer Scope
-                <select
-                  class="h-10 rounded-md border border-border bg-background px-3 text-sm"
-                  [(ngModel)]="editOfferScope"
-                >
-                  <option value="product">By Product</option>
-                  <option value="marketplace">By Marketplace</option>
-                </select>
-              </label>
-            </div>
-            <label class="grid gap-1 text-xs text-muted-foreground">
-              Description
-              <textarea
-                rows="2"
-                class="rounded-md border border-border bg-background px-3 py-2 text-sm"
-                [(ngModel)]="editOfferDescription"
-              ></textarea>
-            </label>
-            <div class="grid gap-4 sm:grid-cols-2">
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Offer Type
-                <select
-                  class="h-10 rounded-md border border-border bg-background px-3 text-sm"
-                  [(ngModel)]="editOfferType"
-                >
-                  <option *ngFor="let type of offerTypeOptions" [value]="type">{{ offerTypeLabels[type] }}</option>
-                </select>
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Discount %
-                <input
-                  type="number"
-                  class="h-10 rounded-md border border-border bg-background px-3 text-sm"
-                  [(ngModel)]="editOfferDiscountPercent"
-                />
-              </label>
-            </div>
-            <div class="grid gap-4 sm:grid-cols-2">
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                Start Date
-                <input
-                  type="date"
-                  class="h-10 rounded-md border border-border bg-background px-3 text-sm"
-                  [(ngModel)]="editOfferStartDate"
-                />
-              </label>
-              <label class="grid gap-1 text-xs text-muted-foreground">
-                End Date
-                <input
-                  type="date"
-                  class="h-10 rounded-md border border-border bg-background px-3 text-sm"
-                  [(ngModel)]="editOfferEndDate"
-                />
-              </label>
-            </div>
-            <div>
-              <p class="text-xs text-muted-foreground">Marketplaces</p>
-              <div class="mt-2 grid grid-cols-2 gap-2 md:grid-cols-3">
-                <button
-                  *ngFor="let marketplace of marketplaceOptions"
-                  type="button"
-                  class="flex items-center justify-between rounded-md border border-border px-3 py-2 text-xs"
-                  [ngClass]="editOfferMarketplaces.includes(marketplace.id) ? 'bg-primary/10 text-foreground' : 'text-muted-foreground'"
-                  (click)="toggleEditMarketplace(marketplace.id)"
-                >
-                  <span>{{ marketplace.label }}</span>
-                  <span *ngIf="editOfferMarketplaces.includes(marketplace.id)">✓</span>
-                </button>
+
+              <div class="space-y-3">
+                <p class="text-xs font-semibold text-muted-foreground">Offer Type *</p>
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  <button
+                    *ngFor="let type of offerTypeOptions"
+                    type="button"
+                    class="flex flex-col items-center gap-2 rounded-lg border-2 p-3 text-xs transition-all"
+                    [ngClass]="editOfferType === type ? 'border-emerald-500 bg-emerald-500/10' : 'border-border hover:border-muted-foreground/50'"
+                    (click)="editOfferType = type"
+                  >
+                    <span
+                      class="inline-flex h-8 w-8 items-center justify-center rounded-full"
+                      [ngClass]="editOfferType === type ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground'"
+                    >
+                      <ng-container [ngSwitch]="type">
+                        <svg *ngSwitchCase="'free_shipping'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 3h13v13H3z" />
+                          <path d="M16 8h4l1 3v5h-5z" />
+                          <circle cx="7.5" cy="17.5" r="1.5" />
+                          <circle cx="17.5" cy="17.5" r="1.5" />
+                        </svg>
+                        <svg *ngSwitchCase="'percent_discount'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M19 5L5 19" />
+                          <circle cx="6.5" cy="6.5" r="2.5" />
+                          <circle cx="17.5" cy="17.5" r="2.5" />
+                        </svg>
+                        <svg *ngSwitchCase="'fixed_discount'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M12 2v20" />
+                          <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H14a3.5 3.5 0 1 1 0 7H6" />
+                        </svg>
+                        <svg *ngSwitchCase="'quantity_discount'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 7h18" />
+                          <path d="M3 12h18" />
+                          <path d="M3 17h18" />
+                        </svg>
+                        <svg *ngSwitchCase="'bulk_purchase'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                          <path d="M12 22V12" />
+                          <path d="m3.3 7 7.7 4.7a2 2 0 0 0 2 0L20.7 7" />
+                        </svg>
+                        <svg *ngSwitchCase="'bogo_half'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M12 2v20" />
+                          <path d="M7 8h10" />
+                          <path d="M7 16h10" />
+                        </svg>
+                        <svg *ngSwitchCase="'bogo_free'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M12 2v20" />
+                          <path d="M7 8h10" />
+                          <path d="M7 16h10" />
+                        </svg>
+                      </ng-container>
+                    </span>
+                    <span class="text-center text-[11px] font-medium">{{ offerTypeLabels[type] }}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="rounded-lg border border-border bg-muted/20 p-4 space-y-3">
+                <p class="text-sm font-semibold">Discount Configuration</p>
+                <div *ngIf="editOfferType === 'percent_discount' || editOfferType === 'quantity_discount' || editOfferType === 'bulk_purchase'" class="flex flex-wrap items-center gap-3 text-xs">
+                  <span class="w-28 font-semibold text-muted-foreground">Discount %</span>
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="1"
+                      max="100"
+                      class="h-9 w-24 rounded-md border border-border bg-background px-3 text-sm"
+                      [(ngModel)]="editOfferDiscountPercent"
+                    />
+                    <span class="text-muted-foreground">%</span>
+                  </div>
+                </div>
+                <div *ngIf="editOfferType === 'fixed_discount'" class="flex flex-wrap items-center gap-3 text-xs">
+                  <span class="w-28 font-semibold text-muted-foreground">Discount Amount</span>
+                  <div class="flex items-center gap-2">
+                    <span class="text-muted-foreground">$</span>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      class="h-9 w-24 rounded-md border border-border bg-background px-3 text-sm"
+                      [(ngModel)]="editOfferDiscountAmount"
+                    />
+                  </div>
+                </div>
+                <div *ngIf="editOfferType === 'quantity_discount' || editOfferType === 'bulk_purchase'" class="flex flex-wrap items-center gap-3 text-xs">
+                  <span class="w-28 font-semibold text-muted-foreground">Minimum Qty</span>
+                  <input
+                    type="number"
+                    min="1"
+                    class="h-9 w-24 rounded-md border border-border bg-background px-3 text-sm"
+                    [(ngModel)]="editOfferMinQty"
+                  />
+                </div>
+                <div *ngIf="editOfferType === 'bogo_half' || editOfferType === 'bogo_free'" class="space-y-3 text-xs">
+                  <div class="flex flex-wrap items-center gap-3">
+                    <span class="w-28 font-semibold text-muted-foreground">Buy Qty</span>
+                    <input
+                      type="number"
+                      min="1"
+                      class="h-9 w-24 rounded-md border border-border bg-background px-3 text-sm"
+                      [(ngModel)]="editOfferBuyQty"
+                    />
+                  </div>
+                  <div class="flex flex-wrap items-center gap-3">
+                    <span class="w-28 font-semibold text-muted-foreground">Get Qty</span>
+                    <div class="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="1"
+                        class="h-9 w-24 rounded-md border border-border bg-background px-3 text-sm"
+                        [(ngModel)]="editOfferGetQty"
+                      />
+                      <span class="text-muted-foreground">
+                        {{ editOfferType === 'bogo_half' ? '@ 50% off' : 'free' }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid gap-4 sm:grid-cols-2">
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  Start Date
+                  <input
+                    type="date"
+                    class="h-10 rounded-md border border-border bg-background px-3 text-sm"
+                    [(ngModel)]="editOfferStartDate"
+                  />
+                </label>
+                <label class="grid gap-1 text-xs text-muted-foreground">
+                  End Date
+                  <input
+                    type="date"
+                    class="h-10 rounded-md border border-border bg-background px-3 text-sm"
+                    [(ngModel)]="editOfferEndDate"
+                  />
+                </label>
+              </div>
+
+              <div>
+                <p class="text-xs text-muted-foreground">Marketplaces</p>
+                <div class="mt-2 grid grid-cols-2 gap-2 md:grid-cols-3">
+                  <button
+                    *ngFor="let marketplace of marketplaceOptions"
+                    type="button"
+                    class="flex items-center justify-between rounded-md border border-border px-3 py-2 text-xs"
+                    [ngClass]="editOfferMarketplaces.includes(marketplace.id) ? 'bg-primary/10 text-foreground' : 'text-muted-foreground'"
+                    (click)="toggleEditMarketplace(marketplace.id)"
+                  >
+                    <span>{{ marketplace.label }}</span>
+                    <span *ngIf="editOfferMarketplaces.includes(marketplace.id)">✓</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-          <div class="mt-6 flex items-center justify-end gap-3">
+
+          <div class="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
             <button
               type="button"
               class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
@@ -935,7 +1081,7 @@ const CHART_COLORS = [
             </button>
             <button
               type="button"
-              class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              class="rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500/90"
               (click)="saveEditedOffer()"
             >
               Save Changes
@@ -1037,9 +1183,14 @@ export class OfferAnalyticsPageComponent {
   editOfferType: Offer['type'] = 'percent_discount';
   editOfferScope: OfferScope = 'product';
   editOfferDiscountPercent = '10';
+  editOfferDiscountAmount = '5';
+  editOfferMinQty = '2';
+  editOfferBuyQty = '1';
+  editOfferGetQty = '1';
   editOfferStartDate = '';
   editOfferEndDate = '';
   editOfferMarketplaces: string[] = [];
+  editOfferIsActive = true;
   readonly offerTypeOptions = Object.keys(offerTypeLabels) as Offer['type'][];
   readonly offerTypeLabels = offerTypeLabels;
 
@@ -1125,9 +1276,14 @@ export class OfferAnalyticsPageComponent {
     this.editOfferType = offer.type;
     this.editOfferScope = offer.scope;
     this.editOfferDiscountPercent = String(offer.discountPercent ?? 10);
+    this.editOfferDiscountAmount = String(offer.discountAmount ?? 5);
+    this.editOfferMinQty = String(offer.condition?.minQty ?? 2);
+    this.editOfferBuyQty = String(offer.condition?.buyQty ?? 1);
+    this.editOfferGetQty = String(offer.condition?.getQty ?? 1);
     this.editOfferStartDate = this.toDateInput(offer.startDate);
     this.editOfferEndDate = this.toDateInput(offer.endDate);
     this.editOfferMarketplaces = [...offer.marketplaces];
+    this.editOfferIsActive = offer.isActive;
     this.editOfferOpen = true;
     this.offerMenuId = null;
   }
@@ -1152,15 +1308,39 @@ export class OfferAnalyticsPageComponent {
       this.showToast('Missing fields', 'Please complete the required fields.');
       return;
     }
+    const discountPercent =
+      this.editOfferType === 'percent_discount' ||
+      this.editOfferType === 'quantity_discount' ||
+      this.editOfferType === 'bulk_purchase'
+        ? this.toNumber(this.editOfferDiscountPercent, 0)
+        : undefined;
+    const discountAmount =
+      this.editOfferType === 'fixed_discount'
+        ? this.toNumber(this.editOfferDiscountAmount, 0)
+        : undefined;
+    const condition =
+      this.editOfferType === 'quantity_discount' ||
+      this.editOfferType === 'bulk_purchase'
+        ? { minQty: this.toNumber(this.editOfferMinQty, 2) }
+        : this.editOfferType === 'bogo_half' || this.editOfferType === 'bogo_free'
+          ? {
+              buyQty: this.toNumber(this.editOfferBuyQty, 1),
+              getQty: this.toNumber(this.editOfferGetQty, 1),
+            }
+          : undefined;
+
     this.offerService.updateOffer(this.selectedOffer.id, {
       name: this.editOfferName.trim(),
       description: this.editOfferDescription.trim(),
       type: this.editOfferType,
       scope: this.editOfferScope,
-      discountPercent: this.toNumber(this.editOfferDiscountPercent, 0),
+      discountPercent,
+      discountAmount,
+      condition,
       startDate,
       endDate,
       marketplaces: [...this.editOfferMarketplaces],
+      isActive: this.editOfferIsActive,
     });
     this.showToast('Offer updated', 'The offer has been updated successfully.');
     this.closeEditOffer();
