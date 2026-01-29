@@ -7306,14 +7306,16 @@ export class ProductGridComponent implements OnInit {
     try {
       const stored = localStorage.getItem(this.columnWidthsStorageKey);
       if (!stored) return null;
-      const parsed = JSON.parse(stored) as
-        | Record<string, number>
-        | { version: number; widths: Record<string, number> };
-      if (typeof parsed === 'object' && parsed !== null && 'widths' in parsed) {
-        return parsed.version === this.columnWidthsVersion ? parsed.widths : null;
-      }
-      if (typeof parsed === 'object' && parsed !== null) {
-        return parsed as Record<string, number>;
+      const parsed: unknown = JSON.parse(stored);
+      if (parsed && typeof parsed === 'object') {
+        if ('widths' in parsed) {
+          const payload = parsed as { version?: number; widths?: Record<string, number> };
+          if (!payload.widths) return null;
+          return payload.version === this.columnWidthsVersion ? payload.widths : null;
+        }
+        if (!Array.isArray(parsed)) {
+          return parsed as Record<string, number>;
+        }
       }
       return null;
     } catch (error) {
