@@ -16,6 +16,7 @@ import { brands, marketplacePlatforms, mockProducts } from '@/data/mockProducts'
 import { FilterState, Product, SoldPeriod, ProductType, KitComponent, MarketplaceStatus } from '@/types/product';
 import { Tag, tagColors } from '@/types/tag';
 import { TagService } from '@/app/services/tag.service';
+import { CreateOfferDialogComponent } from '@/app/components/create-offer-dialog/create-offer-dialog.component';
 import * as XLSX from 'xlsx';
 import {
   Offer,
@@ -380,7 +381,7 @@ interface ColumnPreferences {
 @Component({
   selector: 'app-product-grid',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CreateOfferDialogComponent],
   template: `
   <section class="w-full flex flex-col h-screen bg-background">
     <div class="flex min-h-[calc(100vh-140px)] flex-col gap-0 rounded-2xl border border-border bg-card shadow-sm">
@@ -2843,7 +2844,7 @@ interface ColumnPreferences {
       </div>
 
       <div
-        *ngIf="offerDialogOpen"
+        *ngIf="false && offerDialogOpen"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
       >
         <div class="flex w-full max-w-[98vw] flex-col overflow-hidden rounded-xl bg-card shadow-xl animate-in zoom-in-95 md:max-w-3xl max-h-[90vh]">
@@ -3147,6 +3148,16 @@ interface ColumnPreferences {
           </div>
         </div>
       </div>
+
+      <app-create-offer-dialog
+        [open]="offerDialogOpen"
+        [products]="products"
+        [initialProductIds]="offerDialogProductIds"
+        [hideProductSelection]="offerDialogHideProductSelection"
+        [allowEmptySelection]="offerDialogAllowEmptySelection"
+        (closed)="closeOfferDialog()"
+        (created)="handleOfferCreated($event)"
+      ></app-create-offer-dialog>
 
       <div class="flex flex-1 flex-col min-h-0">
         <ng-container *ngIf="filteredProducts() as filtered">
@@ -5199,6 +5210,7 @@ export class ProductGridComponent implements OnInit {
   offerDialogDescription = '';
   offerDialogProductSearch = '';
   offerDialogHideProductSelection = false;
+  offerDialogAllowEmptySelection = false;
   toastMessages: Array<{ id: number; title: string; text: string }> = [];
   private toastId = 0;
 
@@ -6129,6 +6141,7 @@ export class ProductGridComponent implements OnInit {
     }
     this.offerDialogOpen = true;
     this.offerDialogHideProductSelection = hideProductSelection;
+    this.offerDialogAllowEmptySelection = allowEmptySelection;
     this.offerDialogProductIds = productIds;
     this.offerDialogName = '';
     this.offerDialogScope = 'product';
@@ -6152,7 +6165,16 @@ export class ProductGridComponent implements OnInit {
     this.offerDialogOpen = false;
     this.offerDialogProductIds = [];
     this.offerDialogHideProductSelection = false;
+    this.offerDialogAllowEmptySelection = false;
     this.offerDialogProductSearch = '';
+  }
+
+  handleOfferCreated(event: { name: string; productCount: number }): void {
+    const countLabel = event.productCount === 1 ? '' : 's';
+    this.showToast(
+      'Offer created',
+      `"${event.name}" has been created for ${event.productCount} product${countLabel}.`
+    );
   }
 
   offersForDialog(): Offer[] {

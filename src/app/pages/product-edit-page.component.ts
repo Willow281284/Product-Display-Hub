@@ -6,6 +6,7 @@ import { map } from 'rxjs';
 
 import { marketplacePlatforms, mockProducts } from '@/data/mockProducts';
 import { MarketplaceStatus, Product } from '@/types/product';
+import { CreateOfferDialogComponent } from '@/app/components/create-offer-dialog/create-offer-dialog.component';
 
 type TabId =
   | 'overview'
@@ -63,7 +64,7 @@ interface SalesRow {
 @Component({
   selector: 'app-product-edit-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CreateOfferDialogComponent],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
       <ng-container *ngIf="product$ | async as product">
@@ -1762,7 +1763,7 @@ interface SalesRow {
                 <button
                   type="button"
                   class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500/90"
-                  (click)="openAddOfferModal()"
+                  (click)="openCreateOfferDialog(product)"
                 >
                   <span class="text-sm">+</span>
                   Add to Offer
@@ -2081,106 +2082,14 @@ interface SalesRow {
           </div>
         </div>
 
-        <div
-          *ngIf="addOfferOpen"
-          class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in"
-          (click)="closeAddOfferModal()"
-        >
-          <div
-            class="w-full max-w-xl rounded-xl bg-card p-5 shadow-xl animate-in zoom-in-95"
-            (click)="$event.stopPropagation()"
-          >
-            <div class="flex items-center justify-between border-b border-border pb-4">
-              <div>
-                <h3 class="text-lg font-semibold">Add to Offer</h3>
-                <p class="text-xs text-muted-foreground">Select an offer to include this product.</p>
-              </div>
-              <button
-                type="button"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
-                (click)="closeAddOfferModal()"
-                aria-label="Close"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="h-4 w-4"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </div>
-            <div class="mt-5 space-y-3">
-              <button
-                *ngFor="let offer of offerRows"
-                type="button"
-                class="flex w-full items-center justify-between rounded-lg border border-border px-4 py-3 text-left text-sm hover:bg-muted"
-                [class.border-emerald-500]="selectedOfferName === offer.name"
-                (click)="selectOffer(offer.name)"
-              >
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-semibold">{{ offer.name }}</span>
-                    <span class="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
-                      {{ offer.status }}
-                    </span>
-                  </div>
-                  <p class="text-xs text-muted-foreground">{{ offer.discount }} • {{ offer.duration }}</p>
-                </div>
-                <span
-                  class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border text-[10px]"
-                  [class.bg-emerald-500]="selectedOfferName === offer.name"
-                  [class.text-white]="selectedOfferName === offer.name"
-                >
-                  ✓
-                </span>
-              </button>
-              <button
-                type="button"
-                class="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-border px-4 py-3 text-sm text-muted-foreground hover:bg-muted"
-                (click)="showToast('Create offer', 'Open create offer flow from Product Grid.')"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="h-4 w-4"
-                >
-                  <path d="M5 12h14"></path>
-                  <path d="M12 5v14"></path>
-                </svg>
-                Create new offer
-              </button>
-            </div>
-            <div class="mt-6 flex items-center justify-end gap-3">
-              <button
-                type="button"
-                class="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted"
-                (click)="closeAddOfferModal()"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                class="rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-500/90 disabled:opacity-50"
-                [disabled]="!selectedOfferName"
-                (click)="confirmAddOffer()"
-              >
-                Add to Offer
-              </button>
-            </div>
-          </div>
-        </div>
+        <app-create-offer-dialog
+          [open]="createOfferOpen"
+          [products]="products"
+          [initialProductIds]="createOfferProductIds"
+          [hideProductSelection]="true"
+          (closed)="closeCreateOfferDialog()"
+          (created)="handleOfferCreated($event)"
+        ></app-create-offer-dialog>
 
         <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
           <div
@@ -2204,6 +2113,8 @@ export class ProductEditPageComponent {
     map((params) => params.get('productId')),
     map((productId) => mockProducts.find((product) => product.id === productId) ?? mockProducts[0])
   );
+
+  readonly products = mockProducts;
 
   activeTab: TabId = 'overview';
 
@@ -2249,8 +2160,8 @@ export class ProductEditPageComponent {
   offerStatusFilter = 'All Offers';
   readonly offerStatusFilters = ['All Offers', 'Active', 'Scheduled', 'Paused'];
 
-  addOfferOpen = false;
-  selectedOfferName = '';
+  createOfferOpen = false;
+  createOfferProductIds: string[] = [];
 
   brandOptions = [
     'HyperX',
@@ -2516,23 +2427,22 @@ export class ProductEditPageComponent {
     this.offerStatusFilterOpen = false;
   }
 
-  openAddOfferModal(): void {
-    this.selectedOfferName = this.offerRows[0]?.name ?? '';
-    this.addOfferOpen = true;
+  openCreateOfferDialog(product: Product): void {
+    this.createOfferProductIds = [product.id];
+    this.createOfferOpen = true;
   }
 
-  closeAddOfferModal(): void {
-    this.addOfferOpen = false;
+  closeCreateOfferDialog(): void {
+    this.createOfferOpen = false;
+    this.createOfferProductIds = [];
   }
 
-  selectOffer(name: string): void {
-    this.selectedOfferName = name;
-  }
-
-  confirmAddOffer(): void {
-    if (!this.selectedOfferName) return;
-    this.showToast('Added to offer', `Added to ${this.selectedOfferName}.`);
-    this.closeAddOfferModal();
+  handleOfferCreated(event: { name: string; productCount: number }): void {
+    const countLabel = event.productCount === 1 ? '' : 's';
+    this.showToast(
+      'Offer created',
+      `"${event.name}" has been created for ${event.productCount} product${countLabel}.`
+    );
   }
 
   toggleOfferMarketplace(id: string): void {
