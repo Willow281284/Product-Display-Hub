@@ -720,7 +720,7 @@ export class BatchManagementPageComponent {
         ? {
           ...item,
           ...event.updates,
-          status: 'pending',
+          status: 'pending' as BatchItemStatus,
           error_message: null,
         }
         : item
