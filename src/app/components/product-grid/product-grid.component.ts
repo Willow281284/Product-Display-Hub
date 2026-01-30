@@ -5288,12 +5288,10 @@ interface ColumnPreferences {
                         [checked]="hasTag(product.id, tag.id)"
                         (change)="toggleProductTag(product.id, tag.id)"
                       />
-                      <span
-                        class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-white"
-                        [style.backgroundColor]="tag.color"
-                      >
+                      <label class="text-sm cursor-pointer flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full" [style.backgroundColor]="tag.color"></span>
                         {{ tag.name }}
-                      </span>
+                      </label>
                     </label>
                   </div>
                   </div>
