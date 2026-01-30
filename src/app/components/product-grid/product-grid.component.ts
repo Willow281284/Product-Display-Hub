@@ -425,6 +425,7 @@ interface ColumnPreferences {
             type="button"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-2"
             title="Offer analytics"
+            (click)="goToOfferAnalytics()"
           >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column w-4 h-4"><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
             Offer Analytics
@@ -7012,6 +7013,10 @@ export class ProductGridComponent implements OnInit {
 
   openProductDialog(product: Product): void {
     void this.router.navigate(['/product', product.id]);
+  }
+
+  goToOfferAnalytics(): void {
+    void this.router.navigate(['/offer-analytics']);
   }
 
   closeProductDialog(): void {
