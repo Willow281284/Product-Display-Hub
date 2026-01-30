@@ -698,7 +698,7 @@ interface ColumnPreferences {
             [open]="openDropdownId === 'sold'"
           >
             <summary
-              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-7 sm:h-8 px-2 sm:px-3 gap-1 sm:gap-2"
               title="Filter by sold units"
               data-tooltip="Filter by sold units"
               (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('sold')"
@@ -707,12 +707,13 @@ interface ColumnPreferences {
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up w-3.5 h-3.5 sm:w-4 sm:h-4"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
               </span>
               
-              <span class="text-muted-foreground hidden">
-            Sold    {{
-                  filters.soldRange[0] > 0 || filters.soldRange[1] < 10000
-                    ? filters.soldRange[0] + ' - ' + filters.soldRange[1]
-                    : 'all'
-                }}
+              <span class="hidden xs:inline text-muted-foreground">Sold</span>
+              <span
+                *ngIf="soldFilterActive()"
+                class="ml-0.5 sm:ml-1 inline-flex items-center rounded-full border border-transparent bg-secondary text-secondary-foreground h-4 sm:h-5 px-1 sm:px-1.5 text-[10px] sm:text-xs"
+              >
+                <span class="hidden sm:inline">{{ soldFilterBadgeLabel() }}</span>
+                <span class="sm:hidden">✓</span>
               </span>
               <span class="ml-1 inline-flex h-5 w-5 items-center justify-center text-foreground">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
@@ -722,40 +723,87 @@ interface ColumnPreferences {
             </summary>
             <div
               data-dropdown-panel
-              class="absolute z-50 dropdown-panel mt-2 w-72 rounded-lg border border-border bg-card/95 p-3 shadow-xl backdrop-blur"
+              class="absolute z-50 dropdown-panel mt-2 w-72 rounded-lg border border-border bg-card/95 p-4 shadow-xl backdrop-blur"
             >
-              <div class="grid grid-cols-2 gap-3">
-                <label class="text-xs text-muted-foreground">
-                  Min
-                  <input
-                    type="number"
-                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                    [ngModel]="filters.soldRange[0]"
-                    (ngModelChange)="updateRange('soldRange', $event, filters.soldRange[1])"
-                  />
-                </label>
-                <label class="text-xs text-muted-foreground">
-                  Max
-                  <input
-                    type="number"
-                    class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                    [ngModel]="filters.soldRange[1]"
-                    (ngModelChange)="updateRange('soldRange', filters.soldRange[0], $event)"
-                  />
-                </label>
+              <div class="space-y-4">
+                <div>
+                  <label class="text-xs text-muted-foreground mb-2 block font-medium">Time Period</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <button
+                      *ngFor="let option of soldPeriods"
+                      type="button"
+                      class="h-8 text-xs rounded-md border"
+                      [ngClass]="filters.soldPeriod === option.value ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary/50'"
+                      (click)="setSoldPeriod(option.value)"
+                    >
+                      {{ option.label }}
+                    </button>
+                    <button
+                      type="button"
+                      class="h-8 text-xs rounded-md border col-span-2"
+                      [ngClass]="filters.soldPeriod === 'custom' ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary/50'"
+                      (click)="setSoldPeriod('custom')"
+                    >
+                      Custom
+                    </button>
+                  </div>
+                </div>
+
+                <div *ngIf="filters.soldPeriod === 'custom'" class="space-y-3 border-t border-border pt-3">
+                  <label class="text-xs text-muted-foreground block font-medium">Date Range</label>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1">
+                      <input
+                        type="date"
+                        class="h-9 w-full rounded-md border border-border bg-background px-2 text-xs"
+                        [ngModel]="soldDateInput(filters.soldDateRange[0])"
+                        (ngModelChange)="updateSoldDateRange(0, $event)"
+                      />
+                    </div>
+                    <span class="text-muted-foreground">–</span>
+                    <div class="flex-1">
+                      <input
+                        type="date"
+                        class="h-9 w-full rounded-md border border-border bg-background px-2 text-xs"
+                        [ngModel]="soldDateInput(filters.soldDateRange[1])"
+                        (ngModelChange)="updateSoldDateRange(1, $event)"
+                      />
+                    </div>
+                  </div>
+                  <p class="text-xs text-muted-foreground italic">
+                    Note: Custom date filtering requires sales date data
+                  </p>
+                </div>
+
+                <div [ngClass]="filters.soldPeriod === 'custom' ? 'border-t border-border pt-3' : ''">
+                  <label class="text-xs text-muted-foreground mb-2 block font-medium">Quantity Range</label>
+                  <div class="flex items-center gap-2">
+                    <div class="flex-1">
+                      <label class="text-xs text-muted-foreground mb-1 block">From</label>
+                      <input
+                        type="number"
+                        min="0"
+                        class="h-9 w-full rounded-md border border-border bg-background px-2 text-xs"
+                        [ngModel]="filters.soldRange[0]"
+                        (ngModelChange)="updateRange('soldRange', $event, filters.soldRange[1])"
+                        placeholder="0"
+                      />
+                    </div>
+                    <span class="text-muted-foreground mt-5">–</span>
+                    <div class="flex-1">
+                      <label class="text-xs text-muted-foreground mb-1 block">To</label>
+                      <input
+                        type="number"
+                        min="0"
+                        class="h-9 w-full rounded-md border border-border bg-background px-2 text-xs"
+                        [ngModel]="filters.soldRange[1]"
+                        (ngModelChange)="updateRange('soldRange', filters.soldRange[0], $event)"
+                        placeholder="10000"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <label class="mt-3 block text-xs text-muted-foreground">
-                Period
-                <select
-                  class="mt-1 w-full rounded-md border border-border bg-background px-2 py-1 text-xs"
-                  [ngModel]="filters.soldPeriod"
-                  (ngModelChange)="setSoldPeriod($event)"
-                >
-                  <option *ngFor="let option of soldPeriods" [value]="option.value">
-                    {{ option.label }}
-                  </option>
-                </select>
-              </label>
             </div>
           </details>
 
@@ -6326,8 +6374,46 @@ export class ProductGridComponent implements OnInit {
   }
 
   setSoldPeriod(period: SoldPeriod): void {
-    this.filters = { ...this.filters, soldPeriod: period };
+    this.filters = {
+      ...this.filters,
+      soldPeriod: period,
+      soldDateRange: period === 'custom' ? this.filters.soldDateRange : [null, null],
+    };
     this.onFilterChange();
+  }
+
+  updateSoldDateRange(index: 0 | 1, value: string): void {
+    const parsed = value ? new Date(value) : null;
+    const next: [Date | null, Date | null] = [...this.filters.soldDateRange];
+    next[index] = parsed;
+    if (next[0] && next[1] && next[1] < next[0]) {
+      next[1] = next[0];
+    }
+    this.filters = { ...this.filters, soldDateRange: next };
+    this.onFilterChange();
+  }
+
+  soldFilterActive(): boolean {
+    const [minSold, maxSold] = this.filters.soldRange;
+    const [start, end] = this.filters.soldDateRange;
+    return (
+      minSold > 0 ||
+      maxSold < 10000 ||
+      this.filters.soldPeriod !== 'all' ||
+      (!!start && !!end)
+    );
+  }
+
+  soldFilterBadgeLabel(): string {
+    const [start, end] = this.filters.soldDateRange;
+    if (this.filters.soldPeriod === 'custom' && start && end) {
+      return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    }
+    return this.soldPeriodLabel(this.filters.soldPeriod);
+  }
+
+  soldDateInput(date: Date | null): string {
+    return date ? this.toDateInput(date) : '';
   }
 
   resetFilters(): void {
@@ -7913,6 +7999,7 @@ export class ProductGridComponent implements OnInit {
   }
 
   soldPeriodLabel(period: SoldPeriod): string {
+    if (period === 'custom') return 'Custom';
     const match = this.soldPeriods.find((option) => option.value === period);
     return match ? match.label : 'All time';
   }
