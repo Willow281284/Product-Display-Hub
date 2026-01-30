@@ -274,9 +274,10 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
                   <button
                     *ngIf="hasVariations"
                     type="button"
-                    class="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+                    class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 mr-2 gap-1"
                     (click)="showVariationPicker = true"
                   >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path d="M15 18l-6-6 6-6"></path></svg>
                     All Variations
                   </button>
                   <span
@@ -313,7 +314,7 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
             <div class="flex flex-1 flex-col overflow-hidden">
               <div class="border-b border-border bg-muted/30 px-6 py-3">
                 <div class="flex flex-wrap items-center gap-4">
-                  <label class="text-sm text-muted-foreground">Product Category:</label>
+                  <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 shrink-0">Product Category:</label>
                   <div class="flex items-center gap-2">
                     <select
                       class="h-9 w-64 rounded-md border border-border bg-background px-3 text-sm"
@@ -326,17 +327,18 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
                     </select>
                     <button
                       type="button"
-                      class="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-xs text-muted-foreground hover:text-foreground"
+                      class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 gap-1.5"
                       [disabled]="isSuggestingCategory"
                       (click)="handleAIAutoFill()"
                     >
-                      {{ isSuggestingCategory ? 'Working...' : 'AI Auto-Fill' }}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles w-4 h-4"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>  
+                    {{ isSuggestingCategory ? 'Working...' : 'AI Auto-Fill' }}
                     </button>
                   </div>
                   <button
                     *ngIf="hasErrors"
                     type="button"
-                    class="ml-auto rounded-full px-3 py-1 text-xs font-semibold"
+                    class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80 ml-auto cursor-pointer hover:opacity-80 transition-opacity"
                     [ngClass]="showOnlyMissing ? 'bg-primary text-primary-foreground' : 'bg-destructive/10 text-destructive'"
                     (click)="showOnlyMissing = !showOnlyMissing"
                   >
@@ -345,7 +347,7 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
                 </div>
               </div>
 
-              <div class="flex-1 overflow-hidden">
+              <div class="flex-1 overflow-auto">
                 <div class="mx-6 mt-3 rounded-full bg-muted/40 px-2 py-1 shadow-inner">
                   <div class="flex flex-wrap items-center gap-2">
                     <ng-container *ngFor="let section of sectionKeys">
@@ -551,7 +553,7 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
               <button
                 *ngIf="isLive"
                 type="button"
-                class="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground"
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
                 [disabled]="isSaving"
                 (click)="handleSaveOnly()"
               >
@@ -560,7 +562,7 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
               <button
                 *ngIf="!isLive"
                 type="button"
-                class="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground"
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
                 [disabled]="isSaving || hasErrors"
                 (click)="handleSaveAndRetry()"
               >
