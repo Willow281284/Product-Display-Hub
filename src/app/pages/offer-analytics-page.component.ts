@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ChartConfiguration, ChartData } from 'chart.js';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 
 import { mockProducts } from '@/data/mockProducts';
 import {
@@ -107,7 +107,7 @@ const CHART_HEX = ['#34d399', '#22c55e', '#facc15', '#a855f7', '#38bdf8', '#f472
 @Component({
   selector: 'app-offer-analytics-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, NgChartsModule],
+  imports: [CommonModule, FormsModule, RouterLink, BaseChartDirective],
   template: `
     <section class="min-h-screen bg-background">
       <header class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
@@ -1121,7 +1121,7 @@ export class OfferAnalyticsPageComponent {
     scales: {
       x: {
         beginAtZero: true,
-        grid: { color: 'rgba(148, 163, 184, 0.2)', borderDash: [4, 4] },
+        grid: { color: 'rgba(148, 163, 184, 0.2)' },
         ticks: { color: '#94a3b8', font: { size: 11 } },
       },
       y: {
@@ -1192,13 +1192,13 @@ export class OfferAnalyticsPageComponent {
     maintainAspectRatio: false,
     scales: {
       x: {
-        grid: { color: 'rgba(148, 163, 184, 0.15)', borderDash: [4, 4] },
+        grid: { color: 'rgba(148, 163, 184, 0.15)' },
         ticks: { color: '#94a3b8', font: { size: 10 } },
       },
       y: {
         beginAtZero: true,
         position: 'left',
-        grid: { color: 'rgba(148, 163, 184, 0.15)', borderDash: [4, 4] },
+        grid: { color: 'rgba(148, 163, 184, 0.15)' },
         ticks: { color: '#94a3b8', font: { size: 10 } },
       },
       y1: {
