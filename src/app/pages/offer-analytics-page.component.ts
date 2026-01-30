@@ -150,9 +150,7 @@ const CHART_COLORS = [
                 (click)="$event.preventDefault(); marketplaceFilterOpen = !marketplaceFilterOpen"
               >
                 <span class="truncate">{{ marketplaceFilterLabel }}</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store w-4 h-4"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"></path></svg>
               </summary>
               <div class="absolute right-0 mt-2 w-56 rounded-lg border border-border bg-card p-2 shadow-lg">
                 <button
@@ -194,12 +192,7 @@ const CHART_COLORS = [
             </details>
 
             <div class="flex items-center gap-2 text-sm text-muted-foreground">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
-                <path d="M8 2v4" />
-                <path d="M16 2v4" />
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <path d="M3 10h18" />
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar w-4 h-4"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
               <span>Period:</span>
             </div>
             <select
@@ -227,10 +220,7 @@ const CHART_COLORS = [
                   <p class="text-xs text-muted-foreground">of {{ summaryMetrics.totalOffers }} total</p>
                 </div>
                 <div class="rounded-full bg-primary/10 p-3 text-primary">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                    <path d="M20.59 13.41 12 22 3 13.41a2 2 0 0 1 0-2.82L12 2l8.59 8.59a2 2 0 0 1 0 2.82z" />
-                    <circle cx="7" cy="7" r="1.5"></circle>
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag w-5 h-5 text-primary"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle></svg>
                 </div>
               </div>
             </div>
@@ -240,10 +230,7 @@ const CHART_COLORS = [
                   <p class="text-xs text-muted-foreground">Total Revenue</p>
                   <p class="text-2xl font-bold">{{ formatCurrency(summaryMetrics.totalRevenue) }}</p>
                   <div class="flex items-center gap-1 text-xs text-emerald-400">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
-                      <path d="M7 17L17 7" />
-                      <path d="M7 7h10v10" />
-                    </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign w-5 h-5 text-emerald-500"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                     +{{ formatCurrency(summaryMetrics.totalRevenueImpact) }} impact
                   </div>
                 </div>
@@ -263,10 +250,7 @@ const CHART_COLORS = [
                   <p class="text-xs text-muted-foreground">{{ formatNumber(summaryMetrics.totalConversions) }} conversions</p>
                 </div>
                 <div class="rounded-full bg-blue-500/10 p-3 text-blue-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                    <path d="M12 19V5" />
-                    <path d="M5 12h14" />
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-percent w-5 h-5 text-blue-500"><line x1="19" x2="5" y1="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
                 </div>
               </div>
             </div>
@@ -276,15 +260,7 @@ const CHART_COLORS = [
                   <p class="text-xs text-muted-foreground">Avg. ROI</p>
                   <p class="text-2xl font-bold">{{ summaryMetrics.avgROI | number: '1.0-0' }}%</p>
                   <div class="flex items-center gap-1 text-xs" [ngClass]="summaryMetrics.avgROI > 0 ? 'text-emerald-400' : 'text-rose-400'">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      class="h-3 w-3"
-                      stroke-width="2"
-                    >
-                      <path d="M4 14l5-5 4 4 7-7" />
-                    </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap w-5 h-5 text-purple-500"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg>
                     vs baseline
                   </div>
                 </div>
@@ -306,10 +282,7 @@ const CHART_COLORS = [
                   <p class="text-xs text-muted-foreground">across active offers</p>
                 </div>
                 <div class="rounded-full bg-orange-500/10 p-3 text-orange-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                    <path d="M12 2v20" />
-                    <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H14a3.5 3.5 0 1 1 0 7H6" />
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign w-5 h-5 text-orange-500"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                 </div>
               </div>
             </div>
@@ -324,9 +297,7 @@ const CHART_COLORS = [
                   class="rounded-full p-3"
                   [ngClass]="summaryMetrics.avgRoas >= 3 ? 'bg-emerald-500/10 text-emerald-500' : summaryMetrics.avgRoas >= 2 ? 'bg-amber-500/10 text-amber-500' : 'bg-rose-500/10 text-rose-500'"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                    <path d="M4 14l5-5 4 4 7-7" />
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up w-5 h-5 text-emerald-500"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
                 </div>
               </div>
             </div>
@@ -340,10 +311,7 @@ const CHART_COLORS = [
                   <p class="text-xs text-muted-foreground">{{ formatNumber(summaryMetrics.totalClicks) }} clicks</p>
                 </div>
                 <div class="rounded-full bg-cyan-500/10 p-3 text-cyan-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                    <path d="M3 3h18v18H3z" />
-                    <path d="M7 17l10-10" />
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mouse-pointer w-5 h-5 text-cyan-500"><path d="M12.586 12.586 19 19"></path><path d="M3.688 3.037a.497.497 0 0 0-.651.651l6.5 15.999a.501.501 0 0 0 .947-.062l1.569-6.083a2 2 0 0 1 1.448-1.479l6.124-1.579a.5.5 0 0 0 .063-.947z"></path></svg>
                 </div>
               </div>
             </div>
@@ -357,12 +325,7 @@ const CHART_COLORS = [
                   <p class="text-xs text-muted-foreground">{{ formatNumber(summaryMetrics.totalConversions) }} conversions</p>
                 </div>
                 <div class="rounded-full bg-violet-500/10 p-3 text-violet-500">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5" stroke-width="2">
-                    <path d="M3 7h18" />
-                    <path d="M7 7v10" />
-                    <path d="M17 7v10" />
-                    <path d="M3 17h18" />
-                  </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-5 h-5 text-violet-500"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
                 </div>
               </div>
             </div>
@@ -370,11 +333,7 @@ const CHART_COLORS = [
 
           <div *ngIf="performanceAlerts.length > 0" class="rounded-xl border border-border bg-card">
             <div class="flex items-center gap-2 border-b border-border px-4 py-3 text-sm font-semibold">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4 text-amber-500" stroke-width="2">
-                <path d="M12 2l10 18H2L12 2z" />
-                <path d="M12 8v4" />
-                <path d="M12 16h.01" />
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell w-4 h-4 text-amber-500"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
               Performance Alerts ({{ performanceAlerts.length }})
             </div>
             <div class="max-h-[400px] divide-y divide-border/60 overflow-y-auto">
@@ -423,7 +382,7 @@ const CHART_COLORS = [
                 <button
                   *ngIf="alert.action"
                   type="button"
-                  class="rounded-md border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 flex-shrink-0 text-xs"
                   (click)="handleAlertAction(alert)"
                 >
                   {{ getActionLabel(alert.action) }}
@@ -436,33 +395,34 @@ const CHART_COLORS = [
             <div class="mb-4 text-sm font-semibold">Performance Funnel</div>
             <div class="flex flex-wrap items-center gap-3">
               <div class="flex-1 rounded-lg bg-muted/50 p-4 text-center">
-                <div class="text-xs text-muted-foreground">Impressions</div>
-                <div class="mt-2 text-2xl font-bold">{{ formatNumber(summaryMetrics.totalImpressions) }}</div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye w-5 h-5 mx-auto mb-2 text-muted-foreground"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <div class="mt-2 text-2xl font-bold">{{ formatNumber(summaryMetrics.totalImpressions) }}</div>
+              <div class="text-xs text-muted-foreground">Impressions</div>
               </div>
               <div class="text-muted-foreground">→</div>
               <div class="flex-1 rounded-lg bg-muted/50 p-4 text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mouse-pointer w-5 h-5 mx-auto mb-2 text-muted-foreground"><path d="M12.586 12.586 19 19"></path><path d="M3.688 3.037a.497.497 0 0 0-.651.651l6.5 15.999a.501.501 0 0 0 .947-.062l1.569-6.083a2 2 0 0 1 1.448-1.479l6.124-1.579a.5.5 0 0 0 .063-.947z"></path></svg>
+              <div class="mt-2 text-2xl font-bold">{{ formatNumber(summaryMetrics.totalClicks) }}</div>
                 <div class="text-xs text-muted-foreground">Clicks ({{ summaryMetrics.clickThroughRate | number: '1.1-1' }}%)</div>
-                <div class="mt-2 text-2xl font-bold">{{ formatNumber(summaryMetrics.totalClicks) }}</div>
               </div>
               <div class="text-muted-foreground">→</div>
               <div class="flex-1 rounded-lg bg-muted/50 p-4 text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart w-5 h-5 mx-auto mb-2 text-muted-foreground"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+              <div class="mt-2 text-2xl font-bold">{{ formatNumber(summaryMetrics.totalConversions) }}</div>
                 <div class="text-xs text-muted-foreground">Conversions ({{ summaryMetrics.avgConversionRate | number: '1.1-1' }}%)</div>
-                <div class="mt-2 text-2xl font-bold">{{ formatNumber(summaryMetrics.totalConversions) }}</div>
               </div>
               <div class="text-muted-foreground">→</div>
               <div class="flex-1 rounded-lg bg-emerald-500/10 p-4 text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign w-5 h-5 mx-auto mb-2 text-emerald-500"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              <div class="mt-2 text-2xl font-bold text-emerald-500">{{ formatCurrency(summaryMetrics.totalRevenue) }}</div>
                 <div class="text-xs text-muted-foreground">Revenue</div>
-                <div class="mt-2 text-2xl font-bold text-emerald-500">{{ formatCurrency(summaryMetrics.totalRevenue) }}</div>
               </div>
             </div>
           </div>
 
           <div class="rounded-xl border border-border bg-card">
             <div class="flex items-center gap-2 border-b border-border px-4 py-3 text-sm font-semibold">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
-                <path d="M20.59 13.41 12 22 3 13.41a2 2 0 0 1 0-2.82L12 2l8.59 8.59a2 2 0 0 1 0 2.82z" />
-                <circle cx="7" cy="7" r="1.5"></circle>
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag w-4 h-4"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle></svg>
               Active Offers ({{ activeOfferAnalytics.length }})
             </div>
             <div class="divide-y divide-border/60">
@@ -557,17 +517,19 @@ const CHART_COLORS = [
                 >
                   <button
                     type="button"
-                    class="flex w-full items-center gap-2 rounded-md px-2 py-2 hover:bg-muted"
+                    class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground"
                     (click)="openEditOffer(analytics.offer)"
                   >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil w-4 h-4 mr-2"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg>
                     Edit Offer
                   </button>
                   <button
                     type="button"
-                    class="flex w-full items-center gap-2 rounded-md px-2 py-2 text-rose-400 hover:bg-muted"
+                    class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent text-destructive focus:text-destructive"
                     (click)="promptDeleteOffer(analytics.offer)"
                   >
-                    Delete Offer
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 w-4 h-4 mr-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg> 
+                  Delete Offer
                   </button>
                 </div>
 
@@ -1310,8 +1272,8 @@ export class OfferAnalyticsPageComponent {
     }
     const discountPercent =
       this.editOfferType === 'percent_discount' ||
-      this.editOfferType === 'quantity_discount' ||
-      this.editOfferType === 'bulk_purchase'
+        this.editOfferType === 'quantity_discount' ||
+        this.editOfferType === 'bulk_purchase'
         ? this.toNumber(this.editOfferDiscountPercent, 0)
         : undefined;
     const discountAmount =
@@ -1320,13 +1282,13 @@ export class OfferAnalyticsPageComponent {
         : undefined;
     const condition =
       this.editOfferType === 'quantity_discount' ||
-      this.editOfferType === 'bulk_purchase'
+        this.editOfferType === 'bulk_purchase'
         ? { minQty: this.toNumber(this.editOfferMinQty, 2) }
         : this.editOfferType === 'bogo_half' || this.editOfferType === 'bogo_free'
           ? {
-              buyQty: this.toNumber(this.editOfferBuyQty, 1),
-              getQty: this.toNumber(this.editOfferGetQty, 1),
-            }
+            buyQty: this.toNumber(this.editOfferBuyQty, 1),
+            getQty: this.toNumber(this.editOfferGetQty, 1),
+          }
           : undefined;
 
     this.offerService.updateOffer(this.selectedOffer.id, {
@@ -1549,9 +1511,9 @@ export class OfferAnalyticsPageComponent {
     this.filteredOfferAnalytics = this.selectedMarketplaces.length === 0
       ? this.offerAnalytics
       : this.offerAnalytics.filter((analytics) => {
-          const offerMarkets = this.normalizedOfferMarketplaces(analytics.offer);
-          return this.selectedMarketplaces.some((market) => offerMarkets.includes(market));
-        });
+        const offerMarkets = this.normalizedOfferMarketplaces(analytics.offer);
+        return this.selectedMarketplaces.some((market) => offerMarkets.includes(market));
+      });
 
     this.activeOfferAnalytics = this.filteredOfferAnalytics.filter((analytics) => {
       const status = getOfferStatus(analytics.offer);
