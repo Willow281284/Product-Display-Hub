@@ -5389,7 +5389,22 @@ interface ColumnPreferences {
                   class="p-4 align-middle"
                   [style.width.px]="columnWidth('variationId')"
                 >
-                  <div class="text-sm font-medium">{{ product.variationId || '-' }}</div>
+                  <ng-container *ngIf="product.variationId; else noVariation">
+                    <div class="flex items-center gap-1.5">
+                      <code class="text-sm bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+                        {{ product.variationId }}
+                      </code>
+                      <span
+                        *ngIf="product.variation"
+                        class="inline-flex items-center rounded-md border border-border px-2 py-0.5 text-xs"
+                      >
+                        {{ product.variation.value }}
+                      </span>
+                    </div>
+                  </ng-container>
+                  <ng-template #noVariation>
+                    <span class="text-muted-foreground text-sm">—</span>
+                  </ng-template>
                 </td>
                 <td
                   *ngIf="isColumnVisible('mpn')"
@@ -5482,21 +5497,33 @@ interface ColumnPreferences {
                   class="p-4 align-middle text-right"
                   [style.width.px]="columnWidth('stockQty')"
                 >
-                  <p class="font-medium">{{ product.stockQty }}</p>
+                  <span
+                    class="text-base font-medium"
+                    [ngClass]="product.stockQty === 0 ? 'text-destructive' : 'text-success'"
+                  >
+                    {{ product.stockQty }}
+                  </span>
                 </td>
                 <td
                   *ngIf="isColumnVisible('returnQty')"
                   class="p-4 align-middle text-right"
                   [style.width.px]="columnWidth('returnQty')"
                 >
-                  <p class="font-medium">{{ product.returnQty }}</p>
+                  <span class="text-base" [ngClass]="product.returnQty > 0 ? 'text-warning' : ''">
+                    {{ product.returnQty }}
+                  </span>
                 </td>
                 <td
                   *ngIf="isColumnVisible('profitMargin')"
                   class="p-4 align-middle text-right"
                   [style.width.px]="columnWidth('profitMargin')"
                 >
-                  <p class="font-medium">{{ product.grossProfitPercent }}%</p>
+                  <span
+                    class="text-base font-medium"
+                    [ngClass]="product.grossProfitPercent > 0 ? 'text-success' : 'text-muted-foreground'"
+                  >
+                    {{ product.grossProfitPercent }}%
+                  </span>
                 </td>
                 <td
                   *ngIf="isColumnVisible('profitAmount')"
@@ -5520,7 +5547,18 @@ interface ColumnPreferences {
                   class="p-4 align-middle text-right"
                   [style.width.px]="columnWidth('stockDays')"
                 >
-                  <p class="font-medium">{{ product.stockDays }}</p>
+                  <span
+                    class="text-base font-medium"
+                    [ngClass]="
+                      product.stockDays <= 7
+                        ? 'text-destructive'
+                        : product.stockDays <= 30
+                          ? 'text-warning'
+                          : 'text-foreground'
+                    "
+                  >
+                    {{ product.stockDays === 999 ? '∞' : product.stockDays }}
+                  </span>
                 </td>
                 <td
                   *ngIf="isColumnVisible('restockStatus')"
@@ -5528,7 +5566,7 @@ interface ColumnPreferences {
                   [style.width.px]="columnWidth('restockStatus')"
                 >
                   <span
-                    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border whitespace-nowrap"
                     [ngClass]="restockClasses[product.restockStatus]"
                   >
                     {{ restockLabels[product.restockStatus] }}
@@ -5539,7 +5577,12 @@ interface ColumnPreferences {
                   class="p-4 align-middle text-right"
                   [style.width.px]="columnWidth('suggestedRestockQty')"
                 >
-                  <p class="font-medium">{{ product.suggestedRestockQty }}</p>
+                  <span
+                    class="text-base font-medium"
+                    [ngClass]="product.suggestedRestockQty > 0 ? 'text-primary' : 'text-muted-foreground'"
+                  >
+                    {{ product.suggestedRestockQty }}
+                  </span>
                 </td>
                 <td
                   *ngIf="isColumnVisible('marketplaces')"
@@ -6039,17 +6082,17 @@ export class ProductGridComponent implements OnInit {
   selectedProductIds = new Set<string>();
 
   readonly restockLabels: Record<Product['restockStatus'], string> = {
-    in_stock: 'In stock',
-    low_stock: 'Low stock',
-    out_of_stock: 'Out of stock',
-    reorder_now: 'Reorder now',
+    in_stock: 'In Stock',
+    low_stock: 'Low Stock',
+    out_of_stock: 'Out of Stock',
+    reorder_now: 'Reorder Now',
   };
 
   readonly restockClasses: Record<Product['restockStatus'], string> = {
-    in_stock: 'bg-success/10 text-success',
-    low_stock: 'bg-warning/10 text-warning',
-    out_of_stock: 'bg-destructive/10 text-destructive',
-    reorder_now: 'bg-warning/10 text-warning',
+    in_stock: 'bg-success/10 text-success border-success/30',
+    low_stock: 'bg-warning/10 text-warning border-warning/30',
+    out_of_stock: 'bg-destructive/10 text-destructive border-destructive/30',
+    reorder_now: 'bg-primary/10 text-primary border-primary/30',
   };
 
   private readonly restockRank: Record<Product['restockStatus'], number> = {
