@@ -707,7 +707,7 @@ interface ColumnPreferences {
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up w-3.5 h-3.5 sm:w-4 sm:h-4"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
               </span>
               
-              <span class="hidden xs:inline text-muted-foreground">Sold</span>
+              <span class="hidden xs:hidden text-muted-foreground">Sold</span>
               <span
                 *ngIf="soldFilterActive()"
                 class="ml-0.5 sm:ml-1 inline-flex items-center rounded-full border border-transparent bg-secondary text-secondary-foreground h-4 sm:h-5 px-1 sm:px-1.5 text-[10px] sm:text-xs"
