@@ -315,18 +315,45 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
                       <span *ngIf="item.profit_margin == null">-</span>
                     </td>
                     <td class="px-4 py-2">
-                      <span class="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                      <span
+                        class="inline-flex items-center justify-center rounded-md px-2 py-1 text-[11px] font-semibold uppercase tracking-wide"
+                        [ngClass]="marketplacePillClass(item.marketplace)"
+                      >
                         {{ marketplaceBadge(item.marketplace) }}
                       </span>
                     </td>
                     <td class="px-4 py-2">
-                      <span class="flex items-center gap-1.5 text-base" [ngClass]="itemStatusClass(item.status)">
-                        {{ itemStatusLabel(item.status) }}
+                      <span class="flex items-center gap-2 text-base">
+                        <span
+                          class="inline-flex h-4 w-4 items-center justify-center rounded-full border"
+                          [ngClass]="statusIconClass(item.status)"
+                        >
+                          <svg *ngIf="item.status === 'success'" viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                          <svg *ngIf="item.status === 'failed'" viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18" />
+                            <path d="M6 6l12 12" />
+                          </svg>
+                          <svg *ngIf="item.status === 'pending'" viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                          </svg>
+                          <svg *ngIf="item.status === 'processing'" viewBox="0 0 24 24" class="h-3 w-3 animate-spin" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 0 1 10 10" />
+                          </svg>
+                        </span>
+                        <span [ngClass]="itemStatusClass(item.status)">{{ itemStatusLabel(item.status) }}</span>
                       </span>
                     </td>
                     <td class="px-4 py-2 text-base text-muted-foreground">
-                      <span *ngIf="item.error_message" class="flex items-center gap-1.5 text-red-600">
-                        ! <span class="max-w-[150px] truncate">{{ item.error_message }}</span>
+                      <span *ngIf="item.error_message" class="flex items-center gap-2 text-red-500">
+                        <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-red-500/50">
+                          <svg viewBox="0 0 24 24" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 8v5" />
+                            <path d="M12 16h.01" />
+                          </svg>
+                        </span>
+                        <span class="max-w-[150px] truncate">{{ item.error_message }}</span>
                       </span>
                     </td>
                   </tr>
@@ -830,6 +857,21 @@ export class BatchManagementPageComponent {
     }
   }
 
+  statusIconClass(status: BatchItemStatus): string {
+    switch (status) {
+      case 'success':
+        return 'border-green-500/50 text-green-500';
+      case 'failed':
+        return 'border-red-500/50 text-red-500';
+      case 'processing':
+        return 'border-blue-500/50 text-blue-500';
+      case 'pending':
+        return 'border-yellow-500/50 text-yellow-500';
+      default:
+        return 'border-muted text-muted-foreground';
+    }
+  }
+
   rowClass(item: BatchItem): string {
     const isClickable = item.status === 'failed' || item.status === 'success';
     if (!isClickable) return '';
@@ -841,13 +883,14 @@ export class BatchManagementPageComponent {
 
   marketplaceBadge(marketplace: string): string {
     const map: Record<string, string> = {
-      amazon: 'amz',
-      walmart: 'wmt',
-      ebay: 'ebay',
-      etsy: 'etsy',
-      newegg: 'ne',
-      target: 'tgt',
-      shopify: 'shop',
+      amazon: 'amazon',
+      walmart: 'WMT',
+      ebay: 'EBY',
+      etsy: 'Etsy',
+      newegg: 'NE',
+      target: 'TGT',
+      shopify: 'Shop',
+      costco: 'COST',
     };
     return map[marketplace] || marketplace.slice(0, 3).toUpperCase();
   }
@@ -868,6 +911,8 @@ export class BatchManagementPageComponent {
         return 'bg-rose-500/20 text-rose-300';
       case 'shopify':
         return 'bg-emerald-500/20 text-emerald-300';
+      case 'costco':
+        return 'bg-red-500/20 text-red-300';
       default:
         return 'bg-muted text-muted-foreground';
     }
