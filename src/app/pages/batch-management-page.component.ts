@@ -56,27 +56,27 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
               <p class="mt-1 text-sm">Select products and click "List to Marketplaces" to create a batch</p>
               <a routerLink="/" class="mt-4 inline-flex rounded-md border border-border px-3 py-2 text-sm">Go to Products</a>
             </div>
-            <div *ngIf="!isLoading && batches.length > 0" class="space-y-2 p-2">
+            <div *ngIf="!isLoading && batches.length > 0" class="space-y-3 p-3">
               <div
                 *ngFor="let batch of batches"
-                class="cursor-pointer rounded-lg border border-border bg-card p-3 transition-colors"
-                [ngClass]="selectedBatchId === batch.id ? 'ring-2 ring-primary bg-primary/5' : 'hover:bg-muted/50'"
+                class="cursor-pointer rounded-xl border border-border bg-card/80 p-4 shadow-sm transition-colors"
+                [ngClass]="selectedBatchId === batch.id ? 'ring-2 ring-primary bg-primary/5' : 'hover:bg-muted/40'"
                 (click)="selectBatch(batch.id)"
               >
                 <div class="flex items-start justify-between gap-2">
                   <div class="flex-1">
                     <div *ngIf="editingBatchId === batch.id" class="flex items-center gap-2">
                       <input
-                        class="h-7 flex-1 rounded-md border border-border bg-background px-2 text-sm"
+                        class="h-8 flex-1 rounded-md border border-border bg-background px-2 text-sm"
                         [(ngModel)]="editName"
                         (keydown.enter)="saveBatchName()"
                         (keydown.escape)="cancelEditName()"
                       />
-                      <button class="h-7 w-7 rounded-md border border-border text-xs" (click)="saveBatchName()">OK</button>
-                      <button class="h-7 w-7 rounded-md border border-border text-xs" (click)="cancelEditName()">X</button>
+                      <button class="h-8 w-8 rounded-md border border-border text-xs" (click)="saveBatchName()">OK</button>
+                      <button class="h-8 w-8 rounded-md border border-border text-xs" (click)="cancelEditName()">X</button>
                     </div>
                     <div *ngIf="editingBatchId !== batch.id" class="flex items-center gap-2">
-                      <div class="truncate text-sm font-medium">{{ batch.name }}</div>
+                      <div class="truncate text-sm font-semibold text-foreground">{{ batch.name }}</div>
                     </div>
                     <div class="text-xs text-muted-foreground">
                       {{ formatDate(batch.created_at) }}
@@ -85,37 +85,57 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
                   <div class="flex items-center gap-1" (click)="$event.stopPropagation()">
                     <button
                       type="button"
-                      class="h-6 w-6 rounded-md border border-border text-xs text-muted-foreground hover:text-foreground"
+                      class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground"
                       (click)="startEditName(batch)"
+                      title="Edit batch"
                     >
-                      Edit
+                      <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                      </svg>
                     </button>
                     <button
                       type="button"
-                      class="h-6 w-6 rounded-md border border-border text-xs text-destructive"
+                      class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border text-destructive hover:bg-destructive/10"
                       (click)="openDeleteConfirm(batch)"
+                      title="Delete batch"
                     >
-                      Del
+                      <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18" />
+                        <path d="M8 6v14" />
+                        <path d="M16 6v14" />
+                        <path d="M10 3h4" />
+                      </svg>
                     </button>
                   </div>
                 </div>
-                <div class="mt-2 flex items-center justify-between">
-                  <span class="rounded-full px-2 py-0.5 text-xs" [ngClass]="statusBadgeClass(batch.status)">
+                <div class="mt-3 flex items-center justify-between">
+                  <span
+                    class="rounded-full px-2 py-0.5 text-xs font-semibold"
+                    [ngClass]="statusBadgeClass(batch.status)"
+                  >
                     {{ statusLabel(batch.status) }}
                   </span>
                   <span class="text-xs text-muted-foreground">{{ batch.total_items }} items</span>
                 </div>
                 <div
                   *ngIf="batch.status === 'completed' || batch.status === 'failed'"
-                  class="mt-2 flex items-center gap-3 text-xs"
+                  class="mt-2 flex items-center gap-4 text-xs"
                 >
-                  <span class="text-green-600">OK {{ batch.success_count }}</span>
-                  <span class="text-red-600">X {{ batch.failed_count }}</span>
+                  <span class="inline-flex items-center gap-1 text-green-600">
+                    <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                    {{ batch.success_count }}
+                  </span>
+                  <span class="inline-flex items-center gap-1 text-red-600">
+                    <span class="h-2 w-2 rounded-full bg-red-500"></span>
+                    {{ batch.failed_count }}
+                  </span>
                 </div>
-                <div class="mt-2 flex flex-wrap gap-1">
+                <div class="mt-3 flex flex-wrap gap-1">
                   <span
                     *ngFor="let mp of batch.selected_marketplaces.slice(0, 4)"
-                    class="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground"
+                    class="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                    [ngClass]="marketplacePillClass(mp)"
                   >
                     {{ marketplaceBadge(mp) }}
                   </span>
@@ -830,6 +850,27 @@ export class BatchManagementPageComponent {
       shopify: 'shop',
     };
     return map[marketplace] || marketplace.slice(0, 3).toUpperCase();
+  }
+
+  marketplacePillClass(marketplace: string): string {
+    switch (marketplace) {
+      case 'amazon':
+        return 'bg-amber-500/20 text-amber-300';
+      case 'walmart':
+        return 'bg-sky-500/20 text-sky-300';
+      case 'ebay':
+        return 'bg-yellow-500/20 text-yellow-300';
+      case 'etsy':
+        return 'bg-orange-500/20 text-orange-300';
+      case 'newegg':
+        return 'bg-indigo-500/20 text-indigo-300';
+      case 'target':
+        return 'bg-rose-500/20 text-rose-300';
+      case 'shopify':
+        return 'bg-emerald-500/20 text-emerald-300';
+      default:
+        return 'bg-muted text-muted-foreground';
+    }
   }
 
   formatDate(dateValue: string): string {
