@@ -7124,6 +7124,10 @@ export class ProductGridComponent implements OnInit {
     return formatOfferDiscount(offer);
   }
 
+  formatOfferDiscount(offer: Offer): string {
+    return formatOfferDiscount(offer);
+  }
+
   offerStatusLabel(offer: Offer): string {
     const status = getOfferStatus(offer);
     const config = offerStatusConfig[status];
