@@ -4059,13 +4059,13 @@ interface ColumnPreferences {
               </div>
             </div>
 
-            <div class="flex-1 overflow-x-scroll overflow-y-auto px-4 pb-2 pt-0">
-              <div class="relative mt-2 overflow-visible rounded-lg border border-border bg-background/40 shadow-sm">
+            <div class="flex-1 overflow-x-scroll overflow-y-auto pb-2 pt-0  border border-border bg-background/40 shadow-sm rounded-lg ms-4">
+              <div class="relative overflow-visible">
                 <table class="w-full min-w-max table-fixed text-sm">
             <thead class="relative z-10 bg-card/90 text-left text-xs uppercase tracking-wide backdrop-blur">
               <tr>
                 <th
-                  class="sticky top-0 z-0 bg-card/95 px-4 py-3 text-left"
+                  class="sticky top-0 z-0 bg-card/95 px-4 py-3 text-left w-[40px]"
                 >
                   <input
                     type="checkbox"
@@ -5135,8 +5135,8 @@ interface ColumnPreferences {
                 </th>
                 <th
                   *ngIf="isColumnVisible('actions')"
-                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 w-[150px]"
-                  [style.width.px]="columnWidth('actions')"
+                  class="sticky top-0 z-0 bg-card/95 relative px-4 py-3 w-[190px]"
+                  
                   (dragover)="allowColumnDrop($event)"
                   (drop)="onColumnDrop('actions')"
                 >
@@ -5893,7 +5893,7 @@ export class ProductGridComponent implements OnInit {
     restockStatus: 120,
     suggestedRestockQty: 100,
     marketplaces: 200,
-    actions: 130,
+    actions: 190,
   };
 
   private resizingColumnId: string | null = null;
