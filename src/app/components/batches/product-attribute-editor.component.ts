@@ -345,19 +345,29 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
                 </div>
               </div>
 
-              <div class="flex-1 overflow-auto">
-                <div class="mx-6 mt-3 flex flex-wrap items-center gap-2">
-                  <ng-container *ngFor="let section of sectionKeys">
-                    <button
-                      *ngIf="shouldShowSection(section)"
-                      type="button"
-                      class="rounded-md border border-border px-3 py-1.5 text-xs font-semibold"
-                      [ngClass]="activeSection === section ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'"
-                      (click)="activeSection = section"
-                    >
-                      {{ sectionLabels[section] }}
-                    </button>
-                  </ng-container>
+              <div class="flex-1 overflow-hidden">
+                <div class="mx-6 mt-3 rounded-full bg-muted/40 px-2 py-1 shadow-inner">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <ng-container *ngFor="let section of sectionKeys">
+                      <button
+                        *ngIf="shouldShowSection(section)"
+                        type="button"
+                        class="relative rounded-full px-3 py-1 text-xs font-semibold transition-colors"
+                        [ngClass]="activeSection === section
+                          ? 'bg-background text-foreground shadow'
+                          : sectionHasErrors(section)
+                            ? 'text-destructive'
+                            : 'text-muted-foreground hover:text-foreground'"
+                        (click)="activeSection = section"
+                      >
+                        {{ sectionLabels[section] }}
+                        <span
+                          *ngIf="sectionHasErrors(section)"
+                          class="absolute -top-1 right-1 h-2 w-2 rounded-full bg-destructive"
+                        ></span>
+                      </button>
+                    </ng-container>
+                  </div>
                 </div>
 
                 <div class="flex-1 overflow-auto px-6 py-4">
@@ -750,6 +760,10 @@ export class ProductAttributeEditorComponent implements OnChanges {
     const alwaysShow: AttributeSection[] = ['inventory_pricing', 'identifiers', 'variations', 'extra_attributes'];
     if (alwaysShow.includes(section)) return true;
     return (this.attributesBySection[section] || []).length > 0;
+  }
+
+  sectionHasErrors(section: AttributeSection): boolean {
+    return this.validations.some((item) => item.section === section && item.isMissing);
   }
 
   isStandardSection(section: AttributeSection): boolean {
