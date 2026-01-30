@@ -2956,17 +2956,67 @@ interface ColumnPreferences {
                     [ngModelOptions]="{ standalone: true }"
                   />
                 </label>
-                <label class="space-y-1">
+                <div class="space-y-1">
                   <span class="text-xs text-slate-300">Offer Scope</span>
-                  <select
-                    class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 px-2 text-sm text-slate-100"
-                    [(ngModel)]="marketplaceEditScope"
-                    [ngModelOptions]="{ standalone: true }"
+                  <details
+                    class="relative"
+                    data-dropdown="marketplace-offer-scope"
+                    [open]="openDropdownId === 'marketplace-offer-scope'"
                   >
-                    <option value="product">Product</option>
-                    <option value="marketplace">Marketplace</option>
-                  </select>
-                </label>
+                    <summary
+                      class="flex h-9 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-slate-100"
+                      (click)="$event.preventDefault(); $event.stopPropagation(); toggleDropdown('marketplace-offer-scope')"
+                    >
+                      <span class="flex items-center gap-2">
+                        <svg *ngIf="marketplaceEditScope === 'product'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+                          <path d="m3.3 7 8.7 5 8.7-5"></path>
+                          <path d="M12 22V12"></path>
+                        </svg>
+                        <svg *ngIf="marketplaceEditScope === 'marketplace'" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 10l9-6 9 6"></path>
+                          <path d="M4 10v10"></path>
+                          <path d="M20 10v10"></path>
+                          <path d="M8 14h8"></path>
+                        </svg>
+                        {{ offerScopeLabel(marketplaceEditScope) }}
+                      </span>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </summary>
+                    <div
+                      data-dropdown-panel
+                      class="absolute z-50 mt-2 w-full rounded-lg border border-slate-700 bg-slate-900 p-2 text-sm shadow-xl"
+                    >
+                      <button
+                        type="button"
+                        class="flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-slate-200 hover:bg-slate-800"
+                        (click)="setMarketplaceEditScope('product')"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+                          <path d="m3.3 7 8.7 5 8.7-5"></path>
+                          <path d="M12 22V12"></path>
+                        </svg>
+                        By Product
+                      </button>
+                      <button
+                        type="button"
+                        class="flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-slate-200 hover:bg-slate-800"
+                        (click)="setMarketplaceEditScope('marketplace')"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
+                          <path d="M3 10l9-6 9 6"></path>
+                          <path d="M4 10v10"></path>
+                          <path d="M20 10v10"></path>
+                          <path d="M8 14h8"></path>
+                        </svg>
+                        By Marketplace
+                      </button>
+                    </div>
+                  </details>
+                </div>
               </div>
 
               <label class="space-y-1">
@@ -3043,21 +3093,37 @@ interface ColumnPreferences {
               <div class="grid gap-4 md:grid-cols-2">
                 <label class="space-y-1">
                   <span class="text-xs text-slate-300">Start Date</span>
-                  <input
-                    type="date"
-                    class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-slate-100"
-                    [(ngModel)]="marketplaceEditStartDate"
-                    [ngModelOptions]="{ standalone: true }"
-                  />
+                  <div class="relative">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <input
+                      type="date"
+                      class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 pl-9 pr-3 text-sm text-slate-100"
+                      [(ngModel)]="marketplaceEditStartDate"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                  </div>
                 </label>
                 <label class="space-y-1">
                   <span class="text-xs text-slate-300">End Date</span>
-                  <input
-                    type="date"
-                    class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 px-3 text-sm text-slate-100"
-                    [(ngModel)]="marketplaceEditEndDate"
-                    [ngModelOptions]="{ standalone: true }"
-                  />
+                  <div class="relative">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <input
+                      type="date"
+                      class="h-9 w-full rounded-md border border-slate-700 bg-slate-800 pl-9 pr-3 text-sm text-slate-100"
+                      [(ngModel)]="marketplaceEditEndDate"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                  </div>
                 </label>
               </div>
 
@@ -7547,6 +7613,15 @@ export class ProductGridComponent implements OnInit {
   deleteMarketplaceOffer(offer: Offer): void {
     this.offerService.deleteOffer(offer.id);
     this.showToast('Offer deleted', offer.name);
+  }
+
+  offerScopeLabel(scope: OfferScope): string {
+    return scope === 'marketplace' ? 'By Marketplace' : 'By Product';
+  }
+
+  setMarketplaceEditScope(scope: OfferScope): void {
+    this.marketplaceEditScope = scope;
+    this.openDropdownId = null;
   }
 
   copySku(sku: string | undefined): void {
