@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  HostListener,
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -146,13 +147,13 @@ const CHART_COLORS = [
             </div>
             <details class="relative" [open]="marketplaceFilterOpen">
               <summary
-                class="inline-flex w-[170px] cursor-pointer items-center justify-between rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground"
-                (click)="$event.preventDefault(); marketplaceFilterOpen = !marketplaceFilterOpen"
+                class="marketplace-filter-trigger inline-flex w-[170px] cursor-pointer items-center justify-between rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground transition"
+                (click)="$event.preventDefault(); $event.stopPropagation(); marketplaceFilterOpen = !marketplaceFilterOpen"
               >
                 <span class="truncate">{{ marketplaceFilterLabel }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store w-4 h-4"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"></path></svg>
               </summary>
-              <div class="absolute right-0 mt-2 w-56 rounded-lg border border-border bg-card p-2 shadow-lg">
+              <div class="marketplace-filter-panel absolute right-0 mt-2 w-56 rounded-lg border border-border bg-card p-2 shadow-lg animate-in fade-in slide-in-from-top-1">
                 <button
                   type="button"
                   class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs hover:bg-muted"
@@ -674,30 +675,30 @@ const CHART_COLORS = [
                   <option value="roi">ROI</option>
                 </select>
               </div>
-              <div class="mt-4 space-y-3">
-                <div *ngFor="let item of performanceChartData">
-                  <div class="flex items-center justify-between text-xs">
-                    <span class="truncate">{{ item.name }}</span>
-                    <span>{{ formatNumber(item[sortBy]) }}</span>
-                  </div>
-                  <div class="mt-1 h-2 rounded-full bg-muted">
-                    <div
-                      class="h-2 rounded-full bg-primary"
-                      [style.width.%]="chartBarWidth(item)"
-                    ></div>
+              <div class="mt-4 h-[250px]">
+                <div *ngIf="performanceChartData.length > 0; else noPerformance" class="flex h-full flex-col justify-between gap-2">
+                  <div *ngFor="let item of performanceChartData" class="flex items-center gap-2 text-xs">
+                    <span class="w-24 truncate text-muted-foreground">{{ item.name }}</span>
+                    <div class="flex-1">
+                      <div class="h-2 rounded-full bg-muted">
+                        <div class="h-2 rounded-full bg-primary" [style.width.%]="chartBarWidth(item)"></div>
+                      </div>
+                    </div>
+                    <span class="w-12 text-right text-muted-foreground">{{ formatNumber(item[sortBy]) }}</span>
                   </div>
                 </div>
-                <p *ngIf="performanceChartData.length === 0" class="text-xs text-muted-foreground">
-                  No data available.
-                </p>
+                <ng-template #noPerformance>
+                  <p class="text-xs text-muted-foreground">No data available.</p>
+                </ng-template>
               </div>
             </div>
 
             <div class="rounded-xl border border-border bg-card p-4">
               <h3 class="text-sm font-semibold">Offer Type Distribution</h3>
               <div class="mt-4 flex gap-4">
-                <div class="flex h-36 w-36 items-center justify-center rounded-full border border-border bg-muted/30 text-xs text-muted-foreground">
-                  Chart
+                <div class="relative h-36 w-36">
+                  <div class="absolute inset-0 rounded-full" [style.background]="typeDistributionGradient()"></div>
+                  <div class="absolute inset-5 rounded-full bg-background"></div>
                 </div>
                 <div class="flex-1 space-y-2 text-xs">
                   <div *ngFor="let item of typeDistribution; let i = index" class="flex items-center justify-between">
@@ -717,20 +718,23 @@ const CHART_COLORS = [
 
           <div class="rounded-xl border border-border bg-card p-4">
             <h3 class="text-sm font-semibold">Revenue &amp; Conversions Trend</h3>
-            <div class="mt-4 flex items-end gap-2">
-              <div
-                *ngFor="let day of revenueTrendData"
-                class="flex-1 rounded-md bg-muted/40 p-2 text-center text-[10px]"
-              >
-                <div class="flex h-16 items-end justify-center">
-                  <div
-                    class="w-2 rounded bg-primary"
-                    [style.height.px]="trendBarHeight(day.revenue)"
-                  ></div>
-                </div>
-                <p class="mt-1 text-[10px] text-muted-foreground">{{ day.day }}</p>
-                <p class="font-semibold text-emerald-400">{{ formatCurrency(day.revenue) }}</p>
-                <p class="text-[10px] text-muted-foreground">{{ day.conversions }} conv</p>
+            <div class="mt-4 h-[200px]">
+              <svg viewBox="0 0 100 60" class="h-full w-full">
+                <polyline
+                  [attr.points]="trendPoints(revenueTrendData, 'revenue')"
+                  fill="none"
+                  stroke="hsl(var(--primary))"
+                  stroke-width="2"
+                ></polyline>
+                <polyline
+                  [attr.points]="trendPoints(revenueTrendData, 'conversions')"
+                  fill="none"
+                  stroke="hsl(142, 76%, 36%)"
+                  stroke-width="2"
+                ></polyline>
+              </svg>
+              <div class="mt-2 flex justify-between text-[10px] text-muted-foreground">
+                <span *ngFor="let day of revenueTrendData">{{ day.day }}</span>
               </div>
             </div>
           </div>
@@ -1172,6 +1176,15 @@ export class OfferAnalyticsPageComponent {
       });
   }
 
+  @HostListener('document:click', ['$event'])
+  handleOutsideClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+    if (!target.closest('.marketplace-filter-panel') && !target.closest('.marketplace-filter-trigger')) {
+      this.marketplaceFilterOpen = false;
+    }
+  }
+
   setTimePeriod(value: string): void {
     this.timePeriod = value;
     this.recalculateAnalytics();
@@ -1430,6 +1443,23 @@ export class OfferAnalyticsPageComponent {
     return total === 0 ? 0 : Math.round((value / total) * 100);
   }
 
+  typeDistributionGradient(): string {
+    const total = this.typeDistribution.reduce((sum, item) => sum + item.value, 0);
+    if (total === 0) {
+      return 'conic-gradient(#e5e7eb 0deg 360deg)';
+    }
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#0ea5e9', '#f43f5e'];
+    let current = 0;
+    const segments = this.typeDistribution.map((item, index) => {
+      const value = (item.value / total) * 360;
+      const start = current;
+      const end = current + value;
+      current = end;
+      return `${colors[index % colors.length]} ${start}deg ${end}deg`;
+    });
+    return `conic-gradient(${segments.join(', ')})`;
+  }
+
   chartBarWidth(item: { revenue: number; conversions: number; roi: number }): number {
     const values = this.performanceChartData.map((row) => row[this.sortBy]);
     const max = Math.max(1, ...values);
@@ -1439,6 +1469,24 @@ export class OfferAnalyticsPageComponent {
   trendBarHeight(value: number): number {
     const max = Math.max(1, ...this.revenueTrendData.map((row) => row.revenue));
     return Math.max(6, Math.round((value / max) * 60));
+  }
+
+  trendPoints(
+    data: Array<{ day: string; revenue: number; conversions: number }>,
+    key: 'revenue' | 'conversions'
+  ): string {
+    if (data.length === 0) return '';
+    const values = data.map((row) => row[key]);
+    const max = Math.max(...values, 1);
+    const min = 0;
+    const range = Math.max(1, max - min);
+    return data
+      .map((row, index) => {
+        const x = data.length === 1 ? 50 : (index / (data.length - 1)) * 100;
+        const y = 60 - ((row[key] - min) / range) * 60;
+        return `${x},${y}`;
+      })
+      .join(' ');
   }
 
   marketplaceLabel(id: string): string {
