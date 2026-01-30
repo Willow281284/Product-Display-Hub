@@ -5254,7 +5254,7 @@ interface ColumnPreferences {
                     <button
                       *ngIf="tags.length > 0"
                       type="button"
-                      class="rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
+                    class="tag-picker-trigger rounded-md border border-border px-2 py-0.5 text-xs text-muted-foreground hover:bg-muted"
                       (click)="$event.stopPropagation(); toggleTagPicker(product.id)"
                       title="Add tag"
                     >
@@ -5276,7 +5276,7 @@ interface ColumnPreferences {
                   
                   <div
                     *ngIf="tagPickerProductId === product.id"
-                    class="absolute left-0 top-full z-20 dropdown-panel mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur animate-in fade-in slide-in-from-top-1"
+                    class="tag-picker-panel absolute left-0 top-full z-20 dropdown-panel mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur animate-in fade-in slide-in-from-top-1"
                   >
                     <label
                       *ngFor="let tag of tags"
@@ -7657,6 +7657,9 @@ export class ProductGridComponent implements OnInit {
     const dropdown = target.closest('details[data-dropdown]');
     if (!dropdown) {
       this.openDropdownId = null;
+    }
+    if (!target.closest('.tag-picker-panel') && !target.closest('.tag-picker-trigger')) {
+      this.tagPickerProductId = null;
     }
   }
 
