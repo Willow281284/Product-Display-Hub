@@ -252,7 +252,7 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
   template: `
     <div *ngIf="open" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" (click)="close()">
       <div
-        class="flex h-[98vh] w-[98vw] max-w-[98vw] flex-col overflow-hidden rounded-xl bg-card shadow-xl"
+        class="flex h-[98vh] w-[98vw] max-w-[98vw] flex-col overflow-hidden rounded-xl bg-background shadow-xl"
         (click)="$event.stopPropagation()"
       >
         <ng-container *ngIf="showPicker; else editorView">
@@ -339,7 +339,7 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
                     *ngIf="hasErrors"
                     type="button"
                     class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80 ml-auto cursor-pointer hover:opacity-80 transition-opacity"
-                    [ngClass]="showOnlyMissing ? 'bg-primary text-primary-foreground' : 'bg-destructive/10 text-destructive'"
+                    [ngClass]="showOnlyMissing ? 'bg-primary text-primary-foreground' : 'bg-destructive/80 text-destructive'"
                     (click)="showOnlyMissing = !showOnlyMissing"
                   >
                     {{ showOnlyMissing ? 'Show All Fields' : missingCount + ' required fields missing (click to filter)' }}
