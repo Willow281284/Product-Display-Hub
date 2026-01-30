@@ -434,11 +434,12 @@ interface ColumnPreferences {
             type="button"
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-[34px] px-2 py-2 gap-2"
             title="Batch management"
+            (click)="goToBatchManagement()"
           >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history w-4 h-4"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>
             Batch Management
             <span class="rounded-md bg-primary/20 px-2 py-0.5 text-[10px] text-primary">
-              9
+              {{ batchCount }}
             </span>
           </button>
         </div>
@@ -6097,6 +6098,7 @@ export class ProductGridComponent implements OnInit {
   tags: Tag[] = [];
   productTags: Record<string, string[]> = {};
   offers: Offer[] = [];
+  batchCount = 3;
 
   tagFormOpen = false;
   editingTag: Tag | null = null;
@@ -7017,6 +7019,11 @@ export class ProductGridComponent implements OnInit {
 
   goToOfferAnalytics(): void {
     void this.router.navigate(['/offer-analytics']);
+  }
+
+  goToBatchManagement(): void {
+    this.openDropdownId = null;
+    void this.router.navigate(['/batches']);
   }
 
   closeProductDialog(): void {
