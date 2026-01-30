@@ -5338,7 +5338,30 @@ interface ColumnPreferences {
                   class="p-4 align-middle"
                   [style.width.px]="columnWidth('sku')"
                 >
-                  <div class="text-sm font-medium">{{ product.vendorSku }}</div>
+                  <div class="flex items-center gap-1">
+                    <button
+                      type="button"
+                      class="cursor-pointer"
+                      aria-label="Edit product"
+                      (click)="$event.stopPropagation(); openProductDialog(product)"
+                    >
+                      <code class="text-sm bg-muted px-1.5 py-0.5 rounded hover:text-primary hover:underline transition-colors">
+                        {{ product.vendorSku }}
+                      </code>
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-muted text-muted-foreground hover:text-foreground"
+                      aria-label="Copy SKU"
+                      data-tooltip="Copy SKU"
+                      (click)="$event.stopPropagation(); copySku(product.vendorSku)"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
+                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </td>
                 <td
                   *ngIf="isColumnVisible('vendor')"
@@ -7383,6 +7406,14 @@ export class ProductGridComponent implements OnInit {
   deleteMarketplaceOffer(offer: Offer): void {
     this.offerService.deleteOffer(offer.id);
     this.showToast('Offer deleted', offer.name);
+  }
+
+  copySku(sku: string | undefined): void {
+    if (!sku) return;
+    navigator.clipboard
+      .writeText(sku)
+      .then(() => this.showToast('Copied', `SKU ${sku}`))
+      .catch(() => this.showToast('Copy failed', 'Unable to copy SKU'));
   }
 
   offersForProduct(productId: string): Offer[] {
