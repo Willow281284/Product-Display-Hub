@@ -29,17 +29,17 @@ import { BatchItem } from '@/types/batch';
         </div>
 
         <div class="mt-4 flex flex-wrap items-center gap-2">
-          <span *ngIf="statusCounts.success > 0" class="rounded-full border border-green-500 px-2 py-0.5 text-xs text-green-600">
-            {{ statusCounts.success }} Live
+          <span *ngIf="statusCounts['success'] > 0" class="rounded-full border border-green-500 px-2 py-0.5 text-xs text-green-600">
+            {{ statusCounts['success'] }} Live
           </span>
-          <span *ngIf="statusCounts.failed > 0" class="rounded-full bg-destructive/10 px-2 py-0.5 text-xs text-destructive">
-            {{ statusCounts.failed }} Error
+          <span *ngIf="statusCounts['failed'] > 0" class="rounded-full bg-destructive/10 px-2 py-0.5 text-xs text-destructive">
+            {{ statusCounts['failed'] }} Error
           </span>
-          <span *ngIf="statusCounts.pending > 0" class="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-            {{ statusCounts.pending }} Pending
+          <span *ngIf="statusCounts['pending'] > 0" class="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+            {{ statusCounts['pending'] }} Pending
           </span>
-          <span *ngIf="statusCounts.processing > 0" class="rounded-full border border-blue-500 px-2 py-0.5 text-xs text-blue-600">
-            {{ statusCounts.processing }} Processing
+          <span *ngIf="statusCounts['processing'] > 0" class="rounded-full border border-blue-500 px-2 py-0.5 text-xs text-blue-600">
+            {{ statusCounts['processing'] }} Processing
           </span>
         </div>
       </div>

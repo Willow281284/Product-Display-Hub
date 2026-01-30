@@ -136,19 +136,19 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
             <div class="border-b border-border bg-muted/30 p-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <h2 class="text-lg font-semibold">{{ selectedBatch?.name }}</h2>
+                  <h2 class="text-lg font-semibold">{{ selectedBatch.name }}</h2>
                   <p class="text-sm text-muted-foreground">
-                    Created {{ formatDistance(selectedBatch?.created_at || '') }}
+                    Created {{ formatDistance(selectedBatch.created_at) }}
                   </p>
                 </div>
                 <div class="flex items-center gap-2">
                   <button
                     *ngIf="selectedBatch?.status === 'pending'"
                     class="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground"
-                    [disabled]="processingBatch === selectedBatch?.id"
-                    (click)="handleProcess(selectedBatch?.id || '')"
+                    [disabled]="processingBatch === selectedBatch.id"
+                    (click)="handleProcess(selectedBatch.id)"
                   >
-                    {{ processingBatch === selectedBatch?.id ? 'Processing...' : 'Start Processing' }}
+                    {{ processingBatch === selectedBatch.id ? 'Processing...' : 'Start Processing' }}
                   </button>
                   <ng-container *ngIf="selectedBatch?.status === 'failed'">
                     <button
@@ -595,9 +595,10 @@ export class BatchManagementPageComponent {
     const updated = items.map((item) => {
       if (item.status !== 'pending') return item;
       const isSuccess = Math.random() > 0.2;
+      const status: BatchItemStatus = isSuccess ? 'success' : 'failed';
       return {
         ...item,
-        status: isSuccess ? 'success' : 'failed',
+        status,
         error_message: isSuccess ? null : errorMessages[Math.floor(Math.random() * errorMessages.length)],
       };
     });
@@ -611,7 +612,9 @@ export class BatchManagementPageComponent {
   retryFailedItems(): void {
     if (!this.selectedBatchId) return;
     this.batchItemsById[this.selectedBatchId] = this.batchItemsById[this.selectedBatchId].map((item) =>
-      item.status === 'failed' ? { ...item, status: 'pending', error_message: null } : item
+      item.status === 'failed'
+        ? { ...item, status: 'pending' as BatchItemStatus, error_message: null }
+        : item
     );
     this.batchItems = [...this.batchItemsById[this.selectedBatchId]];
     this.selectedItemIds = new Set<string>();
@@ -623,7 +626,9 @@ export class BatchManagementPageComponent {
     if (!this.selectedBatchId) return;
     const selectedIds = new Set(this.selectedItemIds);
     this.batchItemsById[this.selectedBatchId] = this.batchItemsById[this.selectedBatchId].map((item) =>
-      selectedIds.has(item.id) ? { ...item, status: 'pending', error_message: null } : item
+      selectedIds.has(item.id)
+        ? { ...item, status: 'pending' as BatchItemStatus, error_message: null }
+        : item
     );
     this.batchItems = [...this.batchItemsById[this.selectedBatchId]];
     this.selectedItemIds = new Set<string>();

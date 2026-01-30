@@ -692,9 +692,9 @@ export class ProductAttributeEditorComponent implements OnChanges {
     setTimeout(() => {
       this.attributeValues = {
         ...this.attributeValues,
-        brand: this.attributeValues.brand || 'Acme',
-        description: this.attributeValues.description || 'AI generated description for the product.',
-        bullet_points: this.attributeValues.bullet_points || 'Feature 1\nFeature 2\nFeature 3',
+        brand: this.attributeValues['brand'] || 'Acme',
+        description: this.attributeValues['description'] || 'AI generated description for the product.',
+        bullet_points: this.attributeValues['bullet_points'] || 'Feature 1\nFeature 2\nFeature 3',
       };
       this.isSuggestingCategory = false;
       this.showToast('AI Auto-Fill', 'Suggested category and filled key fields.');
@@ -710,10 +710,10 @@ export class ProductAttributeEditorComponent implements OnChanges {
     if (!this.item) return;
     this.isSaving = true;
     const updates = {
-      product_name: this.attributeValues.title || this.item.product_name,
-      product_sku: this.attributeValues.sku || this.item.product_sku,
-      stock_qty: this.attributeValues.quantity ? Number(this.attributeValues.quantity) : this.item.stock_qty,
-      sale_price: this.attributeValues.price ? Number(this.attributeValues.price) : this.item.sale_price,
+      product_name: this.attributeValues['title'] || this.item.product_name,
+      product_sku: this.attributeValues['sku'] || this.item.product_sku,
+      stock_qty: this.attributeValues['quantity'] ? Number(this.attributeValues['quantity']) : this.item.stock_qty,
+      sale_price: this.attributeValues['price'] ? Number(this.attributeValues['price']) : this.item.sale_price,
       profit_margin: this.item.profit_margin,
     };
     this.saveAndRetry.emit({ itemId: this.item.id, updates });
@@ -783,7 +783,7 @@ export class ProductAttributeEditorComponent implements OnChanges {
     input.value = '';
   }
 
-  handleImageUrlEnter(key: string, event: KeyboardEvent): void {
+  handleImageUrlEnter(key: string, event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.value.trim()) return;
     const urls = [...this.imageValues(key), input.value.trim()];
