@@ -1224,15 +1224,29 @@ interface ColumnPreferences {
                 >
                 <label
                   *ngFor="let column of columns"
-                  class="flex items-center gap-2 py-1 text-xs"
+                  class="flex items-center justify-between gap-2 py-1 text-xs"
                 >
-                  <input
-                    type="checkbox"
-                    class="h-4 w-4"
-                    [checked]="column.visible"
-                    (change)="toggleColumn(column.id)"
-                  />
-                  <span>{{ column.label }}</span>
+                  <span class="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      class="h-4 w-4"
+                      [checked]="column.visible"
+                      (change)="toggleColumn(column.id)"
+                    />
+                    <span>{{ column.label }}</span>
+                  </span>
+                  <span
+                    *ngIf="columnTooltip(column.id)"
+                    class="inline-flex h-4 w-4 items-center justify-center text-muted-foreground"
+                    [attr.data-tooltip]="columnTooltip(column.id)"
+                    data-tooltip-position="left"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3 w-3" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.82 1c0 2-3 2-3 4" />
+                      <path d="M12 17h.01" />
+                    </svg>
+                  </span>
                 </label>
               </div>
             </details>
