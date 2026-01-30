@@ -4654,7 +4654,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('landedCost')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('landedCost')">Landed Cost</span>
@@ -4690,7 +4690,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('shippingCost')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('shippingCost')">Shipping</span>
@@ -4726,7 +4726,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('salePrice')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('salePrice')">Sale Price</span>
@@ -4762,7 +4762,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('purchaseQty')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('purchaseQty')">Purchased</span>
@@ -4798,7 +4798,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('soldQty')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('soldQty')">Sold</span>
@@ -4834,7 +4834,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('stockQty')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('stockQty')">In Stock</span>
@@ -4870,7 +4870,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('returnQty')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('returnQty')">Returns</span>
@@ -4906,7 +4906,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('profitMargin')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('profitMargin')">Margin %</span>
@@ -4942,7 +4942,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('profitAmount')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('profitAmount')">Profit $</span>
@@ -4978,7 +4978,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('velocity')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('velocity')">Velocity</span>
@@ -5014,7 +5014,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('stockDays')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('stockDays')">Stock Days</span>
@@ -5086,7 +5086,7 @@ interface ColumnPreferences {
                   </span>
                   <button
                     type="button"
-                    class="flex items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
+                    class="flex w-full items-center justify-end gap-2 text-muted-foreground hover:text-foreground"
                     (click)="setSort('suggestedRestockQty')"
                   >
                     <span [attr.data-tooltip]="columnTooltip('suggestedRestockQty')">Restock Qty</span>
