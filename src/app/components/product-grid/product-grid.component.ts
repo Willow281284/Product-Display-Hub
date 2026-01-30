@@ -5273,7 +5273,7 @@ interface ColumnPreferences {
                     >
                       Create tag
                     </button>
-                  </div>
+                  
                   <div
                     *ngIf="tagPickerProductId === product.id"
                     class="absolute left-0 top-full z-20 dropdown-panel mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-card/95 p-2 shadow-xl backdrop-blur animate-in fade-in slide-in-from-top-1"
@@ -5295,6 +5295,7 @@ interface ColumnPreferences {
                         {{ tag.name }}
                       </span>
                     </label>
+                  </div>
                   </div>
                 </td>
                 <td
