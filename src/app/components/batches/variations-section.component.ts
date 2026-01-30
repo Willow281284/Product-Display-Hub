@@ -127,7 +127,7 @@ const GROUP_LABELS: Record<'primary' | 'physical' | 'other', string> = {
                     <div class="flex items-center gap-2">
                       <label class="text-sm font-medium">{{ field.label }}</label>
                       <span class="text-xs text-muted-foreground" [attr.data-tooltip]="field.description">?</span>
-                      <span *ngIf="fieldStatus(field.key) === 'valid'" class="ml-auto text-green-600">✓</span>
+                      <span *ngIf="fieldStatus(field.key) === 'valid'" class="ml-auto text-green-600">OK</span>
                       <span *ngIf="fieldStatus(field.key) === 'error'" class="ml-auto text-destructive">!</span>
                     </div>
                     <input

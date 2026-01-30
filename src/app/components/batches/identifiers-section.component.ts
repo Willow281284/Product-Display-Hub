@@ -155,7 +155,7 @@ const GROUP_LABELS: Record<string, { title: string; description: string }> = {
                       [attr.data-tooltip]="'Copy to clipboard'"
                       data-tooltip-position="top"
                     >
-                      {{ copiedKey === config.key ? '✓' : '⧉' }}
+                      {{ copiedKey === config.key ? 'OK' : 'Copy' }}
                     </button>
                   </div>
                 </div>

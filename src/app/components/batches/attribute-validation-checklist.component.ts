@@ -15,7 +15,7 @@ import { AttributeSection, AttributeValidation, SECTION_LABELS } from '@/types/p
         <div class="mb-2 flex items-center justify-between">
           <h3 class="flex items-center gap-2 text-sm font-semibold">
             Validation Checklist
-            <span *ngIf="showCelebration" class="text-green-600">🎉</span>
+            <span *ngIf="showCelebration" class="text-green-600">OK</span>
           </h3>
           <span
             class="rounded-full px-2 py-0.5 text-[11px] font-semibold"
@@ -27,7 +27,7 @@ import { AttributeSection, AttributeValidation, SECTION_LABELS } from '@/types/p
                   : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
             "
           >
-            {{ isComplete ? '✓ Complete!' : completionPercent + '% Complete' }}
+            {{ isComplete ? 'Complete!' : completionPercent + '% Complete' }}
           </span>
         </div>
 

@@ -11,7 +11,7 @@ import { BatchItem } from '@/types/batch';
     <div class="flex h-full flex-col">
       <div class="border-b bg-muted/30 px-6 py-5">
         <div class="flex items-center gap-4">
-          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">⧉</div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">VAR</div>
           <div class="flex-1">
             <h2 class="flex items-center gap-2 text-lg font-semibold">
               Product Variations

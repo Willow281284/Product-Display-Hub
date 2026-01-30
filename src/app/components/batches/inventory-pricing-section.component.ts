@@ -239,7 +239,7 @@ interface QuantityDiscount {
                   placeholder="0.00"
                 />
                 <button type="button" class="h-9 w-9 rounded-md text-primary hover:text-destructive" (click)="removeDiscount(i)">
-                  ✕
+                  x
                 </button>
               </div>
             </div>

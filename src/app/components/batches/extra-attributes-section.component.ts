@@ -52,13 +52,13 @@ const OPTIONAL_PREDEFINED = [
                 placeholder="0.00"
               />
               <span class="text-sm text-muted-foreground">lbs</span>
-              <span *ngIf="isFilled('product_weight')" class="text-green-600">✓</span>
+              <span *ngIf="isFilled('product_weight')" class="text-green-600">OK</span>
             </div>
           </div>
 
           <div class="space-y-2">
             <div class="flex items-center gap-2 text-sm text-muted-foreground">
-              Dimensions (L × W × H) <span class="text-destructive">*</span>
+              Dimensions (L x W x H) <span class="text-destructive">*</span>
             </div>
             <div class="ml-6 flex items-center gap-2">
               <input
@@ -71,7 +71,7 @@ const OPTIONAL_PREDEFINED = [
                 (ngModelChange)="valueChange.emit({ key: 'product_length', value: $event })"
                 placeholder="L"
               />
-              <span class="text-muted-foreground">×</span>
+              <span class="text-muted-foreground">x</span>
               <input
                 type="number"
                 step="0.01"
@@ -82,7 +82,7 @@ const OPTIONAL_PREDEFINED = [
                 (ngModelChange)="valueChange.emit({ key: 'product_width', value: $event })"
                 placeholder="W"
               />
-              <span class="text-muted-foreground">×</span>
+              <span class="text-muted-foreground">x</span>
               <input
                 type="number"
                 step="0.01"
@@ -94,7 +94,7 @@ const OPTIONAL_PREDEFINED = [
                 placeholder="H"
               />
               <span class="text-sm text-muted-foreground">in</span>
-              <span *ngIf="isFilled('product_length') && isFilled('product_width') && isFilled('product_height')" class="text-green-600">✓</span>
+              <span *ngIf="isFilled('product_length') && isFilled('product_width') && isFilled('product_height')" class="text-green-600">OK</span>
             </div>
           </div>
         </div>
@@ -185,7 +185,7 @@ const OPTIONAL_PREDEFINED = [
                 class="h-9 w-9 rounded-md text-muted-foreground hover:text-destructive"
                 (click)="removeCustom(attr.id)"
               >
-                ✕
+                x
               </button>
             </div>
           </div>

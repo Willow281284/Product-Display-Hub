@@ -277,13 +277,13 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
                     class="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
                     (click)="showVariationPicker = true"
                   >
-                    ← All Variations
+                    All Variations
                   </button>
                   <span
                     class="inline-flex h-6 w-6 items-center justify-center rounded-full"
                     [ngClass]="item?.status === 'failed' ? 'bg-destructive/10 text-destructive' : 'bg-emerald-500/10 text-emerald-400'"
                   >
-                    {{ item?.status === 'failed' ? '!' : '✓' }}
+                    {{ item?.status === 'failed' ? '!' : 'OK' }}
                   </span>
                   <h3 class="text-lg font-semibold">
                     {{ isLive ? 'Edit Live Product' : 'Fix Error & Update Attributes' }}
@@ -447,7 +447,7 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
                                       class="absolute right-1 top-1 rounded-full bg-destructive px-2 py-1 text-xs text-destructive-foreground"
                                       (click)="removeImage(attr.attribute_key, i)"
                                     >
-                                      ×
+                                      x
                                     </button>
                                   </div>
                                 </ng-container>

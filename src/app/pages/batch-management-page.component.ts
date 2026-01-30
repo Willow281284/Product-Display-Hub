@@ -72,8 +72,8 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
                         (keydown.enter)="saveBatchName()"
                         (keydown.escape)="cancelEditName()"
                       />
-                      <button class="h-7 w-7 rounded-md border border-border text-xs" (click)="saveBatchName()">✓</button>
-                      <button class="h-7 w-7 rounded-md border border-border text-xs" (click)="cancelEditName()">✕</button>
+                      <button class="h-7 w-7 rounded-md border border-border text-xs" (click)="saveBatchName()">OK</button>
+                      <button class="h-7 w-7 rounded-md border border-border text-xs" (click)="cancelEditName()">X</button>
                     </div>
                     <div *ngIf="editingBatchId !== batch.id" class="flex items-center gap-2">
                       <div class="truncate text-sm font-medium">{{ batch.name }}</div>
@@ -88,14 +88,14 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
                       class="h-6 w-6 rounded-md border border-border text-xs text-muted-foreground hover:text-foreground"
                       (click)="startEditName(batch)"
                     >
-                      ✎
+                      Edit
                     </button>
                     <button
                       type="button"
                       class="h-6 w-6 rounded-md border border-border text-xs text-destructive"
                       (click)="openDeleteConfirm(batch)"
                     >
-                      🗑
+                      Del
                     </button>
                   </div>
                 </div>
@@ -109,8 +109,8 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
                   *ngIf="batch.status === 'completed' || batch.status === 'failed'"
                   class="mt-2 flex items-center gap-3 text-xs"
                 >
-                  <span class="text-green-600">✓ {{ batch.success_count }}</span>
-                  <span class="text-red-600">✕ {{ batch.failed_count }}</span>
+                  <span class="text-green-600">OK {{ batch.success_count }}</span>
+                  <span class="text-red-600">X {{ batch.failed_count }}</span>
                 </div>
                 <div class="mt-2 flex flex-wrap gap-1">
                   <span
@@ -178,7 +178,7 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
                   [disabled]="successItems.length === 0"
                   (click)="toggleStatusFilter('success')"
                 >
-                  ✓ Success: {{ successItems.length }}
+                  OK Success: {{ successItems.length }}
                 </button>
                 <button
                   type="button"
@@ -189,7 +189,7 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
                   [disabled]="failedItems.length === 0"
                   (click)="toggleStatusFilter('failed')"
                 >
-                  ✕ Failed: {{ failedItems.length }}
+                  X Failed: {{ failedItems.length }}
                 </button>
                 <button
                   type="button"
@@ -200,7 +200,7 @@ import { ProductAttributeEditorComponent } from '@/app/components/batches/produc
                   [disabled]="pendingItems.length === 0"
                   (click)="toggleStatusFilter('pending')"
                 >
-                  ⏱ Pending: {{ pendingItems.length }}
+                  Pending: {{ pendingItems.length }}
                 </button>
                 <div class="text-base text-muted-foreground">
                   <button *ngIf="statusFilter !== 'all'" class="underline hover:text-foreground" (click)="statusFilter = 'all'">
