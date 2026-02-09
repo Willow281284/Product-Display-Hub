@@ -265,6 +265,10 @@ th .cursor-col-resize:hover {
 }
 
 @layer utilities {
+  .hover\:bg-accent:hover {
+    background-color: hsl(var(--accent));
+  }
+
   .dropdown-panel {
     top: 100%;
     max-width: min(90vw, 26rem);
