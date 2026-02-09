@@ -1937,6 +1937,78 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
 
             <ng-container *ngIf="initMarketplaceListings(product)"></ng-container>
 
+            <div class="rounded-lg border border-border bg-card px-4 py-3">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-muted/40 text-muted-foreground">
+                      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+                        <path d="M3.3 7 12 12l8.7-5"></path>
+                        <path d="M12 22V12"></path>
+                      </svg>
+                    </span>
+                    <div>
+                      <div class="text-[10px] uppercase tracking-wide text-muted-foreground">SKU</div>
+                      <div class="text-xs font-semibold text-foreground">{{ product.vendorSku }}</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-muted/40 text-muted-foreground">
+                      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 5h18"></path>
+                        <path d="M3 9h18"></path>
+                        <path d="M3 15h18"></path>
+                        <path d="M3 19h18"></path>
+                      </svg>
+                    </span>
+                    <div>
+                      <div class="text-[10px] uppercase tracking-wide text-muted-foreground">Product ID</div>
+                      <div class="text-xs font-semibold text-foreground">{{ product.productId }}</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
+                      <span class="text-sm font-semibold">$</span>
+                    </span>
+                    <div>
+                      <div class="text-[10px] uppercase tracking-wide text-muted-foreground">Sale Price</div>
+                      <div class="text-xs font-semibold text-emerald-400">
+                        {{ product.salePrice | currency: 'USD' : 'symbol' : '1.2-2' }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-muted/40 text-muted-foreground">
+                      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.9a2 2 0 0 0 2-1.6L23 6H6"></path>
+                      </svg>
+                    </span>
+                    <div>
+                      <div class="text-[10px] uppercase tracking-wide text-muted-foreground">Stock</div>
+                      <div class="text-xs font-semibold text-foreground">{{ product.stockQty }} units</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 text-[10px]">
+                  <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-3 py-1 text-emerald-400">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                    {{ marketplaceStatusCount('live') }} Live
+                  </span>
+                  <span class="inline-flex items-center gap-1 rounded-full bg-slate-500/10 px-3 py-1 text-slate-300">
+                    <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+                    {{ marketplaceStatusCount('inactive') }} Inactive
+                  </span>
+                  <span class="inline-flex items-center gap-1 rounded-full bg-slate-500/10 px-3 py-1 text-slate-300">
+                    <span class="h-2 w-2 rounded-full bg-slate-500"></span>
+                    {{ marketplaceStatusCount('not_listed') }} Not Listed
+                  </span>
+                </div>
+              </div>
+            </div>
+
             <div class="rounded-lg border border-border bg-card overflow-hidden">
               <div class="overflow-x-auto">
                 <table class="w-full min-w-[1200px] text-xs">
@@ -1980,9 +2052,12 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                             <div class="text-xs font-semibold text-foreground">
                               {{ platformLabel(row.platform) }}
                             </div>
-                            <div class="text-[10px]" [ngClass]="marketplaceTextClass(row.status)">
+                            <span
+                              class="mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-[10px]"
+                              [ngClass]="marketplaceStatusPillClass(row.status)"
+                            >
                               {{ statusLabel(row.status) }}
-                            </div>
+                            </span>
                           </div>
                         </div>
                       </td>
@@ -2128,23 +2203,26 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                         <ng-template #listedActions>
                           <div class="flex items-center justify-center gap-2">
                             <button
+                              *ngIf="row.status === 'inactive'"
                               type="button"
-                              class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-emerald-500 hover:bg-emerald-500/10"
+                              class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400 hover:text-emerald-300"
                               title="Publish"
                             >
                               <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14"></path>
                                 <path d="M5 12h14"></path>
                               </svg>
+                              Publish
                             </button>
                             <button
                               type="button"
                               class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted"
-                              title="View listing"
+                              title="Unlink"
                             >
                               <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M10 14a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1"></path>
                                 <path d="M14 10a5 5 0 0 1 0 7l-1 1a5 5 0 1 1-7-7l1-1"></path>
+                                <line x1="2" y1="2" x2="22" y2="22"></line>
                               </svg>
                             </button>
                             <button
@@ -3886,6 +3964,24 @@ export class ProductEditPageComponent {
     row.inventorySync = !row.inventorySync;
   }
 
+  marketplaceStatusCount(status: MarketplaceStatus['status']): number {
+    return this.marketplaceListings.filter((row) => row.status === status).length;
+  }
+
+  marketplaceStatusPillClass(status: MarketplaceStatus['status']): string {
+    switch (status) {
+      case 'live':
+        return 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400';
+      case 'inactive':
+        return 'border-slate-500/30 bg-slate-500/10 text-slate-300';
+      case 'error':
+        return 'border-rose-500/30 bg-rose-500/10 text-rose-400';
+      case 'not_listed':
+      default:
+        return 'border-slate-600/40 bg-slate-600/10 text-slate-400';
+    }
+  }
+
   trackByMarketplace(_: number, row: MarketplaceListingRow): string {
     return row.id;
   }
@@ -4276,6 +4372,24 @@ export class ProductEditPageComponent {
         return 'bg-indigo-500/20 text-indigo-500';
       case 'target':
         return 'bg-rose-500/20 text-rose-600';
+      case 'etsy':
+        return 'bg-orange-500/20 text-orange-500';
+      case 'shopify':
+        return 'bg-emerald-500/20 text-emerald-500';
+      case 'temu':
+        return 'bg-orange-500/20 text-orange-500';
+      case 'macys':
+        return 'bg-rose-500/20 text-rose-500';
+      case 'costco':
+        return 'bg-rose-500/20 text-rose-500';
+      case 'homedepot':
+        return 'bg-orange-500/20 text-orange-500';
+      case 'lowes':
+        return 'bg-blue-500/20 text-blue-500';
+      case 'wayfair':
+        return 'bg-purple-500/20 text-purple-500';
+      case 'overstock':
+        return 'bg-rose-500/20 text-rose-500';
       default:
         return 'bg-slate-500/20 text-slate-500';
     }
