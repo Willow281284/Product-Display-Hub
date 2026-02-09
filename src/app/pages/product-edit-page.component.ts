@@ -1554,39 +1554,128 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
 
           <div *ngIf="activeTab === 'images'" class="py-6 space-y-6">
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold">Product Media</h3>
-              <button
-                type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-              >
-                Upload assets
-              </button>
-            </div>
-            <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              <div class="rounded-lg border border-border bg-card p-4">
-                <p class="text-xs font-semibold text-muted-foreground">Primary Image</p>
-                <img
-                  [src]="product.image"
-                  [alt]="product.name"
-                  class="mt-3 h-48 w-full rounded-md border border-border object-cover"
-                />
+              <div class="flex items-center gap-2 text-lg font-semibold">
+                <svg viewBox="0 0 24 24" class="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <path d="m21 15-5-5L5 21"></path>
+                </svg>
+                Product Media
               </div>
-              <div
-                *ngFor="let slot of mediaSlots"
-                class="rounded-lg border border-dashed border-border bg-muted/30 p-4 flex flex-col items-center justify-center gap-2"
-              >
-                <div class="h-16 w-16 rounded-md bg-muted"></div>
-                <p class="text-xs text-muted-foreground">Drop image {{ slot }}</p>
+              <div class="flex items-center gap-3 text-xs text-muted-foreground">
+                <span class="inline-flex items-center gap-1">
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <path d="m21 15-5-5L5 21"></path>
+                  </svg>
+                  {{ product.image ? '1 image' : '0 images' }}
+                </span>
+                <span class="inline-flex items-center gap-1">
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                  </svg>
+                  0 videos
+                </span>
               </div>
             </div>
-            <div class="rounded-lg border border-border bg-card p-4">
-              <h4 class="text-sm font-semibold mb-3">Video &amp; 360 Content</h4>
+
+            <div class="rounded-lg border border-border bg-card p-4 space-y-4">
               <div class="grid gap-4 md:grid-cols-2">
-                <div class="rounded-lg border border-dashed border-border p-4 text-center">
-                  <p class="text-xs text-muted-foreground">Upload product video</p>
+                <label class="space-y-2 text-xs font-semibold text-muted-foreground">
+                  <span class="inline-flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                      <path d="m21 15-5-5L5 21"></path>
+                    </svg>
+                    Upload Images (select multiple)
+                  </span>
+                  <input type="file" multiple class="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-muted-foreground" />
+                </label>
+                <label class="space-y-2 text-xs font-semibold text-muted-foreground">
+                  <span class="inline-flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                    Upload Videos (select multiple)
+                  </span>
+                  <input type="file" multiple class="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-muted-foreground" />
+                </label>
+              </div>
+              <div class="space-y-2 text-xs text-muted-foreground">
+                <span>Add from URL (Image or Video)</span>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="text"
+                    class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-xs"
+                    placeholder="https://example.com/image.jpg or video.mp4"
+                  />
+                  <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-md bg-emerald-500 text-white hover:bg-emerald-600">
+                    <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 5v14" />
+                      <path d="M5 12h14" />
+                    </svg>
+                  </button>
                 </div>
-                <div class="rounded-lg border border-dashed border-border p-4 text-center">
-                  <p class="text-xs text-muted-foreground">Add 360 spin set</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="text-xs font-semibold text-muted-foreground">
+                Media Gallery (Drag to reorder - First image is the main image)
+              </div>
+              <div class="flex flex-wrap gap-4">
+                <div class="relative h-28 w-28 rounded-lg border border-emerald-500 bg-card">
+                  <span class="absolute left-2 top-2 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+                    Main
+                  </span>
+                  <img
+                    [src]="product.image"
+                    [alt]="product.name"
+                    class="h-full w-full rounded-lg object-cover"
+                  />
+                  <span class="absolute bottom-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white">1</span>
+                </div>
+                <div class="flex h-28 w-28 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-xs text-muted-foreground">
+                  <div class="flex flex-col items-center gap-2">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    Add Media
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-lg border border-border bg-card p-4">
+              <div class="flex items-center gap-2 text-sm font-semibold">
+                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 16h.01"></path>
+                  <path d="M12 8v4"></path>
+                </svg>
+                Media Guidelines
+              </div>
+              <div class="mt-3 grid gap-4 md:grid-cols-2 text-xs text-muted-foreground">
+                <div class="space-y-2">
+                  <div class="font-semibold text-foreground">Images</div>
+                  <ul class="space-y-1">
+                    <li>Use high-quality images (at least 1000x1000 pixels)</li>
+                    <li>The first image will be used as the main product image</li>
+                    <li>Use white backgrounds for main images (Amazon requirement)</li>
+                  </ul>
+                </div>
+                <div class="space-y-2">
+                  <div class="font-semibold text-foreground">Videos</div>
+                  <ul class="space-y-1">
+                    <li>MP4 format recommended for best compatibility</li>
+                    <li>Keep videos under 2 minutes for optimal engagement</li>
+                    <li>Show product features and usage in action</li>
+                  </ul>
                 </div>
               </div>
             </div>
