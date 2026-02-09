@@ -65,6 +65,17 @@ interface SalesRow {
   revenue: number;
 }
 
+type MediaType = 'image' | 'video' | 'spin';
+type MediaSource = 'file' | 'url';
+
+interface MediaItem {
+  id: string;
+  url: string;
+  type: MediaType;
+  name?: string;
+  source: MediaSource;
+}
+
 type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | 'isbns';
 
 @Component({
@@ -80,6 +91,7 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
   template: `
     <section class="min-h-screen bg-background flex flex-col">
       <ng-container *ngIf="product$ | async as product">
+        <ng-container *ngIf="initMedia(product)"></ng-container>
         <header class="px-6 py-4 border-b border-border bg-background">
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-4">
@@ -1569,14 +1581,22 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                     <circle cx="8.5" cy="8.5" r="1.5"></circle>
                     <path d="m21 15-5-5L5 21"></path>
                   </svg>
-                  {{ product.image ? '1 image' : '0 images' }}
+                  {{ imageCountLabel }}
                 </span>
                 <span class="inline-flex items-center gap-1">
                   <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="23 7 16 12 23 17 23 7"></polygon>
                     <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
                   </svg>
-                  0 videos
+                  {{ videoCountLabel }}
+                </span>
+                <span class="inline-flex items-center gap-1">
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 4h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path>
+                    <path d="M3 8h4"></path>
+                    <path d="M17 8h4"></path>
+                  </svg>
+                  {{ spinCountLabel }}
                 </span>
               </div>
             </div>
@@ -1591,7 +1611,14 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                     </svg>
                     Upload Images (select multiple)
                   </span>
-                  <input type="file" multiple class="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-muted-foreground" />
+                  <input
+                    #imageUpload
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    class="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-muted-foreground"
+                    (change)="handleMediaFiles($event, 'image', product)"
+                  />
                 </label>
                 <label class="space-y-2 text-xs font-semibold text-muted-foreground">
                   <span class="inline-flex items-center gap-2">
@@ -1601,18 +1628,81 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                     </svg>
                     Upload Videos (select multiple)
                   </span>
-                  <input type="file" multiple class="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-muted-foreground" />
+                  <input
+                    #videoUpload
+                    type="file"
+                    multiple
+                    accept="video/*"
+                    class="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-muted-foreground"
+                    (change)="handleMediaFiles($event, 'video', product)"
+                  />
                 </label>
               </div>
+              <label class="space-y-2 text-xs font-semibold text-muted-foreground">
+                <span class="inline-flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v4"></path>
+                    <path d="M12 18v4"></path>
+                    <path d="M4.93 4.93l2.83 2.83"></path>
+                    <path d="M16.24 16.24l2.83 2.83"></path>
+                    <path d="M2 12h4"></path>
+                    <path d="M18 12h4"></path>
+                    <path d="M4.93 19.07l2.83-2.83"></path>
+                    <path d="M16.24 7.76l2.83-2.83"></path>
+                  </svg>
+                  Upload 360 Spin (optional)
+                </span>
+                <input
+                  #spinUpload
+                  type="file"
+                  multiple
+                  accept="image/*,video/*,.zip,.glb,.gltf"
+                  class="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-muted-foreground"
+                  (change)="handleMediaFiles($event, 'spin', product)"
+                />
+              </label>
               <div class="space-y-2 text-xs text-muted-foreground">
-                <span>Add from URL (Image or Video)</span>
-                <div class="flex items-center gap-2">
+                <span>Add from URL (Image, Video, or 360)</span>
+                <div class="flex flex-wrap items-center gap-2">
+                  <div class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/30 p-1 text-[10px]">
+                    <button
+                      type="button"
+                      class="rounded px-2 py-1 font-semibold"
+                      [ngClass]="mediaUrlType === 'image' ? 'bg-background text-foreground' : 'text-muted-foreground'"
+                      (click)="mediaUrlType = 'image'"
+                    >
+                      Image
+                    </button>
+                    <button
+                      type="button"
+                      class="rounded px-2 py-1 font-semibold"
+                      [ngClass]="mediaUrlType === 'video' ? 'bg-background text-foreground' : 'text-muted-foreground'"
+                      (click)="mediaUrlType = 'video'"
+                    >
+                      Video
+                    </button>
+                    <button
+                      type="button"
+                      class="rounded px-2 py-1 font-semibold"
+                      [ngClass]="mediaUrlType === 'spin' ? 'bg-background text-foreground' : 'text-muted-foreground'"
+                      (click)="mediaUrlType = 'spin'"
+                    >
+                      360
+                    </button>
+                  </div>
                   <input
                     type="text"
                     class="flex-1 rounded-md border border-border bg-background px-3 py-2 text-xs"
                     placeholder="https://example.com/image.jpg or video.mp4"
+                    [(ngModel)]="mediaUrlInput"
+                    [ngModelOptions]="{ standalone: true }"
+                    (keydown.enter)="addMediaFromUrl(product)"
                   />
-                  <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-md bg-emerald-500 text-white hover:bg-emerald-600">
+                  <button
+                    type="button"
+                    class="inline-flex h-9 w-9 items-center justify-center rounded-md bg-emerald-500 text-white hover:bg-emerald-600"
+                    (click)="addMediaFromUrl(product)"
+                  >
                     <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M12 5v14" />
                       <path d="M5 12h14" />
@@ -1627,18 +1717,48 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                 Media Gallery (Drag to reorder - First image is the main image)
               </div>
               <div class="flex flex-wrap gap-4">
-                <div class="relative h-28 w-28 rounded-lg border border-emerald-500 bg-card">
-                  <span class="absolute left-2 top-2 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+                <div
+                  *ngFor="let image of mediaImages; let i = index"
+                  class="relative h-28 w-28 rounded-lg border bg-card"
+                  [ngClass]="i === 0 ? 'border-emerald-500' : 'border-border'"
+                  [class.opacity-70]="mediaDragId === image.id"
+                  draggable="true"
+                  (dragstart)="handleMediaDragStart($event, image.id, 'image')"
+                  (dragover)="handleMediaDragOver($event)"
+                  (drop)="handleMediaDrop($event, image.id, 'image', product)"
+                  (dragend)="handleMediaDragEnd()"
+                >
+                  <span
+                    *ngIf="i === 0"
+                    class="absolute left-2 top-2 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-400"
+                  >
                     Main
                   </span>
                   <img
-                    [src]="product.image"
-                    [alt]="product.name"
+                    [src]="image.url"
+                    [alt]="image.name || product.name"
                     class="h-full w-full rounded-lg object-cover"
                   />
-                  <span class="absolute bottom-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white">1</span>
+                  <span class="absolute bottom-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white">
+                    {{ i + 1 }}
+                  </span>
+                  <button
+                    type="button"
+                    class="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white"
+                    (click)="removeMedia(image, 'image', product)"
+                    aria-label="Remove image"
+                  >
+                    <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
                 </div>
-                <div class="flex h-28 w-28 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-xs text-muted-foreground">
+                <button
+                  type="button"
+                  class="flex h-28 w-28 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-xs text-muted-foreground hover:bg-muted"
+                  (click)="triggerMediaInput(imageUpload)"
+                >
                   <div class="flex flex-col items-center gap-2">
                     <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -1647,7 +1767,115 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                     </svg>
                     Add Media
                   </div>
+                </button>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-xs font-semibold text-muted-foreground">
+                <span>Video Gallery</span>
+                <span class="text-[10px] text-muted-foreground">{{ videoCountLabel }}</span>
+              </div>
+              <div class="flex flex-wrap gap-4">
+                <div
+                  *ngFor="let video of mediaVideos; let i = index"
+                  class="relative h-28 w-28 rounded-lg border border-border bg-card"
+                >
+                  <video
+                    [src]="video.url"
+                    class="h-full w-full rounded-lg object-cover"
+                    muted
+                  ></video>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white">
+                      <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="currentColor">
+                        <polygon points="8 5 19 12 8 19 8 5"></polygon>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="absolute bottom-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white">
+                    Video {{ i + 1 }}
+                  </span>
+                  <button
+                    type="button"
+                    class="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white"
+                    (click)="removeMedia(video, 'video', product)"
+                    aria-label="Remove video"
+                  >
+                    <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
                 </div>
+                <button
+                  type="button"
+                  class="flex h-28 w-28 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-xs text-muted-foreground hover:bg-muted"
+                  (click)="triggerMediaInput(videoUpload)"
+                >
+                  <div class="flex flex-col items-center gap-2">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                    Add Video
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-xs font-semibold text-muted-foreground">
+                <span>360 Spin</span>
+                <span class="text-[10px] text-muted-foreground">{{ spinCountLabel }}</span>
+              </div>
+              <div class="flex flex-wrap gap-4">
+                <div
+                  *ngFor="let spin of mediaSpins; let i = index"
+                  class="relative h-28 w-28 rounded-lg border border-border bg-card"
+                >
+                  <img
+                    [src]="spin.url"
+                    [alt]="spin.name || product.name"
+                    class="h-full w-full rounded-lg object-cover"
+                  />
+                  <span class="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white">
+                    360
+                  </span>
+                  <span class="absolute bottom-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white">
+                    Spin {{ i + 1 }}
+                  </span>
+                  <button
+                    type="button"
+                    class="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white"
+                    (click)="removeMedia(spin, 'spin', product)"
+                    aria-label="Remove spin"
+                  >
+                    <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  class="flex h-28 w-28 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-xs text-muted-foreground hover:bg-muted"
+                  (click)="triggerMediaInput(spinUpload)"
+                >
+                  <div class="flex flex-col items-center gap-2">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2v4"></path>
+                      <path d="M12 18v4"></path>
+                      <path d="M4.93 4.93l2.83 2.83"></path>
+                      <path d="M16.24 16.24l2.83 2.83"></path>
+                      <path d="M2 12h4"></path>
+                      <path d="M18 12h4"></path>
+                      <path d="M4.93 19.07l2.83-2.83"></path>
+                      <path d="M16.24 7.76l2.83-2.83"></path>
+                    </svg>
+                    Add 360
+                  </div>
+                </button>
               </div>
             </div>
 
@@ -3074,7 +3302,14 @@ export class ProductEditPageComponent {
     { label: 'Last 365 days', units: 4032, revenue: 88420 },
   ];
 
-  readonly mediaSlots = [1, 2, 3, 4];
+  mediaProductId: string | null = null;
+  mediaImages: MediaItem[] = [];
+  mediaVideos: MediaItem[] = [];
+  mediaSpins: MediaItem[] = [];
+  mediaUrlInput = '';
+  mediaUrlType: MediaType = 'image';
+  mediaDragId: string | null = null;
+  mediaDragType: MediaType | null = null;
 
   readonly platformLabels: Record<string, string> = {
     amazon: 'Amazon',
@@ -3335,6 +3570,112 @@ export class ProductEditPageComponent {
     this.offerStatusFilterOpen = false;
   }
 
+  initMedia(product: Product): boolean {
+    if (!product) return false;
+    if (this.mediaProductId !== product.id) {
+      this.releaseMediaItems(this.mediaImages);
+      this.releaseMediaItems(this.mediaVideos);
+      this.releaseMediaItems(this.mediaSpins);
+      this.mediaProductId = product.id;
+      this.mediaImages = product.image
+        ? [this.createMediaItem(product.image, 'image', 'Main image', 'url')]
+        : [];
+      this.mediaVideos = [];
+      this.mediaSpins = [];
+      this.mediaUrlInput = '';
+      this.mediaUrlType = 'image';
+      this.mediaDragId = null;
+      this.mediaDragType = null;
+    }
+    return true;
+  }
+
+  triggerMediaInput(input: HTMLInputElement): void {
+    input.click();
+  }
+
+  handleMediaFiles(event: Event, type: MediaType, product: Product): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input?.files?.length) return;
+    const files = Array.from(input.files);
+    const accepted = files.filter((file) => this.fileMatchesType(file, type));
+    if (accepted.length !== files.length) {
+      this.showToast('Some files were skipped', 'Unsupported files were ignored.');
+    }
+    if (!accepted.length) {
+      input.value = '';
+      return;
+    }
+
+    const items = accepted.map((file) =>
+      this.createMediaItem(URL.createObjectURL(file), type, file.name, 'file')
+    );
+    this.addMediaItems(items, type, product);
+    input.value = '';
+  }
+
+  addMediaFromUrl(product: Product): void {
+    const url = this.mediaUrlInput.trim();
+    if (!url) return;
+    if (!this.isValidUrl(url)) {
+      this.showToast('Invalid URL', 'Enter a valid image, video, or 360 URL.');
+      return;
+    }
+    const detectedType = this.detectMediaType(url);
+    const type = detectedType ?? this.mediaUrlType;
+    const item = this.createMediaItem(url, type, undefined, 'url');
+    this.addMediaItems([item], type, product);
+    this.mediaUrlInput = '';
+  }
+
+  removeMedia(item: MediaItem, type: MediaType, product: Product): void {
+    if (type === 'image') {
+      this.mediaImages = this.mediaImages.filter((entry) => entry.id !== item.id);
+      this.syncMainImage(product);
+    } else if (type === 'video') {
+      this.mediaVideos = this.mediaVideos.filter((entry) => entry.id !== item.id);
+    } else {
+      this.mediaSpins = this.mediaSpins.filter((entry) => entry.id !== item.id);
+    }
+    if (item.source === 'file' && item.url.startsWith('blob:')) {
+      URL.revokeObjectURL(item.url);
+    }
+  }
+
+  handleMediaDragStart(event: DragEvent, mediaId: string, type: MediaType): void {
+    this.mediaDragId = mediaId;
+    this.mediaDragType = type;
+    event.dataTransfer?.setData('text/plain', mediaId);
+  }
+
+  handleMediaDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  handleMediaDrop(event: DragEvent, targetId: string, type: MediaType, product: Product): void {
+    event.preventDefault();
+    if (!this.mediaDragId || this.mediaDragType !== type || this.mediaDragId === targetId) {
+      this.mediaDragId = null;
+      this.mediaDragType = null;
+      return;
+    }
+    if (type === 'image') {
+      this.mediaImages = this.reorderMedia(this.mediaImages, this.mediaDragId, targetId);
+      this.syncMainImage(product);
+    } else if (type === 'video') {
+      this.mediaVideos = this.reorderMedia(this.mediaVideos, this.mediaDragId, targetId);
+    } else {
+      this.mediaSpins = this.reorderMedia(this.mediaSpins, this.mediaDragId, targetId);
+    }
+    this.mediaDragId = null;
+    this.mediaDragType = null;
+  }
+
+  handleMediaDragEnd(): void {
+    this.mediaDragId = null;
+    this.mediaDragType = null;
+  }
+
   openCreateOfferDialog(product: Product): void {
     this.createOfferProductIds = [product.id];
     this.createOfferOpen = true;
@@ -3358,6 +3699,21 @@ export class ProductEditPageComponent {
       ...this.offerMarketplaceStates,
       [id]: !this.offerMarketplaceStates[id],
     };
+  }
+
+  get imageCountLabel(): string {
+    const count = this.mediaImages.length;
+    return count === 1 ? '1 image' : `${count} images`;
+  }
+
+  get videoCountLabel(): string {
+    const count = this.mediaVideos.length;
+    return count === 1 ? '1 video' : `${count} videos`;
+  }
+
+  get spinCountLabel(): string {
+    const count = this.mediaSpins.length;
+    return count === 1 ? '1 spin' : `${count} spins`;
   }
 
   get filteredOfferMarketplaces(): Array<{ id: string; label: string }> {
@@ -3456,6 +3812,83 @@ export class ProductEditPageComponent {
     }
     product.vendorName = name;
     this.closeAddVendorModal();
+  }
+
+  private addMediaItems(items: MediaItem[], type: MediaType, product: Product): void {
+    if (type === 'image') {
+      this.mediaImages = [...this.mediaImages, ...items];
+      this.syncMainImage(product);
+    } else if (type === 'video') {
+      this.mediaVideos = [...this.mediaVideos, ...items];
+    } else {
+      this.mediaSpins = [...this.mediaSpins, ...items];
+    }
+  }
+
+  private syncMainImage(product: Product): void {
+    product.image = this.mediaImages[0]?.url ?? '';
+  }
+
+  private reorderMedia(list: MediaItem[], fromId: string, toId: string): MediaItem[] {
+    const fromIndex = list.findIndex((item) => item.id === fromId);
+    const toIndex = list.findIndex((item) => item.id === toId);
+    if (fromIndex === -1 || toIndex === -1) return list;
+    const next = list.slice();
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+    return next;
+  }
+
+  private createMediaItem(
+    url: string,
+    type: MediaType,
+    name?: string,
+    source: MediaSource = 'url'
+  ): MediaItem {
+    return {
+      id: this.mediaId(),
+      url,
+      type,
+      name,
+      source,
+    };
+  }
+
+  private releaseMediaItems(items: MediaItem[]): void {
+    items.forEach((item) => {
+      if (item.source === 'file' && item.url.startsWith('blob:')) {
+        URL.revokeObjectURL(item.url);
+      }
+    });
+  }
+
+  private fileMatchesType(file: File, type: MediaType): boolean {
+    if (type === 'image') return file.type.startsWith('image/');
+    if (type === 'video') return file.type.startsWith('video/');
+    return true;
+  }
+
+  private detectMediaType(url: string): MediaType | null {
+    const clean = url.split('?')[0].split('#')[0];
+    const parts = clean.split('.');
+    const ext = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext)) return 'image';
+    if (['mp4', 'mov', 'webm', 'm4v', 'avi'].includes(ext)) return 'video';
+    if (['zip', 'glb', 'gltf'].includes(ext)) return 'spin';
+    return null;
+  }
+
+  private isValidUrl(value: string): boolean {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+
+  private mediaId(): string {
+    return `media-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
   }
 
   @HostListener('document:click')
