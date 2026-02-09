@@ -59,6 +59,21 @@ interface InventoryLocation {
   available: number;
 }
 
+interface MarketplaceListingRow {
+  id: string;
+  platform: MarketplaceStatus['platform'];
+  status: MarketplaceStatus['status'];
+  selected: boolean;
+  sold: number | null;
+  revenue: number | null;
+  msrp: number | null;
+  discountPercent: number | null;
+  salePrice: number | null;
+  priceSync: boolean;
+  stock: number | null;
+  inventorySync: boolean;
+}
+
 interface SalesRow {
   label: string;
   units: number;
@@ -1909,82 +1924,311 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
             </div>
           </div>
 
-          <div *ngIf="activeTab === 'marketplaces'" class="py-6 space-y-6">
+          <div *ngIf="activeTab === 'marketplaces'" class="py-6 space-y-4">
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-semibold">Marketplace Listings</h3>
               <button
                 type="button"
-                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                class="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
               >
                 Publish updates
               </button>
             </div>
-            <ng-container *ngIf="marketplaceSummary(product) as summary">
-              <div class="rounded-lg border border-border bg-card p-4">
-                <div class="grid gap-3 md:grid-cols-4">
-                  <div class="rounded-lg bg-muted/30 p-3 text-center">
-                    <p class="text-xs text-muted-foreground">Live</p>
-                    <p class="text-lg font-semibold text-emerald-600">{{ summary.live }}</p>
-                  </div>
-                  <div class="rounded-lg bg-muted/30 p-3 text-center">
-                    <p class="text-xs text-muted-foreground">Inactive</p>
-                    <p class="text-lg font-semibold">{{ summary.inactive }}</p>
-                  </div>
-                  <div class="rounded-lg bg-muted/30 p-3 text-center">
-                    <p class="text-xs text-muted-foreground">Error</p>
-                    <p class="text-lg font-semibold text-rose-500">{{ summary.error }}</p>
-                  </div>
-                  <div class="rounded-lg bg-muted/30 p-3 text-center">
-                    <p class="text-xs text-muted-foreground">Not listed</p>
-                    <p class="text-lg font-semibold">{{ summary.notListed }}</p>
-                  </div>
-                </div>
-              </div>
-              <div class="rounded-lg border border-border bg-card p-4">
-                <div class="overflow-x-auto">
-                  <table class="w-full min-w-[760px] text-sm">
-                    <thead>
-                      <tr class="border-b border-border text-xs text-muted-foreground">
-                        <th class="py-2 text-left">Marketplace</th>
-                        <th class="py-2 text-left">Status</th>
-                        <th class="py-2 text-right">Price</th>
-                        <th class="py-2 text-right">Stock</th>
-                        <th class="py-2 text-center">Sync Price</th>
-                        <th class="py-2 text-center">Sync Inventory</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        *ngFor="let row of summary.all; let i = index"
-                        class="border-b border-border/60 text-xs"
-                      >
-                        <td class="py-2 font-medium capitalize">{{ row.platform }}</td>
-                        <td class="py-2">
+
+            <ng-container *ngIf="initMarketplaceListings(product)"></ng-container>
+
+            <div class="rounded-lg border border-border bg-card overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full min-w-[1200px] text-xs">
+                  <thead class="bg-muted/40">
+                    <tr class="border-b border-border text-[10px] uppercase tracking-wide text-muted-foreground">
+                      <th class="px-3 py-2 text-left"></th>
+                      <th class="px-3 py-2 text-left">Marketplace</th>
+                      <th class="px-3 py-2 text-left">Sold</th>
+                      <th class="px-3 py-2 text-left">Revenue</th>
+                      <th class="px-3 py-2 text-left">MSRP</th>
+                      <th class="px-3 py-2 text-left">Discount</th>
+                      <th class="px-3 py-2 text-left">Sale Price</th>
+                      <th class="px-3 py-2 text-center">Price Sync</th>
+                      <th class="px-3 py-2 text-left">Stock</th>
+                      <th class="px-3 py-2 text-center">Inv Sync</th>
+                      <th class="px-3 py-2 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="let row of marketplaceListings; trackBy: trackByMarketplace"
+                      class="border-b border-border/60 text-xs"
+                    >
+                      <td class="px-3 py-3">
+                        <input
+                          type="checkbox"
+                          class="h-4 w-4 rounded-full border-border bg-background"
+                          [(ngModel)]="row.selected"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </td>
+                      <td class="px-3 py-3">
+                        <div class="flex items-center gap-3">
                           <span
-                            class="rounded-full border px-2 py-0.5 text-[10px]"
-                            [ngClass]="marketplaceBadgeClass(row.status)"
+                            class="inline-flex h-7 w-7 items-center justify-center rounded-md text-[10px] font-semibold uppercase"
+                            [ngClass]="platformBadgeClass(row.platform)"
                           >
-                            {{ statusLabel(row.status) }}
+                            {{ platformBadgeLabel(row.platform) }}
                           </span>
-                        </td>
-                        <td class="py-2 text-right">
-                          {{
-                            (product.salePrice + i) | currency: 'USD' : 'symbol' : '1.2-2'
-                          }}
-                        </td>
-                        <td class="py-2 text-right">{{ product.stockQty - i * 2 }}</td>
-                        <td class="py-2 text-center">
-                          <input type="checkbox" [checked]="row.status === 'live'" />
-                        </td>
-                        <td class="py-2 text-center">
-                          <input type="checkbox" [checked]="row.status === 'live'" />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                          <div>
+                            <div class="text-xs font-semibold text-foreground">
+                              {{ platformLabel(row.platform) }}
+                            </div>
+                            <div class="text-[10px]" [ngClass]="marketplaceTextClass(row.status)">
+                              {{ statusLabel(row.status) }}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-3 py-3">
+                        <ng-container *ngIf="row.sold !== null; else soldDash">
+                          <div class="text-xs font-semibold text-foreground">{{ row.sold }}</div>
+                          <div class="text-[10px] text-muted-foreground">units</div>
+                        </ng-container>
+                        <ng-template #soldDash>
+                          <span class="text-muted-foreground">-</span>
+                        </ng-template>
+                      </td>
+                      <td class="px-3 py-3">
+                        <ng-container *ngIf="row.revenue !== null; else revenueDash">
+                          <div class="text-xs font-semibold text-emerald-500">
+                            {{ row.revenue | currency: 'USD' : 'symbol' : '1.2-2' }}
+                          </div>
+                        </ng-container>
+                        <ng-template #revenueDash>
+                          <span class="text-muted-foreground">-</span>
+                        </ng-template>
+                      </td>
+                      <td class="px-3 py-3">
+                        <ng-container *ngIf="row.msrp !== null; else msrpDash">
+                          <div class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/40 px-2 py-1">
+                            <span class="text-[10px] text-muted-foreground">$</span>
+                            <input
+                              type="number"
+                              class="w-16 bg-transparent text-right text-xs text-foreground outline-none"
+                              [(ngModel)]="row.msrp"
+                              [ngModelOptions]="{ standalone: true }"
+                            />
+                          </div>
+                        </ng-container>
+                        <ng-template #msrpDash>
+                          <span class="text-muted-foreground">-</span>
+                        </ng-template>
+                      </td>
+                      <td class="px-3 py-3">
+                        <ng-container *ngIf="row.discountPercent !== null; else discountDash">
+                          <div class="inline-flex items-center gap-1 rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-amber-600">
+                            <input
+                              type="number"
+                              class="w-10 bg-transparent text-right text-xs text-amber-600 outline-none"
+                              [(ngModel)]="row.discountPercent"
+                              [ngModelOptions]="{ standalone: true }"
+                            />
+                            <span class="text-[10px]">%</span>
+                          </div>
+                        </ng-container>
+                        <ng-template #discountDash>
+                          <span class="text-muted-foreground">-</span>
+                        </ng-template>
+                      </td>
+                      <td class="px-3 py-3">
+                        <ng-container *ngIf="row.salePrice !== null; else saleDash">
+                          <div class="inline-flex items-center gap-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-emerald-600">
+                            <span class="text-[10px]">$</span>
+                            <input
+                              type="number"
+                              class="w-14 bg-transparent text-right text-xs text-emerald-600 outline-none"
+                              [(ngModel)]="row.salePrice"
+                              [ngModelOptions]="{ standalone: true }"
+                            />
+                          </div>
+                        </ng-container>
+                        <ng-template #saleDash>
+                          <span class="text-muted-foreground">-</span>
+                        </ng-template>
+                      </td>
+                      <td class="px-3 py-3 text-center">
+                        <ng-container *ngIf="row.status !== 'not_listed'; else priceSyncDash">
+                          <button
+                            type="button"
+                            class="inline-flex h-5 w-9 items-center rounded-full border px-0.5 transition-colors"
+                            [ngClass]="
+                              row.priceSync
+                                ? 'justify-end border-emerald-500/40 bg-emerald-500/20'
+                                : 'justify-start border-border bg-muted/40'
+                            "
+                            (click)="toggleMarketplaceSync(row, 'price')"
+                          >
+                            <span
+                              class="h-4 w-4 rounded-full transition-colors"
+                              [ngClass]="row.priceSync ? 'bg-emerald-500' : 'bg-slate-400'"
+                            ></span>
+                          </button>
+                        </ng-container>
+                        <ng-template #priceSyncDash>
+                          <span class="text-muted-foreground">-</span>
+                        </ng-template>
+                      </td>
+                      <td class="px-3 py-3">
+                        <ng-container *ngIf="row.stock !== null; else stockDash">
+                          <div class="inline-flex items-center gap-1 rounded-md border border-border bg-muted/40 px-2 py-1">
+                            <input
+                              type="number"
+                              class="w-10 bg-transparent text-right text-xs text-foreground outline-none"
+                              [(ngModel)]="row.stock"
+                              [ngModelOptions]="{ standalone: true }"
+                            />
+                          </div>
+                        </ng-container>
+                        <ng-template #stockDash>
+                          <span class="text-muted-foreground">-</span>
+                        </ng-template>
+                      </td>
+                      <td class="px-3 py-3 text-center">
+                        <ng-container *ngIf="row.status !== 'not_listed'; else invSyncDash">
+                          <button
+                            type="button"
+                            class="inline-flex h-5 w-9 items-center rounded-full border px-0.5 transition-colors"
+                            [ngClass]="
+                              row.inventorySync
+                                ? 'justify-end border-emerald-500/40 bg-emerald-500/20'
+                                : 'justify-start border-border bg-muted/40'
+                            "
+                            (click)="toggleMarketplaceSync(row, 'inventory')"
+                          >
+                            <span
+                              class="h-4 w-4 rounded-full transition-colors"
+                              [ngClass]="row.inventorySync ? 'bg-emerald-500' : 'bg-slate-400'"
+                            ></span>
+                          </button>
+                        </ng-container>
+                        <ng-template #invSyncDash>
+                          <span class="text-muted-foreground">-</span>
+                        </ng-template>
+                      </td>
+                      <td class="px-3 py-3">
+                        <ng-container *ngIf="row.status === 'not_listed'; else listedActions">
+                          <button
+                            type="button"
+                            class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-1 text-[10px] text-muted-foreground hover:bg-muted"
+                          >
+                            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M12 5v14"></path>
+                              <path d="M5 12h14"></path>
+                            </svg>
+                            Publish
+                          </button>
+                        </ng-container>
+                        <ng-template #listedActions>
+                          <div class="flex items-center justify-center gap-2">
+                            <button
+                              type="button"
+                              class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-emerald-500 hover:bg-emerald-500/10"
+                              title="Publish"
+                            >
+                              <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14"></path>
+                                <path d="M5 12h14"></path>
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted-foreground hover:bg-muted"
+                              title="View listing"
+                            >
+                              <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 14a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1"></path>
+                                <path d="M14 10a5 5 0 0 1 0 7l-1 1a5 5 0 1 1-7-7l1-1"></path>
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-rose-500 hover:bg-rose-500/10"
+                              title="Remove"
+                            >
+                              <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 6h18"></path>
+                                <path d="M8 6v14"></path>
+                                <path d="M16 6v14"></path>
+                                <path d="M5 6l1-2h12l1 2"></path>
+                              </svg>
+                            </button>
+                          </div>
+                        </ng-template>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="border-t border-border bg-background/40 px-4 py-3">
+                <div class="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  Publish / Re-publish Products
+                </div>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-[10px] text-muted-foreground hover:bg-muted"
+                  >
+                    <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 5v14"></path>
+                      <path d="M5 12h14"></path>
+                    </svg>
+                    Publish
+                  </button>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-[10px] text-muted-foreground hover:bg-muted"
+                  >
+                    <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 7h18"></path>
+                      <path d="M3 12h18"></path>
+                      <path d="M3 17h18"></path>
+                    </svg>
+                    UPC
+                  </button>
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-[10px] text-muted-foreground hover:bg-muted"
+                  >
+                    <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2v4"></path>
+                      <path d="M12 18v4"></path>
+                      <path d="M4.93 4.93l2.83 2.83"></path>
+                      <path d="M16.24 16.24l2.83 2.83"></path>
+                      <path d="M2 12h4"></path>
+                      <path d="M18 12h4"></path>
+                      <path d="M4.93 19.07l2.83-2.83"></path>
+                      <path d="M16.24 7.76l2.83-2.83"></path>
+                    </svg>
+                    AI Publish
+                  </button>
                 </div>
               </div>
-            </ng-container>
+
+              <div class="border-t border-border bg-background/60 px-4 py-3">
+                <div class="flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    class="rounded-full border border-border px-4 py-2 text-[10px] font-semibold text-muted-foreground hover:bg-muted"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-full bg-primary px-4 py-2 text-[10px] font-semibold text-primary-foreground hover:bg-primary/90"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div *ngIf="activeTab === 'content'" class="py-6 space-y-6">
@@ -3311,6 +3555,9 @@ export class ProductEditPageComponent {
   mediaDragId: string | null = null;
   mediaDragType: MediaType | null = null;
 
+  marketplaceListings: MarketplaceListingRow[] = [];
+  private marketplaceListingsProductId: string | null = null;
+
   readonly platformLabels: Record<string, string> = {
     amazon: 'Amazon',
     walmart: 'Walmart',
@@ -3588,6 +3835,59 @@ export class ProductEditPageComponent {
       this.mediaDragType = null;
     }
     return true;
+  }
+
+  initMarketplaceListings(product: Product): boolean {
+    if (!product) return false;
+    if (this.marketplaceListingsProductId === product.id) {
+      return true;
+    }
+    this.marketplaceListingsProductId = product.id;
+    const statusByPlatform = new Map(
+      product.marketplaces.map((marketplace) => [marketplace.platform, marketplace.status])
+    );
+
+    this.marketplaceListings = marketplacePlatforms.map((platform, index) => {
+      const status = statusByPlatform.get(platform) ?? 'not_listed';
+      const basePrice = Math.max(0, product.salePrice + index * 0.25);
+      const baseStock = Math.max(0, product.stockQty - index * 2);
+      const isListed = status !== 'not_listed';
+      const sold = isListed ? Math.max(0, product.soldQty - index * 3) : null;
+      const revenue = isListed ? Math.max(0, product.salePrice * (sold ?? 0)) : null;
+      const msrp = isListed ? Number((basePrice + 3.25).toFixed(2)) : null;
+      const discountPercent = isListed ? 17 : null;
+      const salePrice = isListed ? Number(basePrice.toFixed(2)) : null;
+      const stock = isListed ? baseStock : null;
+
+      return {
+        id: `${product.id}-${platform}`,
+        platform,
+        status,
+        selected: false,
+        sold,
+        revenue,
+        msrp,
+        discountPercent,
+        salePrice,
+        priceSync: status === 'live',
+        stock,
+        inventorySync: status === 'live',
+      } satisfies MarketplaceListingRow;
+    });
+
+    return true;
+  }
+
+  toggleMarketplaceSync(row: MarketplaceListingRow, type: 'price' | 'inventory'): void {
+    if (type === 'price') {
+      row.priceSync = !row.priceSync;
+      return;
+    }
+    row.inventorySync = !row.inventorySync;
+  }
+
+  trackByMarketplace(_: number, row: MarketplaceListingRow): string {
+    return row.id;
   }
 
   triggerMediaInput(input: HTMLInputElement): void {
