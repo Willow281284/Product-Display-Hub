@@ -2707,7 +2707,7 @@ interface ColumnPreferences {
                   </div>
                 </div>
 
-                <div class="px-6 py-4 bg-slate-800 border-t border-slate-700 flex-shrink-0">
+                <div class="px-6 py-4 bg-slate-800 border-t border-slate-700 flex-shrink-0 sticky bottom-0 z-20">
                   <div class="flex items-center justify-between mb-3">
                     <h4 class="text-sm font-semibold text-white">Publish / Re-publish Products</h4>
                     <span
