@@ -2466,36 +2466,76 @@ interface ColumnPreferences {
             <div class="flex-1 min-h-0">
               <div *ngIf="marketplaceDialogTab === 'listings'" class="flex flex-col min-h-0">
                 <div class="flex-1 overflow-y-auto overflow-x-hidden min-h-0">
-                  <div class="bg-slate-800 border-b border-slate-700 sticky top-0 z-10">
+                  <div class="bg-slate-800 border-b border-slate-700 sticky top-0 z-10 overflow-visible">
                     <div class="grid grid-cols-[200px_60px_80px_80px_60px_90px_70px_60px_70px_100px] gap-2 px-4 pr-6 py-3">
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400" data-tooltip="Platform where product is listed">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400"
+                        data-tooltip="Platform where product is listed"
+                        data-tooltip-position="bottom"
+                      >
                         Marketplace
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Total units sold on this marketplace">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Total units sold on this marketplace"
+                        data-tooltip-position="bottom"
+                      >
                         Sold
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Total revenue from this marketplace">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Total revenue from this marketplace"
+                        data-tooltip-position="bottom"
+                      >
                         Revenue
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Manufacturer's Suggested Retail Price">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Manufacturer's Suggested Retail Price"
+                        data-tooltip-position="bottom"
+                      >
                         MSRP
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Discount percentage from MSRP">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Discount percentage from MSRP"
+                        data-tooltip-position="bottom"
+                      >
                         Discount
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Current selling price">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Current selling price"
+                        data-tooltip-position="bottom"
+                      >
                         Sale Price
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Auto-sync price changes">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Auto-sync price changes"
+                        data-tooltip-position="bottom"
+                      >
                         Price Sync
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Current stock level">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Current stock level"
+                        data-tooltip-position="bottom"
+                      >
                         Stock
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Auto-sync inventory">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Auto-sync inventory"
+                        data-tooltip-position="bottom"
+                      >
                         Inv Sync
                       </div>
-                      <div class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center" data-tooltip="Unlink or remove from marketplace">
+                      <div
+                        class="text-xs font-semibold uppercase tracking-wide text-slate-400 text-center"
+                        data-tooltip="Unlink or remove from marketplace"
+                        data-tooltip-position="bottom"
+                      >
                         Actions
                       </div>
                     </div>
@@ -7970,6 +8010,11 @@ export class ProductGridComponent implements OnInit {
   }
 
   private positionTooltip(element: HTMLElement): void {
+    const presetPosition = element.getAttribute('data-tooltip-position');
+    if (presetPosition) {
+      element.dataset['tooltipPosition'] = presetPosition;
+      return;
+    }
     const rect = element.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
