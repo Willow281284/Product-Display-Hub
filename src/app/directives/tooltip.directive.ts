@@ -88,26 +88,24 @@ export class TooltipDirective implements OnInit, OnDestroy {
     if (!this.tooltipEl) return;
     const trigger = this.el.nativeElement.getBoundingClientRect();
     const tip = this.tooltipEl.getBoundingClientRect();
-    const scrollY = window.scrollY;
-    const scrollX = window.scrollX;
     const offset = this.tooltipOffset;
-
+    // position:fixed uses viewport coordinates; getBoundingClientRect() is already viewport-relative
     switch (this.tooltipSide) {
       case 'bottom':
-        this.tooltipEl.style.left = `${scrollX + trigger.left + trigger.width / 2 - tip.width / 2}px`;
-        this.tooltipEl.style.top = `${scrollY + trigger.bottom + offset}px`;
+        this.tooltipEl.style.left = `${trigger.left + trigger.width / 2 - tip.width / 2}px`;
+        this.tooltipEl.style.top = `${trigger.bottom + offset}px`;
         break;
       case 'top':
-        this.tooltipEl.style.left = `${scrollX + trigger.left + trigger.width / 2 - tip.width / 2}px`;
-        this.tooltipEl.style.top = `${scrollY + trigger.top - tip.height - offset}px`;
+        this.tooltipEl.style.left = `${trigger.left + trigger.width / 2 - tip.width / 2}px`;
+        this.tooltipEl.style.top = `${trigger.top - tip.height - offset}px`;
         break;
       case 'left':
-        this.tooltipEl.style.left = `${scrollX + trigger.left - tip.width - offset}px`;
-        this.tooltipEl.style.top = `${scrollY + trigger.top + trigger.height / 2 - tip.height / 2}px`;
+        this.tooltipEl.style.left = `${trigger.left - tip.width - offset}px`;
+        this.tooltipEl.style.top = `${trigger.top + trigger.height / 2 - tip.height / 2}px`;
         break;
       case 'right':
-        this.tooltipEl.style.left = `${scrollX + trigger.right + offset}px`;
-        this.tooltipEl.style.top = `${scrollY + trigger.top + trigger.height / 2 - tip.height / 2}px`;
+        this.tooltipEl.style.left = `${trigger.right + offset}px`;
+        this.tooltipEl.style.top = `${trigger.top + trigger.height / 2 - tip.height / 2}px`;
         break;
     }
   }

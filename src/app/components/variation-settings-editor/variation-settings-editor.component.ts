@@ -284,8 +284,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   </svg>
                   IDENTIFIERS - {{ variation.name }}
                   <span
-                    class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-600 text-[10px] text-slate-300"
-                    title="Product identifiers used across marketplaces. SKU, UPC, ASIN, FNSKU, and GTIN support multiple values for products sold under different codes."
+                    class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-slate-600 text-[10px] text-slate-300"
+                    [appTooltip]="'Product identifiers used across marketplaces. SKU, UPC, ASIN, FNSKU, and GTIN support multiple values for products sold under different codes.'"
                   >
                     ?
                   </span>
@@ -335,7 +335,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                       type="button"
                       class="rounded-full border border-slate-700 px-1.5 text-[10px] text-slate-300 hover:text-slate-100"
                       (click)="addMultiValue(variation, field.key)"
-                      title="Add value"
+                      [appTooltip]="'Add value'"
                     >
                       +
                     </button>
@@ -355,7 +355,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                         class="h-8 w-8 rounded-md border border-slate-700 text-slate-300 hover:text-slate-100"
                         (click)="copyIdentifier(value, field.key, idx)"
                         [disabled]="!value"
-                        title="Copy"
+                        [appTooltip]="'Copy'"
                       >
                         <svg *ngIf="isCopied(field.key, idx)" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5 text-emerald-400" stroke-width="2">
                           <polyline points="20 6 9 17 4 12" />
@@ -370,7 +370,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                         class="h-8 w-8 rounded-md border border-slate-700 text-slate-300 hover:text-rose-400"
                         (click)="removeMultiValue(variation, field.key, idx)"
                         [disabled]="getMultiValues(variation, field.key).length <= 1"
-                        title="Remove"
+                        [appTooltip]="'Remove'"
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-3.5 w-3.5" stroke-width="2">
                           <line x1="5" y1="5" x2="19" y2="19" />
@@ -385,7 +385,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                 <div class="space-y-1">
                   <div class="flex items-center gap-1">
                     <label class="text-xs font-medium uppercase text-slate-400">Barcode</label>
-                    <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" title="Barcode value">
+                    <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" [appTooltip]="'Barcode value'">
                       ?
                     </span>
                   </div>
@@ -399,7 +399,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                 <div class="space-y-1">
                   <div class="flex items-center gap-1">
                     <label class="text-xs font-medium uppercase text-slate-400">Harmcode</label>
-                    <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" title="Harmonized code">
+                    <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" [appTooltip]="'Harmonized code'">
                       ?
                     </span>
                   </div>
@@ -413,7 +413,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                 <div class="space-y-1">
                   <div class="flex items-center gap-1">
                     <label class="text-xs font-medium uppercase text-slate-400">Vendor SKU</label>
-                    <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" title="Vendor SKU reference">
+                    <span class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-slate-700 text-[10px] text-slate-400" [appTooltip]="'Vendor SKU reference'">
                       ?
                     </span>
                   </div>
@@ -436,8 +436,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   </svg>
                   WEIGHT / DIMENSION
                   <span
-                    class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
-                    title="Enter shipping weight and package dimensions. Use Add Qty for bundled quantities."
+                    class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
+                    [appTooltip]="'Enter shipping weight and package dimensions. Use Add Qty for bundled quantities.'"
                   >
                     ?
                   </span>
@@ -446,6 +446,7 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   type="button"
                   class="h-6 rounded-md px-2 text-xs text-white/80 hover:bg-white/10"
                   (click)="addWeightQty(variation)"
+                  [appTooltip]="'Add weight/dimensions for bundled quantities (2 qty, 3 qty, etc.)'"
                 >
                   + Add Qty
                 </button>
@@ -458,8 +459,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                       <div class="flex items-center gap-1">
                         <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
                         <span
-                          class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
-                          [attr.title]="field.tooltip"
+                          class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                          [appTooltip]="field.tooltip"
                         >
                           ?
                         </span>
@@ -490,8 +491,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                       <div class="flex items-center gap-1">
                         <label class="text-xs font-medium uppercase text-muted-foreground">Weight</label>
                         <span
-                          class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
-                          [attr.title]="qtyFieldTooltip('weight', entry.qty)"
+                          class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                          [appTooltip]="qtyFieldTooltip('weight', entry.qty)"
                         >
                           ?
                         </span>
@@ -508,8 +509,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                       <div class="flex items-center gap-1">
                         <label class="text-xs font-medium uppercase text-muted-foreground">{{ dim | titlecase }}</label>
                         <span
-                          class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
-                          [attr.title]="qtyFieldTooltip(dim, entry.qty)"
+                          class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                          [appTooltip]="qtyFieldTooltip(dim, entry.qty)"
                         >
                           ?
                         </span>
@@ -536,8 +537,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                 </svg>
                 INVENTORY
                 <span
-                  class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
-                  title="Track stock levels across all channels."
+                  class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
+                  [appTooltip]="'Track stock levels across all channels. Includes adjustments, purchases, sales, returns, available stock, allocations, reserves, and damaged inventory.'"
                 >
                   ?
                 </span>
@@ -547,8 +548,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   <div class="flex items-center gap-1">
                     <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
                     <span
-                      class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
-                      [attr.title]="field.tooltip"
+                      class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                      [appTooltip]="field.tooltip"
                     >
                       ?
                     </span>
@@ -573,8 +574,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                 </svg>
                 PRICE
                 <span
-                  class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
-                  title="Manage pricing, costs, and profit margins."
+                  class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
+                  [appTooltip]="'Manage pricing, costs, and profit margins.'"
                 >
                   ?
                 </span>
@@ -585,8 +586,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                     <div class="flex items-center gap-1">
                       <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
                       <span
-                        class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
-                        [attr.title]="field.tooltip"
+                        class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                        [appTooltip]="field.tooltip"
                       >
                         ?
                       </span>
@@ -609,8 +610,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                     <div class="flex items-center gap-1">
                       <label class="text-xs font-medium uppercase text-muted-foreground">{{ field.label }}</label>
                       <span
-                        class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
-                        [attr.title]="field.tooltip"
+                        class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                        [appTooltip]="field.tooltip"
                       >
                         ?
                       </span>
@@ -650,8 +651,8 @@ type MultiKey = 'multiSkus' | 'multiUpcs' | 'multiAsins' | 'multiFnskus' | 'mult
                   </svg>
                   EXTRA PRODUCT ATTRIBUTES
                   <span
-                    class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
-                    title="Custom attributes specific to this variation."
+                    class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-white/30 text-[10px] text-white/70"
+                    [appTooltip]="'Custom attributes specific to this variation.'"
                   >
                     ?
                   </span>
