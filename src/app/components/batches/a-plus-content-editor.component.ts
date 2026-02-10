@@ -34,6 +34,25 @@ const MODULE_TYPES: Array<{ type: ContentModule['type']; label: string }> = [
         </span>
       </div>
 
+      <!-- Empty state: match React / Marketplaces tab UI -->
+      <div
+        *ngIf="modules.length === 0"
+        class="text-center py-8 border-2 border-dashed border-border rounded-lg"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="w-10 h-10 mx-auto text-muted-foreground mb-2"
+        >
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <path d="M14 2v6h6" />
+        </svg>
+        <p class="text-sm text-muted-foreground">No content modules yet</p>
+        <p class="text-xs text-muted-foreground">Click "Add Module" to get started</p>
+      </div>
+
       <div *ngFor="let module of modules; let i = index" class="rounded-xl border border-border bg-card p-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3 text-sm font-semibold">
@@ -170,10 +189,14 @@ const MODULE_TYPES: Array<{ type: ContentModule['type']; label: string }> = [
 
         <button
           type="button"
-          class="w-full rounded-xl border border-border bg-background py-3 text-sm font-semibold text-muted-foreground hover:bg-muted"
+          class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           (click)="toggleModulePicker()"
         >
-          + Add Module
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Add Module
         </button>
       </div>
     </div>

@@ -11,6 +11,7 @@ import {
   VariationSettingsEditorComponent,
   VariationSettingsRow,
 } from '@/app/components/variation-settings-editor/variation-settings-editor.component';
+import { APlusContentEditorComponent } from '@/app/components/batches/a-plus-content-editor.component';
 
 type TabId =
   | 'overview'
@@ -102,6 +103,7 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
     RouterLink,
     CreateOfferDialogComponent,
     VariationSettingsEditorComponent,
+    APlusContentEditorComponent,
   ],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
@@ -2425,13 +2427,10 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                   A+ Content
                 </h3>
                 <div class="rounded-lg bg-muted/30 p-4">
-                  <textarea
-                    rows="4"
-                    class="min-h-[120px] w-full resize-none rounded-md border border-dashed border-border bg-background px-3 py-2 text-sm text-muted-foreground"
-                    placeholder="Add A+ content modules..."
-                    [(ngModel)]="aplusContent"
-                    [ngModelOptions]="{ standalone: true }"
-                  ></textarea>
+                  <app-a-plus-content-editor
+                    [value]="aplusContent"
+                    (valueChange)="aplusContent = $event"
+                  />
                 </div>
               </div>
             </div>
