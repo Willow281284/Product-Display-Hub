@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angul
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
+import { ChartConfiguration } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 import { marketplacePlatforms, mockProducts } from '@/data/mockProducts';
 import { MarketplaceStatus, Product } from '@/types/product';
@@ -12,6 +14,7 @@ import {
   VariationSettingsRow,
 } from '@/app/components/variation-settings-editor/variation-settings-editor.component';
 import { APlusContentEditorComponent } from '@/app/components/batches/a-plus-content-editor.component';
+import { TooltipDirective } from '../directives/tooltip.directive';
 
 type TabId =
   | 'overview'
@@ -104,6 +107,8 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
     CreateOfferDialogComponent,
     VariationSettingsEditorComponent,
     APlusContentEditorComponent,
+    BaseChartDirective,
+    TooltipDirective,
   ],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
@@ -2634,11 +2639,12 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
               <div class="flex items-center gap-3">
                 <h3 class="text-lg font-semibold flex items-center gap-2">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 text-primary" stroke-width="2">
-                    <path d="M4 14l5-5 4 4 7-7" />
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    <polyline points="17 6 23 6 23 12" />
                   </svg>
                   Sales
                 </h3>
-                <span class="text-muted-foreground" title="Sales data synced from connected marketplaces">
+                <span class="text-muted-foreground cursor-help" [appTooltip]="'Sales data synced from connected marketplaces'">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 8h.01" />
@@ -2661,7 +2667,7 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                 </span>
                 <button
                   type="button"
-                  class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                  class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:bg-muted"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4" stroke-width="2">
                     <path d="M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 0 0-7.07-7.07L12 4" />
@@ -2825,27 +2831,14 @@ type IdentifierKey = 'skus' | 'upcs' | 'asins' | 'fnskus' | 'gtins' | 'eans' | '
                 </div>
               </div>
 
-              <div class="relative h-[250px]">
-                <div class="absolute left-0 top-0 bottom-0 flex w-12 flex-col justify-between py-2 text-xs text-muted-foreground">
-                  <span>$10.0k</span>
-                  <span>$7.5k</span>
-                  <span>$5.0k</span>
-                  <span>$2.5k</span>
-                  <span>$0</span>
-                </div>
-                <div class="ml-14 h-full border-l border-b border-border relative">
-                  <svg class="h-full w-full" viewBox="0 0 400 200" preserveAspectRatio="none">
-                    <path
-                      d="M0,10 Q20,20 40,40 T80,60 T120,80 T160,150 T200,160 T240,165 T280,160 T320,170 T360,175 T400,180"
-                      fill="none"
-                      stroke="hsl(var(--primary))"
-                      stroke-width="2"
-                    />
-                  </svg>
-                  <div class="absolute bottom-0 left-0 right-0 flex justify-between px-2 text-xs text-muted-foreground translate-y-5">
-                    <span *ngFor="let label of salesChartLabels">{{ label }}</span>
-                  </div>
-                </div>
+              <div class="h-[250px] w-full">
+                <canvas
+                  baseChart
+                  [type]="'line'"
+                  [data]="salesChartData"
+                  [options]="salesChartOptions"
+                  class="w-full h-full"
+                ></canvas>
               </div>
 
               <div class="mt-8 flex flex-wrap items-center gap-8 border-t border-border pt-4">
@@ -3396,6 +3389,42 @@ export class ProductEditPageComponent {
   ];
 
   readonly salesChartLabels = ['12/21', '12/24', '12/27', '12/30', '1/2', '1/5', '1/8', '1/11', '1/14', '1/17'];
+
+  /** Line chart data for Sales tab - matches React curve shape */
+  get salesChartData(): ChartConfiguration<'line'>['data'] {
+    return {
+      labels: this.salesChartLabels,
+      datasets: [
+      {
+        data: [500, 1100, 1800, 2800, 4200, 6200, 7500, 8200, 7800, 8500, 9000, 9800],
+        label: 'Sales',
+        borderColor: '#2FE89B',
+        backgroundColor: 'transparent',
+        fill: false,
+        tension: 0.35,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+      },
+    ],
+    };
+  }
+
+  readonly salesChartOptions: ChartConfiguration<'line'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: { color: 'hsl(var(--border))' },
+        ticks: { color: 'hsl(var(--muted-foreground))', font: { size: 11 } },
+      },
+      x: {
+        grid: { display: false },
+        ticks: { color: 'hsl(var(--muted-foreground))', font: { size: 11 }, maxRotation: 0 },
+      },
+    },
+  };
 
   readonly salesComparisonOptions = [
     { id: 'last30', label: 'Last 30 days', revenue: '$35,657.96', units: '942 units', highlight: true },
