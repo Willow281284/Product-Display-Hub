@@ -26,6 +26,7 @@ import { ExtraAttributesSectionComponent } from './extra-attributes-section.comp
 import { AttributeValidationChecklistComponent } from './attribute-validation-checklist.component';
 import { VariationPickerViewComponent } from './variation-picker-view.component';
 import { APlusContentEditorComponent } from './a-plus-content-editor.component';
+import { TooltipDirective } from '../../directives/tooltip.directive';
 
 const MOCK_CATEGORIES: ProductCategory[] = [
   { id: 'cat-electronics', name: 'Electronics', parent_id: null, marketplace: 'amazon', created_at: '2026-01-01' },
@@ -248,6 +249,7 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
     AttributeValidationChecklistComponent,
     VariationPickerViewComponent,
     APlusContentEditorComponent,
+    TooltipDirective,
   ],
   template: `
     <div *ngIf="open" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" (click)="close()">
@@ -426,9 +428,8 @@ const MOCK_CATEGORY_ATTRIBUTES: Record<string, CategoryAttribute[]> = {
                               </label>
                               <span
                                 *ngIf="attr.help_text"
-                                class="text-xs text-muted-foreground"
-                                [attr.data-tooltip]="attr.help_text"
-                                data-tooltip-position="top"
+                                class="inline-flex h-4 w-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground"
+                                [appTooltip]="attr.help_text"
                               >
                                 ?
                               </span>

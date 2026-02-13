@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { marketplacePlatforms, mockProducts } from '@/data/mockProducts';
+import { TooltipDirective } from '../directives/tooltip.directive';
 
 type CreateTab =
   | 'overview'
@@ -48,7 +49,7 @@ interface ExtraAttributeRow {
 @Component({
   selector: 'app-product-create-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TooltipDirective],
   template: `
     <section class="min-h-screen bg-background flex flex-col">
       <header class="px-6 py-4 border-b border-border bg-background">
@@ -1193,7 +1194,7 @@ interface ExtraAttributeRow {
                   class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                   (click)="copyToClipboard(identifierLists.internalSkus[i])"
                   [disabled]="!identifierLists.internalSkus[i].trim()"
-                  title="Copy"
+                  [appTooltip]="'Copy'"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1213,7 +1214,7 @@ interface ExtraAttributeRow {
                   type="button"
                   class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted"
                   (click)="removeIdentifier('internalSkus', i)"
-                  title="Remove"
+                  [appTooltip]="'Remove'"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1270,7 +1271,7 @@ interface ExtraAttributeRow {
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.upcCodes[i])"
                       [disabled]="!identifierLists.upcCodes[i].trim()"
-                      title="Copy"
+                      [appTooltip]="'Copy'"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1317,7 +1318,7 @@ interface ExtraAttributeRow {
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.gtinCodes[i])"
                       [disabled]="!identifierLists.gtinCodes[i].trim()"
-                      title="Copy"
+                      [appTooltip]="'Copy'"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1364,7 +1365,7 @@ interface ExtraAttributeRow {
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.eanCodes[i])"
                       [disabled]="!identifierLists.eanCodes[i].trim()"
-                      title="Copy"
+                      [appTooltip]="'Copy'"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1411,7 +1412,7 @@ interface ExtraAttributeRow {
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.isbnCodes[i])"
                       [disabled]="!identifierLists.isbnCodes[i].trim()"
-                      title="Copy"
+                      [appTooltip]="'Copy'"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1467,7 +1468,7 @@ interface ExtraAttributeRow {
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.asinCodes[i])"
                       [disabled]="!identifierLists.asinCodes[i].trim()"
-                      title="Copy"
+                      [appTooltip]="'Copy'"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1514,7 +1515,7 @@ interface ExtraAttributeRow {
                       class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted disabled:opacity-50 disabled:pointer-events-none"
                       (click)="copyToClipboard(identifierLists.fnskuCodes[i])"
                       [disabled]="!identifierLists.fnskuCodes[i].trim()"
-                      title="Copy"
+                      [appTooltip]="'Copy'"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
